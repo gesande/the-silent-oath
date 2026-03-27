@@ -24,6 +24,19 @@ The rituals in Jerusalem, the monasteries in Scotland, the fortresses in Cyprus 
 
 Its nature is never explicitly named — different brothers believe different things (the Ark, the Grail, something older). Ambiguity is intentional and mechanical: the player becomes the interpreter.
 
+**The final definition:**
+
+It is the original revelation — before the Church, before doctrine.
+
+The Templars do not guard an artifact. They guard a truth that:
+
+- Overturns organised faith
+- Reveals that mankind is not chosen
+- Reveals that prayers go nowhere
+- Reveals that the "divine voice" is something else entirely
+
+The Church did not build its doctrine on this truth. It built its doctrine *against* it.
+
 **Why this works with the stat system:**
 - **Doubt** grows as you approach the truth — not because you doubt God, but because you begin to *understand*
 - **Faith** protects — not because it is correct, but because it holds you together
