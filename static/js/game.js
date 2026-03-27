@@ -193,7 +193,6 @@ function unhide(id) {
 
 async function startNewGame() {
   await api("/api/new", {});
-  SoundEngine.stopMusic(true);
   show("game");
   loadScene();
 }
