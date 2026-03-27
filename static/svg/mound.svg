@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="msky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#060508"/>
+      <stop offset="100%" stop-color="#0C0A08"/>
+    </linearGradient>
+    <linearGradient id="mound_g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#181018"/>
+      <stop offset="100%" stop-color="#100C10"/>
+    </linearGradient>
+    <radialGradient id="deathglow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%"   stop-color="#4A1A4A" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#200818" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="420" fill="url(#msky)"/>
+
+  <!-- Ominous purple-tinged sky -->
+  <rect width="800" height="420" fill="url(#deathglow)"/>
+
+  <!-- Dim stars -->
+  <g fill="#A090B0" opacity="0.4">
+    <circle cx="80"  cy="30" r="0.8"/><circle cx="200" cy="22" r="1.0"/>
+    <circle cx="350" cy="40" r="0.9"/><circle cx="500" cy="18" r="1.1"/>
+    <circle cx="650" cy="35" r="0.8"/><circle cx="740" cy="25" r="1.0"/>
+    <circle cx="130" cy="65" r="0.7"/><circle cx="430" cy="58" r="0.9"/>
+    <circle cx="680" cy="62" r="0.8"/>
+  </g>
+
+  <!-- THE MOUND — large barrow rising from ground -->
+  <ellipse cx="400" cy="295" rx="340" ry="115" fill="url(#mound_g)"/>
+  <ellipse cx="400" cy="290" rx="320" ry="100" fill="#131018"/>
+  <ellipse cx="400" cy="285" rx="290" ry="85" fill="#100E15"/>
+  <!-- Mound surface texture -->
+  <path d="M110,292 Q250,260 400,258 Q550,260 690,292" stroke="#1C1820" stroke-width="1" fill="none" opacity="0.6"/>
+  <path d="M160,298 Q300,272 400,270 Q500,272 640,298" stroke="#1C1820" stroke-width="1" fill="none" opacity="0.5"/>
+
+  <!-- Grave markers — crosses, stones, tilted posts -->
+  <line x1="240" y1="215" x2="242" y2="270" stroke="#1E1820" stroke-width="4"/>
+  <line x1="228" y1="228" x2="256" y2="228" stroke="#1E1820" stroke-width="3"/>
+  <line x1="310" y1="205" x2="312" y2="265" stroke="#201A20" stroke-width="4"/>
+  <line x1="298" y1="220" x2="326" y2="220" stroke="#201A20" stroke-width="3"/>
+  <line x1="480" y1="200" x2="478" y2="262" stroke="#1E1820" stroke-width="4"/>
+  <line x1="466" y1="215" x2="494" y2="215" stroke="#1E1820" stroke-width="3"/>
+  <line x1="555" y1="210" x2="553" y2="268" stroke="#201A20" stroke-width="4"/>
+  <line x1="541" y1="224" x2="569" y2="224" stroke="#201A20" stroke-width="3"/>
+  <!-- Tilted stone marker -->
+  <rect x="386" y="195" width="28" height="42" rx="4" fill="#181520" transform="rotate(-5,400,216)"/>
+
+  <!-- † symbols in ground -->
+  <text x="200" y="288" font-family="serif" font-size="14" fill="#2A1A2A" opacity="0.7">†</text>
+  <text x="280" y="282" font-family="serif" font-size="12" fill="#2A1A2A" opacity="0.6">†</text>
+  <text x="360" y="278" font-family="serif" font-size="16" fill="#2A1A2A" opacity="0.8">†</text>
+  <text x="450" y="276" font-family="serif" font-size="13" fill="#2A1A2A" opacity="0.7">†</text>
+  <text x="530" y="280" font-family="serif" font-size="15" fill="#2A1A2A" opacity="0.6">†</text>
+  <text x="600" y="286" font-family="serif" font-size="12" fill="#2A1A2A" opacity="0.5">†</text>
+
+  <!-- Ground plane -->
+  <rect x="0" y="340" width="800" height="80" fill="#0A0808"/>
+  <path d="M0,345 Q400,338 800,345" stroke="#181412" stroke-width="1.5" fill="none"/>
+
+  <!-- Mist crawling over mound base -->
+  <ellipse cx="400" cy="345" rx="350" ry="25" fill="#181020" opacity="0.5"/>
+  <ellipse cx="280" cy="348" rx="180" ry="15" fill="#181020" opacity="0.4"/>
+  <ellipse cx="560" cy="346" rx="160" ry="14" fill="#181020" opacity="0.35"/>
+
+  <!-- Vignette — very heavy, oppressive -->
+  <radialGradient id="mvig" cx="50%" cy="55%" r="58%">
+    <stop offset="20%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.82"/>
+  </radialGradient>
+  <rect width="800" height="420" fill="url(#mvig)"/>
+</svg>

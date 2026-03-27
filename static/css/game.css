@@ -1,0 +1,862 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&display=swap');
+
+/* ── Reset & base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #0A0908;
+  --ash:        #141210;
+  --charcoal:   #1E1C18;
+  --iron:       #3A3830;
+  --fog:        #645F58;
+  --bone:       #C4BAA4;
+  --parchment:  #DDD4BE;
+  --gold:       #B8903A;
+  --gold-bright:#D4A840;
+  --blood:      #8B1A1A;
+  --blood-mid:  #9A2020;
+  --frost:      #4A7A8A;
+  --rune:       #7A6028;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: 'IM Fell English', serif;
+  overflow: hidden;
+}
+
+/* ── Screens ──────────────────────────────────────────────── */
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; }
+.hidden { display: none !important; }
+
+/* ═══ TITLE SCREEN ═══════════════════════════════════════════ */
+#title-screen {
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.72)),
+    url("/static/svg/title_bg.png") center/cover no-repeat,
+    radial-gradient(ellipse 80% 60% at 50% 40%, #1A1610 0%, #0A0908 100%);
+  gap: 0;
+}
+
+.title-art {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.rune-row {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(13px, 1.6vw, 17px);
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  opacity: 0.75;
+  margin-bottom: 1.8rem;
+  text-shadow: 0 0 20px rgba(180,140,50,0.4);
+}
+
+.game-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(36px, 6.5vw, 72px);
+  font-weight: 700;
+  color: var(--parchment);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  text-shadow:
+    0 2px 4px rgba(0,0,0,0.9),
+    0 4px 24px rgba(0,0,0,0.8),
+    0 0 60px rgba(180,140,50,0.25),
+    0 0 120px rgba(180,140,50,0.1);
+}
+
+.game-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(12px, 1.4vw, 16px);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--bone);
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.6);
+  opacity: 0.9;
+}
+
+.title-divider {
+  width: 320px;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+  margin: 0 auto;
+  opacity: 0.6;
+}
+
+.title-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.menu-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 14px 40px;
+  border: 0.5px solid rgba(180,140,50,0.5);
+  background: rgba(0,0,0,0.45);
+  color: var(--gold-bright);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  min-width: 260px;
+  text-shadow: 0 0 12px rgba(180,140,50,0.4);
+  backdrop-filter: blur(4px);
+}
+.menu-btn:hover {
+  background: rgba(180,140,50,0.12);
+  border-color: var(--gold-bright);
+  color: #F0C060;
+  text-shadow: 0 0 20px rgba(200,160,60,0.7);
+}
+.menu-btn.secondary {
+  border-color: rgba(100,95,88,0.5);
+  color: var(--bone);
+  font-size: 11px;
+  background: rgba(0,0,0,0.35);
+  text-shadow: none;
+}
+.menu-btn.secondary:hover {
+  border-color: var(--fog);
+  color: var(--parchment);
+  background: rgba(0,0,0,0.5);
+}
+
+.title-footer {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(100,95,88,0.5);
+  text-transform: uppercase;
+}
+
+#audio-hint {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--iron);
+  text-transform: uppercase;
+  margin-top: 6px;
+  animation: hintPulse 2.5s ease-in-out infinite;
+  transition: opacity 0.5s;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.7; }
+}
+
+/* ═══ GAME SCREEN ════════════════════════════════════════════ */
+#game-screen {
+  flex-direction: row;
+}
+
+/* Art panel — left half */
+#art-panel {
+  position: relative;
+  width: 50%;
+  min-width: 50%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.scene-illustration {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: opacity 0.6s ease;
+}
+
+#art-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 28%),
+    linear-gradient(to right, transparent 60%, var(--ink) 100%);
+  pointer-events: none;
+}
+
+/* HUD on art panel */
+#hud {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 50%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 60;
+}
+
+#hud-left { display: flex; flex-direction: column; gap: 5px; width: 150px; }
+#hud-right { text-align: right; }
+
+.hud-label {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(210,190,145,0.75);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.7);
+}
+
+.bar-wrap {
+  height: 5px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 1px;
+  overflow: hidden;
+  box-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+.bar-wrap.full { width: 100%; }
+
+.bar {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.4s ease;
+  background: linear-gradient(90deg, var(--blood), var(--blood-mid));
+  box-shadow: 0 0 6px rgba(160,40,40,0.5);
+}
+.bar.wrath {
+  background: linear-gradient(90deg, #7A5010, var(--gold));
+  box-shadow: 0 0 6px rgba(180,140,40,0.4);
+}
+.bar.enemy {
+  background: linear-gradient(90deg, #1A3040, #2A6080);
+  box-shadow: 0 0 6px rgba(40,90,130,0.4);
+}
+
+.hud-shards {
+  font-family: 'Cinzel', serif;
+  font-size: 26px;
+  color: var(--gold-bright);
+  line-height: 1;
+  text-shadow:
+    0 1px 4px rgba(0,0,0,0.95),
+    0 0 16px rgba(180,140,50,0.4);
+}
+.hud-shards span {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: rgba(180,150,70,0.75);
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+
+#hud-curse {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  color: rgba(220,110,60,0.85);
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.95), 0 0 10px rgba(160,50,20,0.4);
+}
+
+.hud-memories {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(100,165,185,0.8);
+  text-transform: uppercase;
+  margin-top: 4px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.95), 0 0 10px rgba(40,100,130,0.3);
+}
+
+.hud-weapon {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(184,144,58,0.6);
+  text-transform: uppercase;
+  margin-top: 4px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.95);
+}
+
+#hud-inventory {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.hud-item {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(196,186,164,0.7);
+  text-transform: uppercase;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.95);
+  padding-left: 8px;
+  border-left: 1px solid rgba(180,140,50,0.3);
+  line-height: 1.6;
+}
+.hud-item::before {
+  content: "· ";
+  color: rgba(180,140,50,0.4);
+}
+
+/* ═══ AUDIO CONTROLS ════════════════════════════════════════ */
+#audio-corner {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.audio-icon-btn {
+  background: none;
+  border: 0.5px solid var(--iron);
+  border-radius: 2px;
+  color: var(--fog);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.05em;
+}
+.audio-icon-btn:hover  { color: var(--bone); border-color: var(--fog); }
+.audio-icon-btn.muted  { color: var(--iron); border-color: var(--iron); text-decoration: line-through; }
+
+#audio-panel {
+  background: rgba(10,9,8,0.92);
+  border: 0.5px solid var(--iron);
+  border-radius: 3px;
+  padding: 10px 10px 8px;
+  margin-bottom: 6px;
+  order: -1;
+  min-width: 140px;
+}
+
+.audio-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.audio-slider-row:last-child { margin-bottom: 0; }
+
+.audio-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fog);
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.vol-slider {
+  flex: 1;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--iron);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  pointer-events: all;
+}
+.vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  border: none;
+}
+.vol-slider::-moz-range-thumb {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  border: none;
+}
+.vol-slider:hover::-webkit-slider-thumb { background: var(--gold-bright); }
+
+.audio-val {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  color: var(--fog);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Title screen audio row */
+/* Narrative panel — right half */
+#narrative-panel {
+  width: 50%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 2rem 2rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--iron) transparent;
+}
+#narrative-panel::-webkit-scrollbar { width: 4px; }
+#narrative-panel::-webkit-scrollbar-track { background: transparent; }
+#narrative-panel::-webkit-scrollbar-thumb { background: var(--iron); }
+
+/* Scene header */
+#scene-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px, 2.5vw, 26px);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 5px;
+  text-shadow: 0 0 20px rgba(180,140,50,0.2);
+}
+#scene-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bone);
+  opacity: 0.65;
+}
+
+/* Memory flash */
+#memory-flash {
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+.memory-rule {
+  height: 0.5px;
+  background: var(--frost);
+  opacity: 0.4;
+  margin-bottom: 0.75rem;
+}
+.memory-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--frost);
+  margin-bottom: 0.5rem;
+}
+#memory-text {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.85;
+  color: rgba(74,120,138,0.85);
+  padding-left: 1rem;
+}
+
+/* Notification */
+#notification {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  padding: 8px 12px;
+  border-left: 2px solid var(--rune);
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+/* Prose body */
+#prose-body {
+  flex: 1;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.prose-block {
+  font-size: clamp(17px, 1.7vw, 20px);
+  line-height: 1.9;
+  color: var(--parchment);
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  transform: translateX(-18px);
+  animation: slideIn 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.prose-block.italic {
+  font-style: italic;
+  color: var(--bone);
+  padding-left: 1rem;
+  border-left: 2px solid var(--iron);
+}
+.prose-block.memory-block {
+  color: var(--frost);
+  font-style: italic;
+  border-left: 2px solid var(--frost);
+  padding-left: 1rem;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scene header slides in from top */
+#scene-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.5px solid rgba(180,140,50,0.25);
+  opacity: 0;
+  animation: slideInTop 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s forwards;
+}
+@keyframes slideInTop {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Choices slide in from bottom */
+#choices-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 0.5px solid var(--iron);
+}
+.choice-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  padding: 11px 16px;
+  background: transparent;
+  border: 0.5px solid var(--iron);
+  border-radius: 2px;
+  color: var(--bone);
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.5;
+  opacity: 0;
+  animation: slideInBottom 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.choice-btn:hover {
+  border-color: rgba(180,140,50,0.5);
+  color: var(--parchment);
+  background: rgba(180,140,50,0.04);
+}
+.choice-btn::before {
+  content: attr(data-num) " · ";
+  color: var(--iron);
+}
+@keyframes slideInBottom {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Name input */
+#name-input-wrap {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+#name-input {
+  font-family: 'IM Fell English', serif;
+  font-size: 16px;
+  background: transparent;
+  border: 0.5px solid var(--iron);
+  border-bottom: 0.5px solid var(--gold);
+  color: var(--parchment);
+  padding: 8px 12px;
+  outline: none;
+  flex: 1;
+  border-radius: 2px;
+}
+#name-input:focus { border-color: var(--gold); }
+
+/* Choices */
+
+
+/* Loading */
+#loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+.spinner {
+  width: 20px; height: 20px;
+  border: 1.5px solid var(--iron);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══ COMBAT PANEL ═══════════════════════════════════════════ */
+#combat-panel {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: row;
+  background: var(--ink);
+  z-index: 50;
+}
+
+#combat-art-wrap {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+#combat-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Gradient overlay bleeding into combat UI */
+#combat-art-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 50%, var(--ink) 100%);
+}
+
+#combat-ui {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+#combat-header { flex-shrink: 0; }
+#combat-enemy-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(13px, 1.8vw, 17px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  margin-bottom: 8px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+#combat-log-wrap {
+  flex: 1;
+  overflow-y: auto;
+  border: 0.5px solid var(--iron);
+  border-radius: 3px;
+  padding: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--iron) transparent;
+}
+
+#combat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-entry {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--parchment);
+  animation: fadeIn 0.3s ease;
+}
+.log-entry.damage { color: #C03030; }
+.log-entry.miss   { color: var(--fog); font-style: italic; }
+.log-entry.parry  { color: var(--gold); }
+.log-entry.system { color: var(--frost); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.1em; }
+
+#combat-actions {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 0.5px solid var(--iron);
+  padding-top: 1rem;
+}
+
+.combat-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  padding: 9px 14px;
+  background: transparent;
+  border: 0.5px solid var(--iron);
+  border-radius: 2px;
+  color: var(--bone);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.combat-btn:hover {
+  border-color: rgba(180,140,50,0.5);
+  color: var(--parchment);
+  background: rgba(180,140,50,0.04);
+}
+.combat-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ═══ DEATH OVERLAY ══════════════════════════════════════════ */
+#death-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(80,8,8,0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: deathFade 1.2s ease;
+}
+@keyframes deathFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.death-content { text-align: center; }
+
+.death-runes {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  letter-spacing: 0.3em;
+  color: rgba(180,60,40,0.5);
+  margin-bottom: 1.5rem;
+}
+
+.death-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(32px, 5vw, 52px);
+  color: rgba(200,180,150,0.9);
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.death-sub {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: rgba(180,160,130,0.6);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+#death-curse {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(160,80,40,0.7);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* ═══ CREDITS ════════════════════════════════════════════════ */
+#credits-screen {
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+}
+
+.credits-content { text-align: center; }
+
+.credits-content h2 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  color: var(--gold);
+  margin: 1.5rem 0 1rem;
+}
+
+.credits-sub {
+  font-style: italic;
+  font-size: 16px;
+  color: var(--fog);
+  line-height: 1.9;
+  margin-bottom: 2.5rem;
+}
+
+/* ═══ CLICK-TO-ENTER OVERLAY ════════════════════════════════ */
+#enter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  cursor: pointer;
+  transition: opacity 0.8s ease;
+}
+#enter-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#enter-content {
+  text-align: center;
+  animation: enterPulse 3s ease-in-out infinite;
+}
+@keyframes enterPulse {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50%       { opacity: 1.0; transform: translateY(-4px); }
+}
+
+.enter-runes {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(16px, 2.2vw, 22px);
+  letter-spacing: 0.45em;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+  text-shadow: 0 0 20px rgba(180,140,50,0.5);
+}
+
+.enter-text {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(24px, 4vw, 48px);
+  letter-spacing: 0.18em;
+  color: var(--parchment);
+  margin-bottom: 0.6rem;
+  text-shadow:
+    0 2px 8px rgba(0,0,0,0.95),
+    0 0 40px rgba(180,140,50,0.3);
+}
+
+.enter-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bone);
+  opacity: 0.5;
+}
+
+/* ═══ RESPONSIVE ════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  #game-screen { flex-direction: column; }
+  #art-panel   { width: 100%; height: 38%; min-width: unset; }
+  #art-overlay { background: linear-gradient(to bottom, transparent 40%, var(--ink) 100%); }
+  #narrative-panel { width: 100%; height: 62%; padding: 1rem; }
+  #combat-panel { flex-direction: column; }
+  #combat-art-wrap { width: 100%; height: 35%; }
+  #combat-ui { width: 100%; height: 65%; }
+}

@@ -1,0 +1,12 @@
+services:
+  game:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./saves:/app/saves
+      - ./static/audio:/app/static/audio
+      - ./static/svg:/app/static/svg
+    environment:
+      - SECRET_KEY=change-me-in-production
+    restart: unless-stopped

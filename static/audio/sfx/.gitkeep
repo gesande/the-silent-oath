@@ -1,0 +1,6 @@
+# Drop .ogg and .mp3 SFX files here.
+#
+# Required files:
+#   sfx_choice.ogg    sfx_confirm.ogg   sfx_memory.ogg
+#   sfx_death.ogg     sfx_shards.ogg    sfx_hit.ogg
+#   sfx_miss.ogg      sfx_parry.ogg

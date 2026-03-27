@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="ssky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#070810"/>
+      <stop offset="100%" stop-color="#100E08"/>
+    </linearGradient>
+    <linearGradient id="sfog" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%"   stop-color="#141210" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#141210" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="420" fill="url(#ssky)"/>
+
+  <!-- Dense layer of fallen bodies — piled, layered silhouettes -->
+  <!-- Back layer -->
+  <ellipse cx="100" cy="260" rx="55" ry="12" fill="#121008" opacity="0.7"/>
+  <ellipse cx="220" cy="250" rx="60" ry="13" fill="#121008" opacity="0.8"/>
+  <ellipse cx="360" cy="255" rx="65" ry="14" fill="#121008" opacity="0.7"/>
+  <ellipse cx="510" cy="248" rx="58" ry="12" fill="#121008" opacity="0.8"/>
+  <ellipse cx="650" cy="258" rx="62" ry="13" fill="#121008" opacity="0.7"/>
+
+  <!-- Mid layer bodies -->
+  <ellipse cx="60"  cy="290" rx="48" ry="14" fill="#141210" opacity="0.9"/>
+  <ellipse cx="180" cy="285" rx="55" ry="15" fill="#141210" opacity="0.9"/>
+  <ellipse cx="310" cy="282" rx="60" ry="16" fill="#141210" opacity="0.9"/>
+  <ellipse cx="460" cy="280" rx="55" ry="15" fill="#141210"/>
+  <ellipse cx="600" cy="284" rx="58" ry="14" fill="#141210" opacity="0.9"/>
+  <ellipse cx="740" cy="290" rx="45" ry="13" fill="#141210" opacity="0.8"/>
+
+  <!-- Weapons, armour bits sticking up -->
+  <line x1="130" y1="235" x2="128" y2="282" stroke="#282018" stroke-width="3"/>
+  <line x1="280" y1="228" x2="283" y2="278" stroke="#282018" stroke-width="2.5"/>
+  <line x1="420" y1="232" x2="418" y2="276" stroke="#282018" stroke-width="3"/>
+  <line x1="560" y1="225" x2="558" y2="272" stroke="#282018" stroke-width="2.5"/>
+  <line x1="680" y1="230" x2="682" y2="275" stroke="#282018" stroke-width="3"/>
+  <!-- Shield rim arcs sticking up -->
+  <path d="M170,268 Q190,252 210,268" stroke="#201C14" stroke-width="5" fill="none"/>
+  <path d="M470,265 Q492,248 514,265" stroke="#201C14" stroke-width="5" fill="none"/>
+
+  <!-- Ground -->
+  <rect x="0" y="300" width="800" height="120" fill="#0E0C08"/>
+  <path d="M0,308 Q400,300 800,308" stroke="#1C1810" stroke-width="1.5" fill="none"/>
+
+  <!-- Foreground bodies — more detailed -->
+  <!-- Body 1 face down -->
+  <ellipse cx="200" cy="315" rx="50" ry="14" fill="#161412"/>
+  <ellipse cx="175" cy="310" rx="18" ry="10" fill="#141210"/>
+  <!-- Body 2 on side -->
+  <ellipse cx="420" cy="308" rx="55" ry="12" fill="#161412"/>
+  <rect x="375" y="298" width="20" height="20" rx="4" fill="#141210"/>
+  <!-- Body 3 -->
+  <ellipse cx="650" cy="312" rx="48" ry="13" fill="#161412"/>
+
+  <!-- ONE DRAUGAR beginning to rise — mid-right -->
+  <!-- This one's arm is lifting -->
+  <ellipse cx="560" cy="300" rx="45" ry="12" fill="#161412"/>
+  <!-- Arm rising -->
+  <path d="M545,295 Q550,275 558,260 Q562,250 555,242" stroke="#1A1818" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <!-- Hand shape -->
+  <ellipse cx="556" cy="240" rx="8" ry="10" fill="#181615"/>
+  <!-- Head lifting from mud -->
+  <ellipse cx="575" cy="295" rx="14" ry="11" fill="#161414"/>
+  <!-- Glowing eye -->
+  <ellipse cx="579" cy="292" rx="3" ry="2.5" fill="#3A6878" opacity="0.7"/>
+
+  <!-- Fog layer over everything -->
+  <rect x="0" y="240" width="800" height="80" fill="url(#sfog)"/>
+  <ellipse cx="400" cy="295" rx="400" ry="22" fill="#141210" opacity="0.3"/>
+
+  <!-- Vignette -->
+  <radialGradient id="svig" cx="50%" cy="60%" r="62%">
+    <stop offset="20%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.78"/>
+  </radialGradient>
+  <rect width="800" height="420" fill="url(#svig)"/>
+</svg>

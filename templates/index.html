@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forgotten Among the Fallen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/game.css">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+<body>
+
+<!-- ═══ TITLE SCREEN ══════════════════════════════════════ -->
+<div id="title-screen" class="screen">
+  <div class="title-art">
+    <div class="rune-row">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ</div>
+    <h1 class="game-title">Forgotten Among<br>the Fallen</h1>
+    <p class="game-subtitle">Every oath was kept. Just not as intended.</p>
+    <div class="title-divider"></div>
+  </div>
+  <div class="title-menu">
+    <button class="menu-btn" id="btn-new">Wake from the Dead</button>
+    <button class="menu-btn" id="btn-load" style="display:none">Continue — the Dead Remember</button>
+    <button class="menu-btn secondary" id="btn-quit">Leave this Place</button>
+  </div>
+
+  <div class="title-footer">No external dependencies · Pure Python + Flask</div>
+</div>
+
+<!-- ═══ CLICK-TO-ENTER OVERLAY ════════════════════════════ -->
+<div id="enter-overlay">
+  <div id="enter-content">
+    <div class="enter-runes">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ</div>
+    <div class="enter-text">Enter</div>
+    
+  </div>
+</div>
+
+<!-- ═══ GAME SCREEN ═══════════════════════════════════════ -->
+<div id="game-screen" class="screen hidden">
+
+  <!-- HUD — fixed over left (art) half, visible during combat too -->
+  <div id="hud">
+    <div id="hud-left">
+      <div class="hud-label">Health</div>
+      <div class="bar-wrap"><div class="bar" id="hp-bar"></div></div>
+      <div class="hud-label" id="hud-hp-desc">Unbroken</div>
+      <div class="hud-label" style="margin-top:6px">Wrath</div>
+      <div class="bar-wrap"><div class="bar wrath" id="wrath-bar"></div></div>
+    </div>
+    <div id="hud-right">
+      <div class="hud-shards" id="hud-shards">0 <span>shards</span></div>
+      <div id="hud-curse"></div>
+      <div class="hud-memories" id="hud-memories"></div>
+      <div class="hud-weapon" id="hud-weapon"></div>
+      <div class="hud-weapon" id="hud-shield"></div>
+      <div id="hud-inventory"></div>
+    </div>
+  </div>
+
+  <!-- Illustration panel -->
+  <div id="art-panel">
+    <img id="scene-art" src="" alt="" class="scene-illustration"/>
+    <div id="art-overlay"></div>
+    <!-- Audio controls — bottom-right of art panel -->
+    <div id="audio-corner">
+      <button id="mute-btn" class="audio-icon-btn" title="Audio settings">♪</button>
+      <div id="audio-panel" class="hidden">
+        <div class="audio-slider-row">
+          <span class="audio-label">Music</span>
+          <input type="range" id="music-vol" min="0" max="100" value="45" class="vol-slider">
+          <span class="audio-val" id="music-val">45</span>
+        </div>
+        <div class="audio-slider-row">
+          <span class="audio-label">SFX</span>
+          <input type="range" id="sfx-vol" min="0" max="100" value="70" class="vol-slider">
+          <span class="audio-val" id="sfx-val">70</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narrative panel -->
+  <div id="narrative-panel">
+    <div id="scene-header" class="hidden">
+      <div id="scene-title"></div>
+      <div id="scene-subtitle"></div>
+    </div>
+
+    <!-- Memory flash -->
+    <div id="memory-flash" class="hidden">
+      <div class="memory-rule"></div>
+      <div class="memory-label">Memory Recovered</div>
+      <div id="memory-text"></div>
+      <div class="memory-rule"></div>
+    </div>
+
+    <!-- Notification bar (items / shards gained) -->
+    <div id="notification" class="hidden"></div>
+
+    <!-- Prose body -->
+    <div id="prose-body"></div>
+
+    <!-- Name input (awakening scene) -->
+    <div id="name-input-wrap" class="hidden">
+      <input type="text" id="name-input" placeholder="Your name..." maxlength="30" autocomplete="off"/>
+      <button class="choice-btn" id="name-submit">Remember</button>
+    </div>
+
+    <!-- Choices -->
+    <div id="choices-wrap"></div>
+
+    <!-- Loading spinner -->
+    <div id="loading" class="hidden">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- ═══ COMBAT PANEL ══════════════════════════════════ -->
+  <div id="combat-panel" class="hidden">
+    <div id="combat-art-wrap">
+      <img id="combat-art" src="" alt=""/>
+    </div>
+    <div id="combat-ui">
+      <div id="combat-header">
+        <div id="combat-enemy-name"></div>
+        <div class="bar-wrap full"><div class="bar enemy" id="enemy-hp-bar"></div></div>
+      </div>
+      <div id="combat-log-wrap">
+        <div id="combat-log"></div>
+      </div>
+      <div id="combat-actions"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DEATH OVERLAY ═════════════════════════════════════ -->
+<div id="death-overlay" class="hidden">
+  <div class="death-content">
+    <div class="death-runes">ᚠ ᚢ ᚦ ᚨ ᚱ</div>
+    <div class="death-title">You Fall</div>
+    <div class="death-sub">Not death. You have already done that.<br>The battlefield takes you again.</div>
+    <div id="death-curse"></div>
+    <button class="menu-btn" id="btn-rise">Rise Again</button>
+  </div>
+</div>
+
+<!-- ═══ CREDITS / END ═════════════════════════════════════ -->
+<div id="credits-screen" class="screen hidden">
+  <div class="credits-content">
+    <div class="rune-row">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ</div>
+    <h2>Act I Complete</h2>
+    <p class="credits-sub">The fog does not lift. It never lifts.<br>But you are still standing in it.</p>
+    <button class="menu-btn" id="btn-credits-back">Return</button>
+  </div>
+</div>
+
+<script src="/static/js/audio.js"></script>
+<script src="/static/js/game.js"></script>
+</body>
+</html>

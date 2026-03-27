@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="cmbsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#080608"/>
+      <stop offset="100%" stop-color="#0C0808"/>
+    </linearGradient>
+    <radialGradient id="combatglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#501010" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#200808" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="420" fill="url(#cmbsky)"/>
+  <rect width="800" height="420" fill="url(#combatglow)"/>
+
+  <!-- Ground -->
+  <rect x="0" y="305" width="800" height="115" fill="#0C0A08"/>
+
+  <!-- THE DRAUGAR — left side, facing right -->
+  <ellipse cx="250" cy="315" rx="55" ry="11" fill="#090708" opacity="0.7"/>
+  <!-- Legs -->
+  <rect x="228" y="270" width="18" height="65" rx="4" fill="#131018" transform="rotate(-3,237,302)"/>
+  <rect x="252" y="268" width="18" height="67" rx="4" fill="#131018" transform="rotate(3,261,301)"/>
+  <!-- Torso - rotting armour -->
+  <rect x="220" y="185" width="60" height="95" rx="5" fill="#141218"/>
+  <rect x="223" y="190" width="54" height="10" rx="2" fill="#1A1820" opacity="0.7"/>
+  <rect x="223" y="206" width="54" height="10" rx="2" fill="#1A1820" opacity="0.6"/>
+  <rect x="223" y="222" width="54" height="10" rx="2" fill="#1A1820" opacity="0.5"/>
+  <!-- Arms raised for attack -->
+  <path d="M220,210 Q188,200 172,218 Q158,235 165,258" stroke="#141018" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <path d="M280,210 Q308,198 322,210 Q338,225 330,252" stroke="#141018" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <!-- Rusted axe in right hand -->
+  <line x1="330" y1="252" x2="355" y2="288" stroke="#222018" stroke-width="5" stroke-linecap="round"/>
+  <path d="M350,280 Q340,262 347,250 Q358,244 366,255 Q368,268 360,285 Z" fill="#202018"/>
+  <path d="M347,250 Q340,254 342,265 Q344,276 350,280" stroke="#383830" stroke-width="1.2" fill="none"/>
+  <!-- Draugar head -->
+  <ellipse cx="250" cy="165" rx="26" ry="30" fill="#121018"/>
+  <!-- Helmet, broken -->
+  <path d="M224,165 Q224,132 250,128 Q276,132 276,165 Z" fill="#181420"/>
+  <!-- Crack in helmet -->
+  <path d="M245,130 Q248,148 244,165" stroke="#0A0810" stroke-width="2.5" fill="none"/>
+  <!-- Dead eyes — blue-white glow -->
+  <ellipse cx="241" cy="158" rx="4.5" ry="3.5" fill="#4A8898" opacity="0.85"/>
+  <ellipse cx="259" cy="158" rx="4.5" ry="3.5" fill="#4A8898" opacity="0.85"/>
+  <ellipse cx="241" cy="158" rx="2"   ry="1.5" fill="#88CCDD"/>
+  <ellipse cx="259" cy="158" rx="2"   ry="1.5" fill="#88CCDD"/>
+
+  <!-- PLAYER SILHOUETTE — right side, in guard stance -->
+  <ellipse cx="560" cy="315" rx="50" ry="11" fill="#090708" opacity="0.6"/>
+  <!-- Legs in wide stance -->
+  <rect x="538" y="265" width="20" height="70" rx="5" fill="#1A1614" transform="rotate(-6,548,300)"/>
+  <rect x="562" y="262" width="20" height="72" rx="5" fill="#1A1614" transform="rotate(6,572,298)"/>
+  <!-- Torso -->
+  <rect x="530" y="175" width="60" height="100" rx="6" fill="#1E1A18"/>
+  <!-- Shield raised on left arm -->
+  <path d="M530,210 Q492,218 478,240 Q470,255 475,272" stroke="#1A1614" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <rect x="456" y="230" width="28" height="55" rx="6" fill="#2A2418"/>
+  <rect x="456" y="230" width="28" height="55" rx="6" stroke="#4A3820" stroke-width="1.5" fill="none"/>
+  <!-- Axe arm raised -->
+  <path d="M590,190 Q622,178 638,192 Q652,208 645,230" stroke="#1A1614" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <!-- Player axe -->
+  <line x1="645" y1="230" x2="665" y2="195" stroke="#282018" stroke-width="5"/>
+  <path d="M658,188 Q648,174 655,162 Q666,157 674,167 Q676,182 668,196 Z" fill="#303028"/>
+  <path d="M655,162 Q648,167 650,178 Q652,188 658,188" stroke="#505040" stroke-width="1.2" fill="none"/>
+  <!-- Rune glow on player axe -->
+  <text x="663" y="180" font-family="serif" font-size="10" fill="#B8903A" opacity="0.7">ᚠ</text>
+  <!-- Player head -->
+  <ellipse cx="560" cy="152" rx="24" ry="27" fill="#161412"/>
+  <path d="M536,152 Q536,122 560,118 Q584,122 584,152 Z" fill="#1E1C18"/>
+  <rect x="557" y="136" width="5" height="18" rx="1" fill="#262218"/>
+
+  <!-- Clash sparks between them -->
+  <line x1="440" y1="240" x2="452" y2="228" stroke="#C8A030" stroke-width="1.5" opacity="0.6"/>
+  <line x1="445" y1="235" x2="458" y2="244" stroke="#C8A030" stroke-width="1.2" opacity="0.5"/>
+  <line x1="448" y1="230" x2="436" y2="245" stroke="#FFD060" stroke-width="1" opacity="0.7"/>
+
+  <!-- Ground mist -->
+  <ellipse cx="400" cy="318" rx="380" ry="18" fill="#141010" opacity="0.4"/>
+
+  <!-- Vignette -->
+  <radialGradient id="cvig2" cx="50%" cy="55%" r="58%">
+    <stop offset="15%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.82"/>
+  </radialGradient>
+  <rect width="800" height="420" fill="url(#cvig2)"/>
+</svg>
