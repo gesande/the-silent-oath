@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forgotten Among the Fallen</title>
+<title>The Silent Oath</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/css/game.css">
 <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
@@ -14,14 +14,14 @@
 <!-- ═══ TITLE SCREEN ══════════════════════════════════════ -->
 <div id="title-screen" class="screen">
   <div class="title-art">
-    <div class="rune-row">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ</div>
-    <h1 class="game-title">Forgotten Among<br>the Fallen</h1>
-    <p class="game-subtitle">Every oath was kept. Just not as intended.</p>
+    <div class="rune-row">✝ · · · ✝ · · · ✝ · · · ✝ · · · ✝</div>
+    <h1 class="game-title">The Silent Oath</h1>
+    <p class="game-subtitle">Some truths are not meant to be carried.</p>
     <div class="title-divider"></div>
   </div>
   <div class="title-menu">
-    <button class="menu-btn" id="btn-new">Wake from the Dead</button>
-    <button class="menu-btn" id="btn-load" style="display:none">Continue — the Dead Remember</button>
+    <button class="menu-btn" id="btn-new">Take the Oath</button>
+    <button class="menu-btn" id="btn-load" style="display:none">Continue — the Oath Holds</button>
     <button class="menu-btn secondary" id="btn-quit">Leave this Place</button>
   </div>
 
@@ -31,9 +31,9 @@
 <!-- ═══ CLICK-TO-ENTER OVERLAY ════════════════════════════ -->
 <div id="enter-overlay">
   <div id="enter-content">
-    <div class="enter-runes">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ</div>
+    <div class="enter-runes">✝ · ✝ · ✝</div>
     <div class="enter-text">Enter</div>
-    
+    <div class="enter-sub">Click to begin</div>
   </div>
 </div>
 
@@ -43,14 +43,15 @@
   <!-- HUD — fixed over left (art) half, visible during combat too -->
   <div id="hud">
     <div id="hud-left">
-      <div class="hud-label">Health</div>
+      <div class="hud-label">Body</div>
       <div class="bar-wrap"><div class="bar" id="hp-bar"></div></div>
-      <div class="hud-label" id="hud-hp-desc">Unbroken</div>
-      <div class="hud-label" style="margin-top:6px">Wrath</div>
-      <div class="bar-wrap"><div class="bar wrath" id="wrath-bar"></div></div>
+      <div class="hud-label" id="hud-hp-desc"></div>
+      <div class="hud-label" style="margin-top:6px">Faith</div>
+      <div class="bar-wrap"><div class="bar faith" id="wrath-bar"></div></div>
+      <div class="hud-label" style="margin-top:6px">Doubt</div>
+      <div class="bar-wrap"><div class="bar doubt" id="doubt-bar"></div></div>
     </div>
     <div id="hud-right">
-      <div class="hud-shards" id="hud-shards">0 <span>shards</span></div>
       <div id="hud-curse"></div>
       <div class="hud-memories" id="hud-memories"></div>
       <div class="hud-weapon" id="hud-weapon"></div>
@@ -96,16 +97,16 @@
       <div class="memory-rule"></div>
     </div>
 
-    <!-- Notification bar (items / shards gained) -->
+    <!-- Notification bar (items gained etc.) -->
     <div id="notification" class="hidden"></div>
 
     <!-- Prose body -->
     <div id="prose-body"></div>
 
-    <!-- Name input (awakening scene) -->
+    <!-- Name input -->
     <div id="name-input-wrap" class="hidden">
-      <input type="text" id="name-input" placeholder="Your name..." maxlength="30" autocomplete="off"/>
-      <button class="choice-btn" id="name-submit">Remember</button>
+      <input type="text" id="name-input" placeholder="Your name, brother..." maxlength="30" autocomplete="off"/>
+      <button class="choice-btn" id="name-submit">Speak it</button>
     </div>
 
     <!-- Choices -->
@@ -139,9 +140,9 @@
 <!-- ═══ DEATH OVERLAY ═════════════════════════════════════ -->
 <div id="death-overlay" class="hidden">
   <div class="death-content">
-    <div class="death-runes">ᚠ ᚢ ᚦ ᚨ ᚱ</div>
-    <div class="death-title">You Fall</div>
-    <div class="death-sub">Not death. You have already done that.<br>The battlefield takes you again.</div>
+    <div class="death-runes">✝ · ✝ · ✝</div>
+    <div class="death-title">The Oath Breaks</div>
+    <div class="death-sub">Your body fails. But the truth remains.<br>It was always there, waiting.</div>
     <div id="death-curse"></div>
     <button class="menu-btn" id="btn-rise">Rise Again</button>
   </div>
@@ -150,9 +151,9 @@
 <!-- ═══ CREDITS / END ═════════════════════════════════════ -->
 <div id="credits-screen" class="screen hidden">
   <div class="credits-content">
-    <div class="rune-row">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ</div>
+    <div class="rune-row">✝ · · · ✝ · · · ✝</div>
     <h2>Act I Complete</h2>
-    <p class="credits-sub">The fog does not lift. It never lifts.<br>But you are still standing in it.</p>
+    <p class="credits-sub">The commandery is quiet again.<br>But you have heard something you cannot unhear.</p>
     <button class="menu-btn" id="btn-credits-back">Return</button>
   </div>
 </div>
