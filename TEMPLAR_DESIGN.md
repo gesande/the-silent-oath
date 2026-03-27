@@ -103,6 +103,36 @@ The player chooses. Both paths are valid. Neither is safe.
 
 ---
 
+## Gameplay Implications
+
+### Faith vs Doubt builds
+
+**Faith build:**
+- Abilities are stable and powerful
+- Can resist the truth — prayers hold, resolve does not crack
+- Pays a price: never fully understands what is happening
+- Ending: walks away intact, but blind
+
+**Doubt build:**
+- Sees more — hidden dialogue, deeper scene variants, things Faith-built players never encounter
+- Begins to fracture — abilities destabilize, some fail at critical moments
+- Pays a price: the closer you get, the less you can hold together
+- Ending: understands — and must decide what to do with that
+
+Neither build is wrong. Both are complete experiences.
+
+### Enemy design
+
+Enemies are not evil. They are:
+
+- People who saw too much
+- Knights who understood
+- Beings that could not endure the truth
+
+Combat is not victory over evil — it is an encounter with what the player may become. Every enemy is a mirror.
+
+---
+
 ## Open Questions
 
 1. Where does Act I begin? (Specific location — fortress, ship, Paris dungeon?)
