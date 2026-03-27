@@ -326,4 +326,97 @@ ENEMIES = {
             ],
         },
     },
+
+    # ── Watching heretic ──────────────────────────────────────
+    # Identity: a person who sees too much — not mad, not evil.
+    # He has looked at the thing the Order guards and cannot un-see it.
+    # He does not want to fight. He wants to be heard.
+    # Attacking him is the wrong answer. The game lets you make it anyway.
+    "watching_heretic": {
+        "name": "the Watching Heretic",
+        "name_short": "the heretic",
+        "identity": "a person who sees too much — not evil, just unable to un-see",
+        # Stats (GDD: Body 1, Faith 2, Resolve 3 → engine values)
+        "threat": 1,
+        "hp": 40,
+        "damage": (0, 0),    # does not attack — initially
+        "accuracy": 0.0,
+        "faith": 20,
+        "resolve": 60,
+        # Behavior: passive — holds still, does not initiate
+        # If struck: transforms (handled in special hook)
+        "behavior": "passive",
+        # Special: doubt_watcher — Doubt grows every turn, even doing nothing.
+        # If attacked: transforms into something worse.
+        "special": {
+            "id": "doubt_watcher",
+            "label": "Doubt-Watcher",
+            "desc": (
+                "Every enemy turn, Doubt +3 — regardless of whether the heretic attacks. "
+                "The longer you delay, the more he unsettles you. "
+                "If struck by a physical attack, he transforms: hp +70, behavior → aggressive."
+            ),
+        },
+        # Moral resolution
+        "resolution": {
+            "kill": True,    # you can, after the transformation
+            "free": False,
+            "listen": True,  # the right answer — available before attacking
+            "understand": True,
+        },
+        "loot": [],
+        "on_death": {
+            "flag": "heretic_killed",
+            "memory": ("heretic_destroyed", "The Heretic — silenced"),
+        },
+        "phrases": {
+            "windup": [
+                # Used only after transformation
+                "The thing that was the heretic lunges forward.",
+                "It no longer speaks. It only presses.",
+                "The shape of him is wrong now. It moves anyway.",
+            ],
+            "hit": [
+                "The blow finds you — no form, no technique. Just force.",
+                "It hits like grief.",
+                "You weren't ready for what it became.",
+            ],
+            "miss": [
+                "It overreaches. Something in its movement is broken.",
+                "The strike misses. The weight of it carries it past you.",
+                "Wrong distance. It resets.",
+            ],
+            "watch": [
+                "He watches you. He does not move.",
+                "His eyes hold something you don't have a word for.",
+                "He says nothing. The silence is not empty.",
+                "\"You already know,\" he says. \"You just haven't let yourself know it yet.\"",
+            ],
+            "listen": [
+                "He tells you what he saw beneath the commandery. "
+                "Not all of it — he doesn't have the words for all of it. "
+                "But enough. You understand why he couldn't stay quiet.",
+                "\"I was a brother once,\" he says. \"Before I looked. "
+                "I thought knowing would make me stronger. "
+                "It made me — this.\" He gestures at himself. \"But I'd look again.\"",
+            ],
+            "transform": (
+                "Something happens to his face. The moment your blade touches him, "
+                "the thing he has been holding — holding so carefully, for so long — "
+                "comes loose. "
+                "He is no longer trying to tell you something. "
+                "He is no longer trying."
+            ),
+            "death": [
+                "He goes down. Whatever he knew, it goes with him.",
+                "He is still. The thing he saw in the dark — he takes it with him.",
+                "He falls. You'll never know what he was going to say.",
+            ],
+            "passive": [
+                "He watches. He does not move toward you.",
+                "\"I'm not what you think I am,\" he says quietly.",
+                "He holds out his hands. No weapon.",
+            ],
+        },
+    },
 }

@@ -97,6 +97,13 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
         actions.append(
             {"id": "flank", "label": "Flank — circle wide past the shield"}
         )
+    # Listen — available before attacking a passive enemy who can be understood
+    if (
+        resolution.get("listen")
+        and not combat_state.get("player_has_struck")
+        and not combat_state.get("heretic_transformed")
+    ):
+        actions.append({"id": "listen", "label": "Listen — hear what they have to say"})
     if player.doubt >= 40:
         actions.append(
             {
@@ -211,6 +218,22 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         release_line = random.choice(e["phrases"].get("release", ["You let them go."]))
         log.append(release_line)
 
+    elif action_id == "listen":
+        # Understand resolution — ends combat peacefully; costs doubt, gains resolve
+        e["current_hp"] = 0
+        player.modify_stat("doubt", 15)   # what they say is unsettling
+        player.modify_stat("faith", -5)   # shaken
+        player.modify_stat("resolve", 10) # you chose understanding
+        combat_state["listened"] = True
+        listen_line = random.choice(e["phrases"].get("listen", ["They speak. You listen."]))
+        log.append(listen_line)
+        on_listen = e.get("on_listen", {})
+        if "memory" in on_listen:
+            key, label = on_listen["memory"]
+            player.add_memory(key, label)
+        if "flag" in on_listen:
+            player.set_flag(on_listen["flag"], True)
+
     elif action_id == "flee":
         dmg = roll_range(10, 20)
         player.take_damage(dmg)
@@ -303,6 +326,20 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
                 "Your oath sounds different coming back from his mouth."
             )
 
+    elif special_id == "doubt_watcher":
+        # Physical strikes trigger transformation
+        if action_id in ("strike", "doubt_surge") and not combat_state.get(
+            "heretic_transformed"
+        ):
+            combat_state["heretic_transformed"] = True
+            combat_state["player_has_struck"] = True
+            e["behavior"] = "aggressive"
+            e["hp"] += 70
+            e["current_hp"] = min(e["hp"], e["current_hp"] + 70)
+            e["damage"] = (15, 28)
+            e["accuracy"] = 0.75
+            log.append(e["phrases"].get("transform", "Something changes in them."))
+
     elif special_id == "oath_memory":
         # Direct strikes trigger counter (flagged for defensive turn)
         combat_state["player_struck_this_turn"] = action_id in (
@@ -337,11 +374,18 @@ def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
 
     if behavior == "passive":
         if not combat_state.get("player_has_struck"):
-            log.append(
-                random.choice(
-                    e["phrases"].get("passive", ["It watches. It does not move."])
+            # doubt_watcher grows doubt even while standing still
+            if e.get("special", {}).get("id") == "doubt_watcher":
+                player.modify_stat("doubt", 3)
+                log.append(
+                    random.choice(e["phrases"].get("watch", ["He watches."]))
                 )
-            )
+            else:
+                log.append(
+                    random.choice(
+                        e["phrases"].get("passive", ["It watches. It does not move."])
+                    )
+                )
             return
 
     if behavior == "defensive":
@@ -459,7 +503,13 @@ def _tick_player_effects(combat_state, player, log):
 
 
 def _resolve_enemy_death(e, player, combat_state, log):
-    log.append(random.choice(e["phrases"]["death"]))
+    # Listen and release endings skip the death log
+    if not combat_state.get("listened") and not combat_state.get("released"):
+        log.append(random.choice(e["phrases"]["death"]))
+        # Winning through violence: faith up slightly, doubt up slightly
+        player.modify_stat("faith", 3)
+        player.modify_stat("doubt", 2)
+
     for item, prob in e.get("loot", []):
         if chance(prob):
             player.add_item(item)
@@ -471,9 +521,6 @@ def _resolve_enemy_death(e, player, combat_state, log):
         key, label = on_death["memory"]
         player.add_memory(key, label)
     player.set_flag(f"defeated_{e['key']}", True)
-    # Winning through violence: faith up slightly, doubt up slightly
-    player.modify_stat("faith", 3)
-    player.modify_stat("doubt", 2)
 
 
 def _tick_effects(e, log):
