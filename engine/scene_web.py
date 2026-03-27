@@ -42,7 +42,7 @@ def render_scene(scene_key: str, state: PlayerState) -> dict:
         "paragraphs": [],  # rendered narrative text blocks
         "memories": [],  # any memories recovered this scene
         "items": [],  # items gained
-        "shards": 0,  # shards gained
+
         "choices": [],
         "next": None,
         "combat": None,  # set if a combat beat triggers
@@ -189,8 +189,7 @@ def _process_beat(
         if first_visit:
             for stat, delta in beat.get("changes", {}).items():
                 state.modify_stat(stat, delta)
-                if stat == "echo_shards" and delta > 0:
-                    output["shards"] += delta
+
 
     elif kind == "flag":
         if first_visit:
@@ -239,7 +238,7 @@ def _build_hud(state: PlayerState) -> dict:
         "inventory": state.inventory,
         "equipped": state.equipped,
         "is_dead": state.is_dead(),
-        "is_cursed": state.is_cursed(),
+        "is_doubting": state.is_doubting(),
     }
     for entry in HUD_STATS:
         hud[entry["key"]] = getattr(state, entry["stat"], 0)

@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SAVES_DIR = os.path.join(BASE_DIR, "saves")
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "forgotten-among-the-fallen-dev-key")
+app.secret_key = os.environ.get("SECRET_KEY", "the-silent-oath-dev-key")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 
@@ -160,7 +160,7 @@ def choose():
 
     # Handle name input specially
     if data.get("name"):
-        state.name = data["name"].strip() or "the drengr"
+        state.name = data["name"].strip() or "the brother"
         # Use the choice the player actually selected before typing their name
         pending_id = str(data.get("pending_choice_id", "0"))
         scene = SCENES.get(scene_key, {})
@@ -168,7 +168,7 @@ def choose():
         if choices:
             next_key, _ = apply_choice(scene_key, pending_id, state)
         else:
-            next_key = scene.get("next", "battlefield_open")
+            next_key = scene.get("next", "commandery_night")
         state.current_scene = next_key
         _save_state(state)
         return jsonify({"next_scene": next_key, "ok": True})
@@ -214,7 +214,6 @@ def combat_action():
             if combat["enemy"]["hp"] > 0
             else 0
         ),
-        "shards_gained": combat.get("shards_gained", 0),
         "items_gained": combat.get("items_gained", []),
     }
 
@@ -242,8 +241,6 @@ def status():
         {
             "has_save": os.path.exists(os.path.join(SAVES_DIR, "save_0.json")),
             "scene": state.current_scene,
-            "curse": state.curse_stacks,
-            "shards": state.echo_shards,
             "memories": state.memories,
             "inventory": state.inventory,
             "deaths": state.deaths,
@@ -270,7 +267,7 @@ def advance():
 
     if next_key == "__restart__":
         state = PlayerState()
-        next_key = "awakening"
+        next_key = "name_entry"
 
     state.current_scene = next_key
     state.save(0)
@@ -295,21 +292,11 @@ def _advance_after_combat(scene_key: str, combat: dict) -> str:
     """After combat ends, move to the right next scene."""
     # On death: go to the scene BEFORE the combat so player
     # sees the approach again rather than re-entering combat immediately
-    pre_combat = {
-        "combat_gunnar": "the_mound",
-        "combat_draugar_east": "scavenge_east",
-        "combat_fog_sentinel": "fog_sentinel",
-    }
-    # On flee: return to the scene before combat, not always battlefield
-    pre_combat_fled = {
-        "combat_gunnar": "the_mound",
-        "combat_draugar_east": "scavenge_east",
-        "combat_fog_sentinel": "fog_sentinel",
-    }
-    if combat.get("died"):
-        return pre_combat.get(scene_key, "battlefield_open")
-    if combat.get("fled"):
-        return pre_combat_fled.get(scene_key, "battlefield_open")
+    # Populate these as combat scenes are added to the acts.
+    # Key: combat scene key → scene to return to on death/flee.
+    pre_combat: dict[str, str] = {}
+    if combat.get("died") or combat.get("fled"):
+        return pre_combat.get(scene_key, "commandery_night")
     # Victory: advance to scene defined in scene data
     return SCENES[scene_key].get("next", scene_key)
 

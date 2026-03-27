@@ -12,39 +12,30 @@ from content.game_config import STATS, EQUIPMENT, START_SCENE
 
 @dataclass
 class PlayerState:
-    # ── Identity (recovered through play) ────────────────────
-    name: str = "the drengr"
-    clan: str = "unknown"
-    oath: str = "unknown"  # What oath was broken
+    # ── Identity ──────────────────────────────────────────────
+    name: str = "the brother"
 
-    # ── Visible resources ─────────────────────────────────────
-    echo_shards: int = 0
-    curse_stacks: int = 0  # 0–5; world darkens as it rises
+    # ── Core stats (0–100) ────────────────────────────────────
+    # These shape which choices appear and how prose reads.
+    body: int = 50      # physical strength/endurance; < 20 = broken
+    faith: int = 50     # belief; >= 70 = faithful; powers oath abilities
+    resolve: int = 50   # mental fortitude; < 20 = broken
+    doubt: int = 0      # grows during play; destabilises faith; >= 60 = doubting
 
-    # ── Hidden moral stats (0–100) ────────────────────────────
-    # These shape which choices appear and how prose reads
-    honour: int = 50  # affects how others treat you
-    resolve: int = 50  # mental fortitude; low = hallucinations
-    brutality: int = 0  # rises with violent choices
-    mercy: int = 0  # rises with sparing / aiding others
-
-    # ── Combat stats ──────────────────────────────────────────
+    # ── Combat HP ─────────────────────────────────────────────
     health: int = 100
     max_health: int = 100
-    stamina: int = 100
-    wrath: int = 0
-    max_wrath: int = 100
 
     # ── Inventory ─────────────────────────────────────────────
     inventory: list = field(default_factory=list)
     equipped: dict = field(
-        default_factory=lambda: {"weapon": "bare hands", "shield": ""}
+        default_factory=lambda: {"weapon": "unarmed", "shield": ""}
     )
 
     # ── Story flags ───────────────────────────────────────────
     flags: dict = field(default_factory=dict)
 
-    # ── Memory fragments recovered ────────────────────────────
+    # ── Memory fragments ──────────────────────────────────────
     memories: list = field(default_factory=list)
 
     # ── World state ───────────────────────────────────────────
@@ -53,17 +44,17 @@ class PlayerState:
     deaths: int = 0
 
     # ── Derived properties ────────────────────────────────────
-    def is_cursed(self) -> bool:
-        return self.curse_stacks >= STATS["curse_stacks"]["threshold"]
-
     def is_broken(self) -> bool:
-        return self.resolve < STATS["resolve"]["threshold"]
+        return (
+            self.body < STATS["body"]["threshold"]
+            or self.resolve < STATS["resolve"]["threshold"]
+        )
 
-    def is_honoured(self) -> bool:
-        return self.honour >= STATS["honour"]["threshold"]
+    def is_faithful(self) -> bool:
+        return self.faith >= STATS["faith"]["threshold"]
 
-    def is_brutal(self) -> bool:
-        return self.brutality >= STATS["brutality"]["threshold"]
+    def is_doubting(self) -> bool:
+        return self.doubt >= STATS["doubt"]["threshold"]
 
     def has_memory(self, key: str) -> bool:
         return key in self.memories

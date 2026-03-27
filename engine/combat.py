@@ -1,8 +1,7 @@
 # ============================================================
-#  engine/combat.py
-#  Combat engine.
+#  engine/combat.py — Oath & Judgment
+#  Combat is physical, mental, and spiritual simultaneously.
 #  Returns structured dicts instead of printing to terminal.
-#  All prose, choices, and outcomes go through JSON to the UI.
 # ============================================================
 import random
 from engine.state import PlayerState
@@ -32,7 +31,7 @@ def damage_word(dmg):
         return "a serious wound"
     if dmg <= 30:
         return "a grievous blow"
-    return "something that would kill a living man"
+    return "something that would fell a lesser man"
 
 
 # ── Combat state lives in Flask session ───────────────────────
@@ -43,22 +42,19 @@ def start_combat(
     enemy_key: str, player: PlayerState, variant: str | None = None
 ) -> dict:
     e = dict(ENEMIES[enemy_key])
-    # Merge variant overrides (hp, damage, accuracy, weapon, etc.)
     if variant:
         e.update(ENEMIES[enemy_key].get("variants", {}).get(variant, {}))
     e["current_hp"] = e["hp"]
     e["key"] = enemy_key
     e["effects"] = {}
-    # Apply curse scaling
-    scale = 1.0 + player.curse_stacks * 0.06
-    e["damage"] = (int(e["damage"][0] * scale), int(e["damage"][1] * scale))
+    if e.get("phases"):
+        e["current_phase"] = 1
     return {
         "enemy": e,
         "log": [f"You face {e['name']}."],
         "over": False,
         "won": False,
         "fled": False,
-        "shards_gained": 0,
         "items_gained": [],
         "player_effects": {},
     }
@@ -67,17 +63,24 @@ def start_combat(
 def get_player_actions(combat_state: dict, player: PlayerState) -> list:
     e = combat_state["enemy"]
     actions = [
-        {"id": "light", "label": "Strike — a fast, measured blow"},
-        {"id": "heavy", "label": "Commit — a heavy, reckless strike"},
-        {"id": "parry", "label": "Wait for the opening — attempt a parry"},
+        {"id": "strike", "label": "Strike — drive forward with your blade"},
+        {"id": "endure", "label": "Endure — hold your ground and weather the blow"},
+        {"id": "invoke_oath", "label": "Invoke your Oath — call on your faith"},
     ]
     if e.get("shield") and not e.get("flanked"):
-        actions.append({"id": "flank", "label": "Circle wide — find the flank"})
-    if player.echo_shards >= 100:
-        actions.append({"id": "runic", "label": "Spend 100 shards — Runic Burst"})
-    if not e.get("phases") and e["current_hp"] < e["hp"] * 0.30 and player.honour >= 40:
-        actions.append({"id": "mercy", "label": "Lower your weapon"})
-    actions.append({"id": "flee", "label": "Retreat into the fog"})
+        actions.append(
+            {"id": "flank", "label": "Flank — circle wide past the shield"}
+        )
+    if player.doubt >= 40:
+        actions.append(
+            {
+                "id": "doubt_surge",
+                "label": "Yield to Doubt — let the darkness move through you",
+            }
+        )
+    if not e.get("phases") and e["current_hp"] < e["hp"] * 0.30:
+        actions.append({"id": "mercy", "label": "Show Mercy — lower your weapon"})
+    actions.append({"id": "flee", "label": "Retreat — fall back while you still can"})
     return actions
 
 
@@ -89,82 +92,80 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
     # ── Player effects tick (at turn start) ───────────────────
     _tick_player_effects(combat_state, player, log)
     if player.is_dead():
-        log.append("You fall.")
-        log.append("When you wake, it will be at the Bone Cairn.")
-        player.deaths += 1
-        player.curse_stacks = min(5, player.curse_stacks + 1)
-        player.echo_shards = player.echo_shards // 4
-        player.health = player.max_health
-        combat_state["over"] = True
-        combat_state["died"] = True
+        _handle_player_death(player, combat_state, log)
         return combat_state
 
+    # ── Endure flag (set last turn) ────────────────────────────
+    enduring = combat_state.pop("enduring", False)
+
     # ── Player action ─────────────────────────────────────────
-    if action_id == "light":
+    if action_id == "strike":
         base = roll_range(8, 18)
-        dmg = _apply_mods(base, player, "light")
+        dmg = _player_damage(base, player)
         _hit_enemy(dmg, e, player, log)
-        player.modify_stat("wrath", 10)
-        combo = player.flags.get("combo", 0) + 1
-        player.set_flag("combo", min(combo, 3))
-        log.append(_light_prose(dmg, e))
+        log.append(_strike_prose(dmg, e))
 
-    elif action_id == "heavy":
-        if chance(0.25):
+    elif action_id == "endure":
+        combat_state["enduring"] = True
+        player.modify_stat("resolve", 5)
+        log.append(
+            "You set your feet and raise your guard. Whatever comes, you will meet it."
+        )
+        log.append("Your resolve steadies.")
+
+    elif action_id == "invoke_oath":
+        # Faith powers the invocation. Low faith risks failure.
+        if player.faith >= 50 or not chance(0.35):
+            base = roll_range(15, 30)
+            if player.faith >= 70:
+                base = roll_range(20, 35)
+            dmg = _player_damage(base, player)
+            _hit_enemy(dmg, e, player, log)
+            player.modify_stat("doubt", -3)
+            log.append(_invoke_prose(dmg, player, e))
+        else:
+            player.modify_stat("resolve", -5)
             log.append(
-                "You overcommit. The blow goes wide and you nearly lose your footing."
+                "You reach for the oath — and find silence. The words do not come."
+            )
+            log.append("The doubt is louder than the prayer.")
+        player.modify_stat("resolve", -3)  # cost of invocation regardless
+
+    elif action_id == "doubt_surge":
+        if player.doubt >= 60:
+            dmg = roll_range(30, 55)
+            player.modify_stat("resolve", -10)
+            log.append(
+                "The doubt does not resist. It opens like a wound and something pours through."
             )
         else:
-            base = roll_range(18, 30)
-            dmg = _apply_mods(base, player, "heavy")
-            _hit_enemy(dmg, e, player, log)
-            player.modify_stat("wrath", 18)
-            log.append(_heavy_prose(dmg, e))
-
-    elif action_id == "parry":
-        if chance(0.45 + player.honour * 0.003):
-            dmg = roll_range(12, 22)
-            _hit_enemy(dmg, e, player, log)
-            player.modify_stat("honour", 2)
-            player.modify_stat("wrath", 25)
+            dmg = roll_range(20, 40)
             log.append(
-                "You read the blow perfectly. Your parry opens a gap — you answer it."
+                "The doubt rises in your chest. You stop fighting it and let it push your arm."
             )
-            log.append(f"{e['name_short']} staggers. Your strike finds bone.")
-        else:
-            dmg = roll_range(*e["damage"]) // 2
-            actual = player.take_damage(dmg)
-            log.append("The parry fails. You mistimed it.")
-            log.append(f"It costs you — {damage_word(actual)}.")
+        _hit_enemy(dmg, e, player, log)
+        player.modify_stat("doubt", 8)
+        log.append(f"The blow lands. {e['name_short']} reels.")
 
     elif action_id == "flank":
         e["flanked"] = True
-        log.append("You circle wide. The shield is useless now. Its side is open.")
-
-    elif action_id == "runic":
-        player.echo_shards -= 100
-        dmg = roll_range(35, 50)
-        _hit_enemy(dmg, e, player, log)
-        player.modify_stat("brutality", 5)
-        player.wrath = 0
-        log.append(
-            "The shards burn cold in your fist. The rune ᚠ blooms across your weapon."
-        )
-        log.append(f"The burst hits {e['name_short']} like a memory of fire.")
+        log.append("You circle wide. The shield is no longer between you.")
 
     elif action_id == "mercy":
         e["current_hp"] = 0
-        player.modify_stat("mercy", 10)
-        player.modify_stat("honour", 5)
-        log.append("You lower your weapon. It sinks to the ground. It does not rise.")
+        player.modify_stat("faith", 10)
+        player.modify_stat("doubt", -5)
+        log.append(
+            "You lower your blade. It is a choice. Perhaps the only holy one left to you."
+        )
 
     elif action_id == "flee":
         dmg = roll_range(10, 20)
         player.take_damage(dmg)
-        player.modify_stat("honour", -5)
-        log.append("You run. The thing behind you is slower — but not by much.")
-        log.append("You reach the fog. It doesn't follow into the fog.")
-        log.append(f"You are {damage_word(dmg)} from the retreat.")
+        player.modify_stat("faith", -5)
+        player.modify_stat("resolve", -5)
+        log.append("You fall back. The shame of it follows faster than any soldier.")
+        log.append(f"You escape — at the cost of {damage_word(dmg)}.")
         combat_state["fled"] = True
         combat_state["over"] = True
         return combat_state
@@ -179,10 +180,10 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
     # ── Phase transitions (boss) ──────────────────────────────
     if e.get("phases"):
         ratio = e["current_hp"] / e["hp"]
-        if e["current_phase"] == 1 and ratio <= 0.65:
+        if e.get("current_phase") == 1 and ratio <= 0.65:
             e["current_phase"] = 2
             log.append(e["phrases"].get("phase2", ""))
-        elif e["current_phase"] == 2 and ratio <= 0.30:
+        elif e.get("current_phase") == 2 and ratio <= 0.30:
             e["current_phase"] = 3
             log.append(e["phrases"].get("phase3", ""))
 
@@ -197,24 +198,31 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
 
     # ── Enemy turn ────────────────────────────────────────────
     if not combat_state["over"]:
-        _resolve_enemy_turn(e, player, log, combat_state)
+        _resolve_enemy_turn(e, player, log, combat_state, enduring)
 
-    # Taunt
+    # ── Taunt ─────────────────────────────────────────────────
     if "taunt" in e.get("phrases", {}) and chance(0.35):
         log.append(random.choice(e["phrases"]["taunt"]))
 
-    # Check player death
+    # ── Check player death ────────────────────────────────────
     if player.is_dead():
-        log.append("You fall.")
-        log.append("When you wake, it will be at the Bone Cairn.")
-        player.deaths += 1
-        player.curse_stacks = min(5, player.curse_stacks + 1)
-        player.echo_shards = player.echo_shards // 4
-        player.health = player.max_health
-        combat_state["over"] = True
-        combat_state["died"] = True
+        _handle_player_death(player, combat_state, log)
 
     return combat_state
+
+
+# ── Internal helpers ──────────────────────────────────────────
+
+
+def _handle_player_death(player, combat_state, log):
+    log.append("You fall.")
+    log.append("Darkness. Then cold stone. You are not finished — not yet.")
+    player.deaths += 1
+    player.modify_stat("faith", -5)
+    player.modify_stat("resolve", -5)
+    player.health = player.max_health
+    combat_state["over"] = True
+    combat_state["died"] = True
 
 
 def _tick_player_effects(combat_state, player, log):
@@ -229,7 +237,7 @@ def _tick_player_effects(combat_state, player, log):
             log.append("The bleeding slows.")
 
 
-def _resolve_enemy_turn(e, player, log, combat_state=None):
+def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
     windup = random.choice(e["phrases"]["windup"])
     log.append(windup)
     dmg_range = e["damage"]
@@ -241,27 +249,32 @@ def _resolve_enemy_turn(e, player, log, combat_state=None):
             "defense", 0
         )
         dmg = max(1, dmg - shield_def)
+        if enduring:
+            dmg = dmg // 2
         actual = player.take_damage(dmg)
-        player.modify_stat("wrath", 8)
         log.append(random.choice(e["phrases"]["hit"]))
         log.append(f"— {damage_word(actual)} taken.")
-        # Enemy weapon effect
+        # Special enemy weapon effects
         effect = e.get("weapon", {}).get("effect")
         if effect == "bleeding" and combat_state is not None:
             peff = combat_state.setdefault("player_effects", {})
             if not peff.get("bleeding"):
                 peff["bleeding"] = 3
                 log.append("The wound opens. You are bleeding.")
+        if effect == "fear":
+            player.modify_stat("resolve", -8)
+            log.append("Something in you shrinks back. The resolve costs more here.")
+        if effect == "corruption":
+            player.modify_stat("doubt", 6)
+            log.append(
+                "The doubt is louder after that. The blow carries something with it."
+            )
     else:
         log.append(random.choice(e["phrases"]["miss"]))
 
 
 def _resolve_enemy_death(e, player, combat_state, log):
     log.append(random.choice(e["phrases"]["death"]))
-    lo, hi = e["shards"]
-    shards = roll_range(lo, hi)
-    player.echo_shards += shards
-    combat_state["shards_gained"] = shards
     for item, prob in e.get("loot", []):
         if chance(prob):
             player.add_item(item)
@@ -273,6 +286,9 @@ def _resolve_enemy_death(e, player, combat_state, log):
         key, label = on_death["memory"]
         player.add_memory(key, label)
     player.set_flag(f"defeated_{e['key']}", True)
+    # Holding the oath through violence costs something too
+    player.modify_stat("faith", 3)
+    player.modify_stat("doubt", 2)
 
 
 def _tick_effects(e, log):
@@ -289,56 +305,43 @@ def _tick_effects(e, log):
 
 def _hit_enemy(dmg, e, player=None, log=None):
     e["current_hp"] = max(0, e["current_hp"] - dmg)
-    # Weapon effect — apply on hit if weapon carries one
     if player is not None and e["current_hp"] > 0:
-        weapon = player.equipped.get("weapon", "bare hands")
+        weapon = player.equipped.get("weapon", "unarmed")
         effect = EQUIPMENT.get(weapon, {}).get("effect")
         if effect == "bleeding" and not e.get("effects", {}).get("bleeding"):
             e.setdefault("effects", {})["bleeding"] = 3
             if log is not None:
                 log.append("The wound opens. Dark blood begins to run.")
-    # Drain mechanic — sentinel heals from player wrath
-    if e.get("drain") and player is not None:
-        drain = min(e["drain_amount"], getattr(player, "wrath", 0))
-        if drain > 0:
-            player.wrath = max(0, player.wrath - drain)
-            heal = min(drain, e["hp"] - e["current_hp"])
-            e["current_hp"] = min(e["hp"], e["current_hp"] + heal)
-            if log is not None:
-                log.append(random.choice(e["phrases"]["drain_trigger"]))
 
 
-def _apply_mods(base, player, kind):
+def _player_damage(base, player):
     mod = base
-    mod += EQUIPMENT.get(player.equipped.get("weapon", "bare hands"), {}).get(
+    mod += EQUIPMENT.get(player.equipped.get("weapon", "unarmed"), {}).get(
         "damage_bonus", 0
     )
-    if player.brutality > 50:
-        mod += roll(6)
-    if player.honour > 70 and kind == "light":
+    if player.body > 60:
         mod += roll(4)
-    if player.is_cursed():
+    if player.body < 20:
         mod -= roll(4)
     return max(1, mod)
 
 
-def _light_prose(dmg, e):
+def _strike_prose(dmg, e):
     name = e["name_short"]
     if dmg < 10:
-        return f"Your blow glances off {name}. It slows, but does not stop."
+        return f"Your blow glances off {name}. You leave a mark, nothing more."
     if dmg < 20:
         return f"The strike lands clean. {name} staggers."
-    return f"You drive the blow deep. {name} reels."
+    return f"You drive the blow home. {name} reels."
 
 
-def _heavy_prose(dmg, e):
+def _invoke_prose(dmg, player, e):
     name = e["name_short"]
-    if dmg < 15:
-        return "A solid hit — the weight tells, even if the precision does not."
-    if dmg < 25:
+    if player.faith >= 70:
         return (
-            f"{name} is staggered by the force. You feel the impact in your shoulders."
+            f"The oath holds. The blow falls with the weight of something older than the order. "
+            f"{name} is driven back."
         )
-    return (
-        f"The heavy strike connects. {name} is driven back — something in it is broken."
-    )
+    if dmg >= 25:
+        return f"The words of the oath are rough in your throat — but they land. {name} recoils."
+    return "The invocation is uncertain. But the blow finds its mark."
