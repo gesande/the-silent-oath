@@ -1,25 +1,50 @@
 # ============================================================
-#  content/enemies.py
-#  Enemy definitions consumed by the combat engine.
-#  Add new enemies here — no engine changes needed.
+#  content/enemies.py — Enemy Design Framework
 #
-#  Required fields:
-#    name, name_short, hp, damage (tuple), accuracy, phrases
-#  Optional:
-#    shield, loot, on_death, weapon (effect), variants, phases
+#  Every enemy has five layers:
+#
+#  1. Identity   — who/what this is (not just a type, a person or force)
+#  2. Stats      — threat (1–5), hp, damage, accuracy, faith, resolve
+#  3. Behavior   — aggressive | testing | passive | manipulative
+#  4. Special    — one mechanic that changes the rules of the fight
+#  5. Resolution — kill / free / understand
+#
+#  Add new enemies here — no engine changes needed
+#  unless a new special.id is introduced.
 # ============================================================
 
 ENEMIES = {
     # ── Royal sergeant ────────────────────────────────────────
-    # A soldier of the French crown. Disciplined, armoured.
-    # Sent to enforce Philip IV's arrest of the Templars.
+    # Identity: sold soldier — obedient to the crown, not to conscience.
+    # He is not evil. He is following orders from a king who needs him to be.
     "royal_sergeant": {
         "name": "a royal sergeant",
         "name_short": "the sergeant",
+        "identity": "sold soldier — obedient to the crown, not to conscience",
+        # Stats
+        "threat": 2,
         "hp": 80,
         "damage": (10, 18),
         "accuracy": 0.65,
-        "shield": False,
+        "faith": 15,    # serves crown, not God — invoke_oath hits harder
+        "resolve": 65,  # disciplined; hard to rattle
+        # Behavior: presses forward, no hesitation, no mercy
+        "behavior": "aggressive",
+        # Special: reads repeated patterns — same action twice and he's ready
+        "special": {
+            "id": "trained_guard",
+            "label": "Trained Guard",
+            "desc": (
+                "If the player uses the same action two turns in a row, "
+                "the sergeant reads it. His next attack hits with +0.20 accuracy."
+            ),
+        },
+        # Resolution
+        "resolution": {
+            "kill": True,
+            "free": True,      # disarm and release — he'll leave
+            "understand": True, # he's following orders; that's human
+        },
         "loot": [],
         "phrases": {
             "windup": [
@@ -47,20 +72,46 @@ ENEMIES = {
                 "\"Your order is finished, Templar. This is mercy.\"",
                 "\"There are more of us outside.\"",
             ],
+            "release": [
+                "He holds your gaze for a moment. Then he turns and walks.",
+                "He sheathes nothing — he drops it. Then he goes.",
+            ],
         },
     },
 
     # ── Inquisitor's agent ────────────────────────────────────
-    # Not a warrior but dangerous in a different way.
-    # His presence erodes resolve and feeds doubt.
+    # Identity: living doubt — weaponises uncertainty as effectively as steel.
+    # He does not fight you. He interrogates you while you fight him.
+    # The horror: he genuinely believes he serves God.
     "inquisitors_agent": {
         "name": "an agent of the Inquisition",
         "name_short": "the agent",
+        "identity": "living doubt — he weaponises uncertainty as effectively as steel",
+        # Stats
+        "threat": 2,
         "hp": 55,
         "damage": (6, 14),
         "accuracy": 0.55,
-        "shield": False,
+        "faith": 70,    # genuinely believes — invoke_oath is weaker against him
+        "resolve": 30,  # not a fighter; breaks under real pressure
+        # Behavior: exploits hesitation; psychological before physical
+        "behavior": "manipulative",
         "weapon": {"effect": "fear"},
+        # Special: silence is losing — every turn the player doesn't attack, Doubt grows
+        "special": {
+            "id": "interrogator",
+            "label": "Interrogator",
+            "desc": (
+                "Every turn the player defends or hesitates without dealing damage, "
+                "Doubt increases by 4. Silence is not safety."
+            ),
+        },
+        # Resolution
+        "resolution": {
+            "kill": True,
+            "free": False,      # releasing him brings more
+            "understand": True, # the horror is he might be right about God
+        },
         "loot": [],
         "phrases": {
             "windup": [
@@ -89,21 +140,50 @@ ENEMIES = {
                 "\"Every brother we've questioned has said the same: they didn't know. "
                 "Are you different?\"",
             ],
+            "manipulate": [
+                "\"What do you protect? Do you even know anymore?\"",
+                "\"The order fell in a single night. What does that tell you about God's favour?\"",
+                "\"You hesitate. That is already an answer.\"",
+                "He says nothing. Just watches. The silence is deliberate.",
+            ],
         },
     },
 
     # ── Fallen brother ────────────────────────────────────────
-    # A Templar who broke under interrogation and now serves the crown.
-    # Boss. Has phases. His corruption bleeds into the player.
+    # Identity: the broken oath made flesh — what the player could become.
+    # He broke under interrogation. Now he serves the crown.
+    # He is not a villain. He is a mirror.
     "fallen_brother": {
         "name": "Brother Arnaud — the broken oath",
         "name_short": "Arnaud",
+        "identity": "the broken oath made flesh — what the player could become",
+        # Stats
+        "threat": 4,
         "hp": 140,
         "damage": (12, 22),
         "accuracy": 0.70,
-        "shield": False,
+        "faith": 35,    # broken but not gone; invoke_oath still costs something
+        "resolve": 80,  # endures despite everything
+        # Behavior: reads the player; adapts; has nothing left to hold back
+        "behavior": "testing",
         "weapon": {"effect": "corruption"},
         "phases": True,
+        # Special: broken mirror — when player invokes their oath, Arnaud echoes it broken
+        "special": {
+            "id": "broken_mirror",
+            "label": "Broken Mirror",
+            "desc": (
+                "When the player invokes their Oath, Arnaud echoes it — broken. "
+                "The invocation still works, but Doubt increases by 5 "
+                "and the player hears their oath in his voice."
+            ),
+        },
+        # Resolution
+        "resolution": {
+            "kill": True,
+            "free": True,      # mercy; he accepts it, may even want it
+            "understand": True, # his story is the player's possible future
+        },
         "loot": [("templar_sword", 1.0)],
         "on_death": {
             "flag": "arnaud_defeated",
@@ -133,11 +213,20 @@ ENEMIES = {
                 "He looks at you at the end with something like relief. "
                 "You don't know what to do with that.",
             ],
+            "release": [
+                "He does not thank you. He just goes. "
+                "You think he was looking for permission.",
+                "\"I didn't think you'd—\" He stops. He goes.",
+            ],
             "taunt": [
                 "\"They broke me in three days. How long do you think you'll last?\"",
                 "\"I said the words they wanted. Just words. "
                 "What did it cost? What did it change?\"",
                 "\"You still believe. I can see it. It must be very heavy.\"",
+            ],
+            "testing": [
+                "He adjusts. He saw that coming.",
+                "\"Same move. You did that last time too.\"",
             ],
             "phase2": (
                 "Arnaud stops. He looks at you — really looks. "
