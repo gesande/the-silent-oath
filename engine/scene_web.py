@@ -37,7 +37,7 @@ def render_scene(scene_key: str, state: PlayerState) -> dict:
     scene = SCENES[scene_key]
     output = {
         "scene_key": scene_key,
-        "art_key": scene.get("art", "battlefield"),
+        "art_key": scene.get("art", "commandery"),
         "header": scene.get("header"),
         "paragraphs": [],  # rendered narrative text blocks
         "memories": [],  # any memories recovered this scene

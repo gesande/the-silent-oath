@@ -4,13 +4,10 @@
 // ============================================================
 
 const ART_BASE = "/static/svg/";
-const ART_FALLBACK = "battlefield";
+const ART_FALLBACK = "commandery";
 
 // Art key aliases — use a different image file but trigger different music
-const ART_ALIASES = {
-  name_entry: "battlefield",
-  gunnar_combat: "gunnar",
-};
+const ART_ALIASES = {};
 
 // ── DOM refs ──────────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);

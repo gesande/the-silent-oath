@@ -11,159 +11,113 @@ Map new music tracks in `static/js/audio.js` → `SCENE_MUSIC` dict using the ar
 
 ## Style reference (add to all music prompts)
 
-Dark Norse ambient. Slow tempo, sparse arrangement.
-Instruments: tagelharpa (bowed lyre), kravik lyre, frame drum, bone flute,
-low drone strings, distant horn, breath texture.
-Muted, desaturated sound — no reverb excess, no fantasy epic swells.
-Think: death, fog, unfinished oaths. Not heroic. Not peaceful.
+Dark medieval Templar ambient. Slow tempo, sparse arrangement.
+Instruments: solo lute or oud, bowed psaltery, low drone strings, church bell
+(distant, sparse), plainchant breath texture (no words), stone resonance.
+Muted, desaturated sound — no reverb excess, no epic orchestral swells.
+Think: vaulted stone, candlelight, an oath that cannot be unspoken.
+Not heroic. Not peaceful. Sacred and heavy.
 
 ---
 
-## Act I — existing tracks
+## Act I — The Vow
 
 | File | Art key | Mood |
 |------|---------|------|
-| `ambient_title.mp3` | `title` | Slow dark Norse ambient, builds slowly |
-| `ambient_cairn.mp3` | `cairn`, `name_entry` | Ethereal, rune tones, sparse |
-| `ambient_battlefield.mp3` | `battlefield`, `scavenge` | Wind, distant horn, no melody |
-| `ambient_leif.mp3` | `leif` | Sorrowful strings, dying soldier |
-| `ambient_forge.mp3` | `longhouse` | Dying embers, low drone, sacred |
-| `ambient_mound.mp3` | `mound`, `gunnar` | Oppressive bass drone, ominous |
-| `ambient_void.mp3` | `act_break` | Near silence, one distant horn note |
-| `combat_draugar.mp3` | `combat_draugar` | Urgent percussion, no melody |
-| `combat_boss.mp3` | `gunnar_combat` | War drums, heavy, relentless |
+| `title.mp3` | `title` | Slow dark medieval ambient, builds slowly — **exists** |
 
-### Suno/Udio prompts — Act I
+### Tracks to generate — Act I
 
-- **ambient_title**: "dark norse atmospheric intro, slow building tension, distant
-  single horn note fading in, deep silence between sounds, title screen atmosphere,
-  no melody, no percussion, 3 minutes loop"
-- **ambient_leif**: "slow sorrowful norse ambient, single cello or low strings,
-  sparse melody, dying soldier atmosphere, melancholic but not hopeless,
-  quiet and intimate, no percussion, 3 minutes loop"
-- **ambient_battlefield**: "dark norse ambient, wind howling, distant war horn,
-  slow deep drums fading in and out, no melody, 3 minutes, loop"
-- **ambient_forge**: "dark medieval blacksmith ambient, dying forge embers crackling,
-  low resonant drone, occasional distant hammer strike on metal, warm but desolate,
-  sacred atmosphere, no melody, 3 minutes loop"
-- **ambient_cairn**: "ethereal norse ambient, singing bowls, rune tones,
-  sparse, sacred feeling, very quiet, 3 minutes loop"
-- **ambient_mound**: "oppressive dark norse drone, deep bass rumble, burial mound
-  atmosphere, silence punctuated by distant wind, ominous, no melody, no percussion,
-  unsettling, 3 minutes loop"
-- **ambient_void**: "near silence dark ambient, single distant viking horn note,
-  vast empty space, cold wind, between worlds liminal atmosphere, very minimal,
-  90 seconds loop"
-- **combat_draugar**: "viking battle percussion, urgent rhythmic drums, no
-  melody, intense, dark, 90 seconds loop"
-- **combat_boss**: "epic dark norse boss fight music, heavy war drums, chanting,
-  ominous, relentless tempo, 2 minutes loop"
-
----
-
-## Act II — tracks to generate
-
----
-
-### Track 1 — `ambient_fog.mp3`
-**Art key:** `fog_road`
-**Used in:** fog_road, fog_the_held, fog_held_other, fog_held_release, fog_held_after, fog_sentinel_after
-
-**Mood:** Something is alive in the fog. Not hostile — aware.
-You cannot see the path ahead. You cannot see what is following you.
-The air is wrong in a way you cannot name.
+#### `commandery.mp3`
+**Art key:** `commandery`, `commandery_night`
+**Mood:** A commandery that knows what is coming. Too quiet for the hour.
+The torches burn low. Something beneath has been disturbed.
 
 **Prompt:**
 ```
-Dark Norse ambient drone. Tagelharpa bowed slowly, single note held and
-released. Frame drum at 40 BPM, barely audible. Bone flute enters once
-then disappears. Low vocal texture — not words, not song — breath shapes
-in cold air. Field recording: wind over frozen ground, distant water.
-No melody. No resolution. Fog. Seamlessly loopable.
-Instrumental, no lyrics.
-```
-
-**Alternative (shorter Suno/Udio prompt):**
-```
-slow rhythmic breathing sound as ambient music, warm but deeply wrong
-temperature, no instruments, fog atmosphere, purgatorial, something
-inhuman exhaling slowly, liminal dread, 3 minutes loop
-```
-
----
-
-### Track 2 — `combat_sentinel.mp3`
-**Art key:** `fog_sentinel`
-**Used in:** combat_fog_sentinel, fog_sentinel_wait
-
-**Mood:** Fighting something that grows stronger the harder you strike.
-Not a battle to win with force — the music should feel like it is
-absorbing the player's effort. Draining, not escalating.
-
-**Prompt:**
-```
-Dark Norse percussive ambient. Dissonant bowed strings that swell when
-struck and slowly deflate. Frame drum pulse, irregular — 60 BPM but
-slightly unsteady, as if breathing. Low drone bass that builds when
-drums accelerate, then releases. No triumphant crescendo. The tension
-never fully resolves — it absorbs. Cold, oppressive, relentless.
+Dark medieval ambient. Single bowed psaltery note held and released.
+Distant church bell, heard once, fading into stone walls.
+Low cello drone beneath. Wind through a courtyard at night.
+Candle-flame texture — present but fragile. The silence of people
+who are not sleeping. No melody. No resolution.
 Seamlessly loopable. Instrumental, no lyrics.
 ```
 
-**Alternative (shorter Suno/Udio prompt):**
+**Short prompt (Suno/Udio):**
 ```
-single sustained low bell tone pulsing slowly, no percussion no melody,
-the bell never fully decays, something absorbing sound, combat
-atmosphere without urgency, 90 seconds loop
-```
-
----
-
-### Track 3 — `ambient_gatehouse.mp3`
-**Art key:** `gatehouse`
-**Used in:** gatehouse_approach, gatehouse_guards and all gatehouse variants, gatehouse_courtyard, gatehouse_wall, gatehouse_inside
-
-**Mood:** Forty warriors frozen mid-step. A moment suspended for decades.
-Not death — something more precise than death. Waiting, without knowing
-they are waiting. The silence of interrupted time.
-
-**Prompt:**
-```
-Norse ambient, stillness. Single tagelharpa note held for eight counts,
-released, silence for four, repeated. Sparse frame drum — one strike
-every twelve beats. Wind ambience through stone. Distant horn, heard
-once, fading. The feeling of a held breath that has lasted forty years.
-No rhythm, no forward motion. Time has stopped here.
-Seamlessly loopable. Instrumental, no lyrics.
-```
-
-**Alternative (shorter Suno/Udio prompt):**
-```
-complete interior silence ambient, single drop of water echoing in stone
-chamber, occasional distant creak of heavy wood, held breath atmosphere,
-warmth without comfort, 3 minutes loop
+dark medieval ambient, stone courtyard at night, single distant church bell,
+bowed strings sustain, candle atmosphere, dread without violence,
+Templar commandery, quiet before arrest, 3 minutes loop
 ```
 
 ---
 
-### Track 4 — `ambient_great_hall.mp3`
-**Art key:** `great_hall`, `odrik_go_forward`
-**Used in:** great_hall_entrance, great_hall_rune_door, all odrik_* scenes, act2_end
-
-**Mood:** An old man and an unfinished rune.
-Forty frozen warriors still seated at the feast tables.
-Something in the walls that has been holding for a long time
-and is beginning, very slowly, to shift.
+#### `chapter_house.mp3`
+**Art key:** `chapter_house`
+**Mood:** The inner circle. Something has been opened that should remain sealed.
+The Grand Master knows. He has not fled.
 
 **Prompt:**
 ```
-Dark Norse chamber ambient. Solo kravik lyre, fingerpicked slowly —
-a pattern that almost resolves but doesn't. Low cello drone beneath.
-Fire ambience, very quiet. Occasional creak of old timber.
-The music should feel inhabited — not empty, not peaceful.
-Someone has been in this room for a very long time.
-Sparse, intimate, heavy with unspoken weight.
+Medieval sacred ambient, descending. Solo oud or lute, fingerpicked
+very slowly — a phrase that does not resolve. Low drone strings.
+Plainchant breath texture — exhale only, no pitch. Stone resonance.
+The feeling of a decision already made. Sparse, interior, final.
 Seamlessly loopable. Instrumental, no lyrics.
+```
+
+**Short prompt (Suno/Udio):**
+```
+sacred medieval ambient, single lute phrase repeating without resolution,
+Templar inner sanctum, low bass drone, plainchant breath, no percussion,
+weight of unspoken knowledge, 3 minutes loop
+```
+
+---
+
+#### `crypta.mp3`
+**Art key:** `crypta`
+**Mood:** Beneath the commandery. What the Order has guarded for centuries.
+Not a tomb — something alive. Different interpretations are all true.
+
+**Prompt:**
+```
+Dark sacred ambient. Deep stone resonance — the sound of a very large
+enclosed space breathing. Single bowed string, barely audible, one note
+held for the entire piece. Water drip, very distant. No percussion.
+No melody. The sound of something that has been here longer than the Order.
+Unsettling, not violent. Liminal. Sacred.
+Seamlessly loopable. Instrumental, no lyrics.
+```
+
+**Short prompt (Suno/Udio):**
+```
+underground sacred chamber ambient, deep stone resonance, single drone,
+water echo, something ancient and alive, Templar secret, no melody,
+liminal dread, 4 minutes loop
+```
+
+---
+
+#### `combat_templar.mp3`
+**Art key:** `combat` (general combat fallback)
+**Mood:** Oath & Judgment — physical and spiritual simultaneously.
+Not a triumph. A test.
+
+**Prompt:**
+```
+Medieval combat ambient. Irregular frame drum, 70 BPM, occasionally
+silent. Dissonant bowed strings. Heavy breath texture. No triumphant
+crescendo — the tension does not release, it shifts. Cold, interior,
+relentless. The sound of violence committed in a place of God.
+Seamlessly loopable. Instrumental, no lyrics.
+```
+
+**Short prompt (Suno/Udio):**
+```
+dark medieval combat music, frame drum irregular rhythm, dissonant
+bowed strings, no heroism, Templar violence sacred space atmosphere,
+heavy physical presence, 90 seconds loop
 ```
 
 ---
@@ -176,21 +130,19 @@ Seamlessly loopable. Instrumental, no lyrics.
 | `sfx_confirm.ogg` | Click a choice |
 | `sfx_memory.ogg` | Memory fragment recovered |
 | `sfx_death.ogg` | Player falls in combat |
-| `sfx_shards.ogg` | Echo shards gained |
 | `sfx_hit.ogg` | Combat hit lands |
 | `sfx_miss.ogg` | Combat attack misses |
 | `sfx_parry.ogg` | Parry succeeds |
 
 ### Suno/Udio prompts — SFX
 
-- **sfx_choice**: "soft parchment rustling, quiet, subtle, ui hover sound"
-- **sfx_confirm**: "heavy iron click, satisfying, medieval, selection confirm sound"
-- **sfx_memory**: "ethereal frost bell chime, single note, reverb, memory recovered"
-- **sfx_death**: "deep resonant iron toll, single heavy bell, slow decay, death knell"
-- **sfx_shards**: "crystalline ice shards clinking, bright, magical, short"
+- **sfx_choice**: "parchment unfolding, soft, quiet, medieval, ui hover sound"
+- **sfx_confirm**: "heavy iron latch clicking shut, satisfying, medieval stone, selection confirm"
+- **sfx_memory**: "single resonant church bell, very quiet, reverb decay, sacred, memory recovered"
+- **sfx_death**: "deep iron toll, single heavy bell, slow long decay, death knell, solemn"
 - **sfx_hit**: "iron on iron impact, heavy, combat hit, short sharp"
 - **sfx_miss**: "weapon swoosh through air, short, combat miss"
-- **sfx_parry**: "ringing metal clash, iron parry, short bright tone, success sound"
+- **sfx_parry**: "ringing metal clash, iron parry, short bright tone, success"
 
 ---
 

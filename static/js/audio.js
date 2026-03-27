@@ -6,24 +6,7 @@
 const SoundEngine = (() => {
   const SCENE_MUSIC = {
     title: "title",
-    name_entry: "ambient_battlefield",
-    battlefield: "ambient_battlefield",
-    leif: "ambient_leif",
-    longhouse: "ambient_forge",
-    cairn: "ambient_cairn",
-    mound: "ambient_mound",
-    gunnar: "combat_gunnar",
-    scavenge: "ambient_battlefield",
-    combat_draugar: "combat_draugar",
-    act_break: "ambient_void",
-    // Act II — The Stirring Beneath
-    forest: "forest",
-    hermit_oak: "hermit_oak",
-    fog_road: "ambient_fog",
-    fog_sentinel: "combat_sentinel",
-    gatehouse: "ambient_gatehouse",
-    great_hall: "ambient_greathall",
-    odrik_go_forward: "ambient_greathall",
+    // Act I — The Vow (add entries as scenes and tracks are created)
   };
 
   const SFX_MAP = {

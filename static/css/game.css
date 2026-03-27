@@ -919,25 +919,12 @@ body {
   }
 }
 
-.enter-runes {
-  font-family: "Cinzel", serif;
-  font-size: clamp(14px, 2vw, 20px);
-  letter-spacing: 0.45em;
-  color: var(--crimson-bright);
-  margin-bottom: 1.5rem;
-  opacity: 0.6;
-  text-shadow: 0 0 20px rgba(192, 40, 40, 0.4);
-}
-
-.enter-text {
-  font-family: "Cinzel Decorative", serif;
-  font-size: clamp(22px, 3.8vw, 46px);
-  letter-spacing: 0.18em;
-  color: var(--parchment);
-  margin-bottom: 0.6rem;
-  text-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.95),
-    0 0 40px rgba(196, 149, 42, 0.2);
+.enter-icon {
+  width: clamp(80px, 14vw, 160px);
+  height: auto;
+  margin-bottom: 1.8rem;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 24px rgba(196, 149, 42, 0.35));
 }
 
 .enter-sub {

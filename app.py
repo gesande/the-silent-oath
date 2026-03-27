@@ -261,7 +261,7 @@ def advance():
     # __scene_next__ means: look up the current scene's next key
     if next_key == "__scene_next__":
         scene_key = data.get("scene_key") or state.current_scene
-        next_key = SCENES.get(scene_key, {}).get("next", "battlefield_open")
+        next_key = SCENES.get(scene_key, {}).get("next", "commandery_night")
 
     if next_key in ("__save_quit__", "end", "__end__"):
         state.save(0)
