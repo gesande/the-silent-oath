@@ -78,6 +78,31 @@ Built on top of the forgotten-among-the-fallen engine (Flask/Python + vanilla JS
 **Rewrite:**
 - `engine/combat.py` — entirely new Oath & Judgment mechanics
 
+## How It Is Experienced In-Game
+
+**Act I — The Sacred:**
+- Feels holy
+- Warm light at the edges of perception
+- A whisper that seems to *understand* you
+- Faith abilities work cleanly — prayers answered, resolve holds
+
+**Act II — The Fracture:**
+- Contradictions surface
+- Prayers no longer feel right — something is off in the silence after
+- Faith abilities become unstable: sometimes stronger, sometimes wrong
+- Doubt rises not from weakness but from *paying attention*
+
+**Act III — The Choice:**
+- No monster
+- No boss
+- Only a door, and a question:
+
+> Do you want to know?
+
+The player chooses. Both paths are valid. Neither is safe.
+
+---
+
 ## Open Questions
 
 1. Where does Act I begin? (Specific location — fortress, ship, Paris dungeon?)
