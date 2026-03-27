@@ -12,9 +12,22 @@ The Templars are not protecting the world. They are keeping something terrible l
 
 ## The Secret
 
-An ancient, divine power beneath Jerusalem, Europe, and the northern wastes. Its nature is never explicitly revealed — different brothers believe different things (the Ark, the Holy Grail, something else). Ambiguity is intentional. The player becomes the interpreter.
+> "Voima ei ole voima — se on totuus, jota ei voi kantaa."
 
-> High Doubt does not reveal the truth — it reveals more possibilities.
+What the Templars guard is not an object or a place. It is **knowledge** — absolute, divine, unbearable.
+
+It appears as a cosmic phenomenon. The player experiences it as supernatural. But what it truly is: a truth so complete that encountering it shatters faith or transforms the person beyond return.
+
+The rituals in Jerusalem, the monasteries in Scotland, the fortresses in Cyprus — they do not keep the power contained. They keep **understanding** at a distance.
+
+> Some brothers have seen it. They are not the same.
+
+Its nature is never explicitly named — different brothers believe different things (the Ark, the Grail, something older). Ambiguity is intentional and mechanical: the player becomes the interpreter.
+
+**Why this works with the stat system:**
+- **Doubt** grows as you approach the truth — not because you doubt God, but because you begin to *understand*
+- **Faith** protects — not because it is correct, but because it holds you together
+- At the end, the player may choose to *understand* — and pay the price
 
 ## Core Stats
 
