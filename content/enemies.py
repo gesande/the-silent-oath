@@ -586,4 +586,117 @@ ENEMIES = {
             ],
         },
     },
+
+    # ── Hollow choir ──────────────────────────────────────────
+    # Identity: voices in the dark — the Order's confessions, never spoken aloud.
+    # They accumulated beneath the commandery. They have no body.
+    # They cannot be fought with steel. They can only be met on their own terms.
+    #
+    # The player cannot trust the UI:
+    #   "Confess"  sounds like submission — it is actually offensive.
+    #   "Kneel"    sounds defensive — it costs more than it saves.
+    #   "Silence"  sounds like giving up — it is the weapon.
+    #   "Open"     sounds vulnerable — it is the most dangerous path.
+    #
+    # Variable threat: damage scales with player Doubt.
+    # Path to resolution: four Confess actions → Dissolve the Choir.
+    "hollow_choir": {
+        "name": "the Hollow Choir",
+        "name_short": "the Choir",
+        "identity": "the Order's unspoken confessions — they accumulated until they could speak",
+        # Stats (GDD: Body 0, Faith 4, Resolve 4)
+        "threat": 3,    # scales with player Doubt in practice
+        "hp": 100,
+        "damage": (5, 12),  # base; +player.doubt // 8 per turn
+        "accuracy": 0.75,
+        "faith": 80,    # collective faith — silence/confess bypass it
+        "resolve": 80,
+        # Behavior: entirely psychological — no physical form
+        "behavior": "manipulative",
+        # Special: choir_distortion
+        #   Replaces ALL standard actions with choir vocabulary.
+        #   confess: truth damages the choir (doubt -5, faith +3, resolve -5)
+        #   kneel:   submission — choir pauses but doubt +10, resolve -8
+        #   silence: hold the oath — faith attack, doubt -8
+        #   open:    let them through — massive damage, massive self-cost
+        #   After 4 confessions: dissolve_choir action appears
+        "special": {
+            "id": "choir_distortion",
+            "label": "Choir Distortion",
+            "desc": (
+                "Replaces standard actions entirely. "
+                "'Confess' is offensive. 'Kneel' is costly submission. "
+                "'Silence' is the strongest weapon. 'Open' is extreme. "
+                "Enemy damage scales with player Doubt. "
+                "Four confessions unlock dissolve_choir."
+            ),
+        },
+        # Moral resolution
+        "resolution": {
+            "kill": False,    # voices cannot be killed
+            "free": False,
+            "understand": True,  # dissolve them by naming what they are
+        },
+        "loot": [],
+        "on_death": {
+            "flag": "choir_silenced",
+            "memory": ("hollow_choir", "The Hollow Choir"),
+        },
+        "phrases": {
+            "windup": [],   # never physically attacks
+            "hit": [],
+            "miss": [],
+            "choir_attack": [
+                "The voices press in from every direction.",
+                "They know your name. They know everything you haven't said.",
+                "They do not threaten. They simply remind.",
+                "The doubt they carry is yours. They are giving it back.",
+            ],
+            "confess_recoil": [
+                "The truth pushes them back. They were not expecting that.",
+                "A voice goes quiet. Briefly.",
+                "They do not like being answered.",
+            ],
+            "kneel_pleased": [
+                "The choir stills. It sounds almost content.",
+                "They accept the gesture. They want more of it.",
+                "A silence — but the wrong kind.",
+            ],
+            "silence_lands": [
+                "The held oath cuts through the noise.",
+                "They recoil from something they recognise.",
+                "Silence, here, is a weapon.",
+            ],
+            "open_consequence": [
+                "They pour through you — and take damage doing it.",
+                "The opening goes both ways.",
+                "You let them in. You also let them out.",
+            ],
+            "near_dissolution": [
+                "Some of the voices are gone. The ones that remain are louder.",
+                "They are fewer now. The silence between them is worse.",
+            ],
+            "death": [
+                "They do not end so much as stop. "
+                "The confessions they carried go nowhere. That is its own horror.",
+                "The voices thin. Then there is just the dark, which is always there.",
+                "They were always going to run out of words.",
+            ],
+            "dissolve": (
+                "You name them. One by one. "
+                "Not what they did — what they were afraid of. "
+                "Each name is a silence. "
+                "By the end, there is no one left to hear you."
+            ),
+            "paused": [
+                "The choir holds. It is watching.",
+                "A brief silence — genuinely unsettling in its own way.",
+            ],
+            "taunt": [
+                "They do not taunt. They recite.",
+                "\"You knew,\" they say. All of them. At once.",
+                "\"Why didn't you speak?\" The question has no single voice.",
+            ],
+        },
+    },
 }

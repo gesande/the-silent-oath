@@ -89,7 +89,25 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
     e = combat_state["enemy"]
     resolution = e.get("resolution", {})
     hp_ratio = e["current_hp"] / e["hp"]
+    special_id = e.get("special", {}).get("id")
 
+    # ── Choir distortion: replace entire action list ───────────
+    if special_id == "choir_distortion":
+        actions = [
+            {"id": "confess",  "label": "Confess — speak a truth into the dark"},
+            {"id": "kneel",    "label": "Kneel — submit to the voices"},
+            {"id": "silence",  "label": "Silence — hold the oath against the noise"},
+            {"id": "open",     "label": "Open — let the voices through"},
+        ]
+        if combat_state.get("confessions_made", 0) >= 4:
+            actions.append(
+                {"id": "dissolve_choir",
+                 "label": "Name them — call each voice by its truth"}
+            )
+        actions.append({"id": "flee", "label": "Seal it — leave before it seals you"})
+        return actions
+
+    # ── Standard action list ───────────────────────────────────
     actions = [
         {"id": "strike", "label": "Strike — drive forward with your blade"},
         {"id": "endure", "label": "Endure — hold your ground and weather the blow"},
@@ -112,7 +130,7 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
             {"id": "destroy_relic", "label": "Destroy the Relic — shatter what binds it"}
         )
     # False saint bargain actions
-    if e.get("special", {}).get("id") == "false_sanctity":
+    if special_id == "false_sanctity":
         actions.append(
             {"id": "accept_bargain", "label": "Accept — take what it offers"}
         )
@@ -239,6 +257,63 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         player.modify_stat("faith", -20)
         player.modify_stat("doubt", 10)
         log.append(e["phrases"].get("relic_destroyed", "The relic shatters."))
+
+    # ── Choir actions (choir_distortion special) ──────────────
+    elif action_id == "confess":
+        # Truth is offensive against voices in the dark
+        dmg = roll_range(12, 22)
+        _hit_enemy(dmg, e, player, log, bypass_relic=True)
+        player.modify_stat("faith", 3)
+        player.modify_stat("doubt", -5)
+        player.modify_stat("resolve", -5)
+        combat_state["confessions_made"] = combat_state.get("confessions_made", 0) + 1
+        log.append(
+            random.choice(e["phrases"].get("confess_recoil", ["The truth pushes them back."]))
+        )
+        dealt_damage = True
+
+    elif action_id == "kneel":
+        # Submit — choir pauses but doubt and resolve cost is heavy
+        combat_state["choir_paused"] = True
+        player.modify_stat("doubt", 10)
+        player.modify_stat("resolve", -8)
+        log.append(
+            random.choice(e["phrases"].get("kneel_pleased", ["The choir stills."]))
+        )
+
+    elif action_id == "silence":
+        # Hold the oath — faith attack, bypasses choir's faith resistance
+        base = roll_range(15, 25)
+        dmg = _player_damage(base, player, e)
+        _hit_enemy(dmg, e, player, log, bypass_relic=True)
+        player.modify_stat("doubt", -8)
+        player.modify_stat("resolve", -5)
+        log.append(
+            random.choice(e["phrases"].get("silence_lands", ["The held oath cuts through."]))
+        )
+        dealt_damage = True
+
+    elif action_id == "open":
+        # Let them through — massive damage, massive self-cost
+        dmg = roll_range(30, 50)
+        _hit_enemy(dmg, e, player, log)
+        player.modify_stat("resolve", -20)
+        player.modify_stat("doubt", 20)
+        log.append(
+            random.choice(
+                e["phrases"].get("open_consequence", ["The opening goes both ways."])
+            )
+        )
+        dealt_damage = True
+
+    elif action_id == "dissolve_choir":
+        # Name each voice — understand resolution; choir dissolves
+        e["current_hp"] = 0
+        player.modify_stat("faith", 20)
+        player.modify_stat("doubt", -15)
+        player.modify_stat("resolve", 10)
+        combat_state["listened"] = True  # reuse understood flag
+        log.append(e["phrases"].get("dissolve", "You name them. They go quiet."))
 
     elif action_id == "accept_bargain":
         player.modify_stat("faith", 15)
@@ -439,6 +514,11 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
 
 
 def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
+    # Choir has its own turn logic entirely
+    if e.get("special", {}).get("id") == "choir_distortion":
+        _choir_turn(e, player, log, combat_state)
+        return
+
     behavior = e.get("behavior", "aggressive")
 
     if behavior == "passive":
@@ -498,6 +578,31 @@ def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
         acc_bonus = max(acc_bonus, 0.20)
 
     _physical_turn(e, player, log, combat_state, enduring, acc_bonus)
+
+
+def _choir_turn(e, player, log, combat_state):
+    """The Hollow Choir's turn — psychological, scales with player Doubt."""
+    if combat_state.pop("choir_paused", False):
+        log.append(
+            random.choice(e["phrases"].get("paused", ["The choir is briefly still."]))
+        )
+        return
+    base_dmg = roll_range(5, 12)
+    doubt_bonus = player.doubt // 8
+    dmg = base_dmg + doubt_bonus
+    player.take_damage(dmg)
+    player.modify_stat("resolve", -roll_range(3, 6))
+    log.append(
+        random.choice(e["phrases"].get("choir_attack", ["The voices press in."]))
+    )
+    log.append(f"— {damage_word(dmg)} taken.")
+    # Near dissolution — choir is more desperate
+    if e["current_hp"] < e["hp"] * 0.40:
+        log.append(
+            random.choice(
+                e["phrases"].get("near_dissolution", ["The remaining voices are louder."])
+            )
+        )
 
 
 def _manipulative_turn(e, player, log):
