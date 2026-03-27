@@ -1,5 +1,5 @@
 // ============================================================
-//  audio.js — Forgotten Among the Fallen
+//  audio.js — The Silent Oath
 //  Named SoundEngine to avoid shadowing window.Audio.
 // ============================================================
 
@@ -111,7 +111,7 @@ const SoundEngine = (() => {
 
   // ── Public API ────────────────────────────────────────────
   function playTitle() {
-    if (!muted) _switchTo("ambient_title");
+    if (!muted) _switchTo("title");
   }
 
   function playScene(artKey) {

@@ -1,5 +1,5 @@
 // ============================================================
-//  game.js — Forgotten Among the Fallen
+//  game.js — The Silent Oath
 //  Frontend controller. Talks to Flask API, renders scenes.
 // ============================================================
 

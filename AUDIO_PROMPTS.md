@@ -1,4 +1,4 @@
-# Forgotten Among the Fallen — Audio Generation Prompts
+# The Silent Oath — Audio Generation Prompts
 
 Music files go in `static/audio/music/` as `.mp3` (with `.ogg` fallback).
 SFX files go in `static/audio/sfx/`.
