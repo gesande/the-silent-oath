@@ -44,7 +44,7 @@ SCENE_INTRO = {
 
 # ── Scene: Name entry ─────────────────────────────────────────
 SCENE_NAME_ENTRY = {
-    "art": "name_entry",
+    "art": "title",
     "beats": [
         {
             "type": "prose",
