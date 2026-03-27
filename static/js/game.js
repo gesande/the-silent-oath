@@ -365,7 +365,9 @@ function renderChoices(choices, autoNext, hasNamePrompt, paraCount) {
     btn.dataset.num = "·";
     btn.textContent = "Continue";
     btn.style.animationDelay = `${afterProse}s`;
-    btn.addEventListener("click", () => advanceScene(autoNext));
+    btn.addEventListener("click", () =>
+      hasNamePrompt ? submitName() : advanceScene(autoNext)
+    );
     wrap.appendChild(btn);
     return;
   }
@@ -463,16 +465,15 @@ async function submitName() {
 
 function renderHUD(hud) {
   $("hp-bar").style.width = hud.hp_ratio * 100 + "%";
-  $("wrath-bar").style.width = (hud.wrath / (hud.max_wrath || 100)) * 100 + "%";
+  $("wrath-bar").style.width = (hud.faith || 0) + "%";
+  $("doubt-bar").style.width = (hud.doubt || 0) + "%";
   $("hud-hp-desc").textContent = hud.hp_desc || "";
-  $("hud-shards").innerHTML = `${hud.shards} <span>shards</span>`;
 
-  // Curse dots
+  // Doubting state indicator
   const curseEl = $("hud-curse");
   curseEl.innerHTML = "";
-  if (hud.curse > 0) {
-    const dots = "●".repeat(hud.curse) + "○".repeat(5 - hud.curse);
-    curseEl.textContent = `Curse ${dots}`;
+  if (hud.is_doubting) {
+    curseEl.textContent = "Doubting";
   }
 
   // Memories
