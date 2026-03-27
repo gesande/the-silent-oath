@@ -99,7 +99,7 @@ const SoundEngine = (() => {
 
   function playScene(artKey) {
     if (muted) return;
-    const t = SCENE_MUSIC[artKey] || "exploration";
+    const t = SCENE_MUSIC[artKey] || "title";
     _switchTo(t);
   }
 

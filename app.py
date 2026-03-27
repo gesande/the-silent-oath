@@ -8,6 +8,7 @@ import os
 
 from flask import Flask, jsonify, render_template, request, session
 
+from content.game_config import START_SCENE
 from content.scenes import SCENES
 from engine.combat import ENEMIES, get_player_actions, resolve_action, start_combat
 from engine.scene_web import render_scene, apply_choice, _build_hud
@@ -68,7 +69,7 @@ def index():
 @app.route("/api/new", methods=["POST"])
 def new_game():
     state = PlayerState()
-    state.current_scene = "name_entry"
+    state.current_scene = START_SCENE
     _save_state(state)
     _save_combat(None)
     return jsonify({"ok": True})
