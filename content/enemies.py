@@ -5,7 +5,7 @@
 #
 #  1. Identity   — who/what this is (not just a type, a person or force)
 #  2. Stats      — threat (1–5), hp, damage, accuracy, faith, resolve
-#  3. Behavior   — aggressive | testing | passive | manipulative
+#  3. Behavior   — aggressive | testing | passive | manipulative | defensive
 #  4. Special    — one mechanic that changes the rules of the fight
 #  5. Resolution — kill / free / understand
 #
@@ -236,6 +236,94 @@ ENEMIES = {
                 "He is bleeding badly now. It doesn't slow him. "
                 "\"Finish it,\" he says, between strikes. \"One of us should.\""
             ),
+        },
+    },
+
+    # ── Broken knight ─────────────────────────────────────────
+    # Identity: a former Templar who broke his oath — not captured, not coerced.
+    # He simply stopped believing. He did not leave. He stayed and became hollow.
+    # He fights because fighting is the last thing he knows how to do.
+    "broken_knight": {
+        "name": "the Broken Knight",
+        "name_short": "the knight",
+        "identity": "the oath unkept — he did not break under pressure; he simply let go",
+        # Stats (GDD scale: Body 3, Faith 1, Resolve 4 → mapped to engine values)
+        "threat": 3,
+        "hp": 110,
+        "damage": (14, 24),
+        "accuracy": 0.75,
+        "faith": 8,     # almost none — invoke_oath hits hardest here
+        "resolve": 80,  # endures; has nothing left to lose
+        # Behavior: defensive — does not initiate; punishes direct strikes with counter
+        "behavior": "defensive",
+        # Special: oath-memory — Faith abilities cause him to hesitate (miss chance on counter)
+        "special": {
+            "id": "oath_memory",
+            "label": "Oath-Memory",
+            "desc": (
+                "Direct strikes trigger a counter-attack at +0.20 accuracy. "
+                "Faith abilities (invoke_oath) make him hesitate — "
+                "counter is suppressed and he loses 8 resolve."
+            ),
+        },
+        # Resolution
+        "resolution": {
+            "kill": True,
+            "free": False,
+            "understand": True,  # remind him of the oath — he collapses
+            # 'understand' triggers via invoke_oath at low HP (handled in special hook):
+            # if hp < 30% and player uses invoke_oath → oath_memory collapses him (hp → 0,
+            # faith +20, no kill flag set — counts as understanding, not victory)
+        },
+        "loot": [("kite_shield", 0.8)],
+        "on_death": {
+            "flag": "broken_knight_defeated",
+            "memory": ("broken_knight", "The Broken Knight"),
+        },
+        "phrases": {
+            "windup": [
+                "He moves into position. Not aggressive — just ready.",
+                "He does not speak. He raises his guard and waits.",
+                "He shifts his weight. Waiting for you to commit.",
+            ],
+            "hit": [
+                "The counter finds you before you finish the swing.",
+                "He reads the strike and punishes the gap.",
+                "You overextend. He does not.",
+            ],
+            "miss": [
+                "The counter grazes air. You pulled back in time.",
+                "He misjudges the distance. Barely.",
+                "The blow falls short.",
+            ],
+            "counter": [
+                "He answers your strike before it lands.",
+                "Direct. Immediate. He has been waiting for exactly that.",
+            ],
+            "faith_hesitation": [
+                "He stops. Something in the words — he knows them.",
+                "He lowers his guard. Just for a moment. The oath is still in him somewhere.",
+                "His sword arm drops an inch. He catches it. But the moment was real.",
+            ],
+            "death": [
+                "He goes down without a word. "
+                "Whatever he was holding onto, he let it go at the end.",
+                "The knight falls. He looks almost relieved.",
+                "He is still. The hollow thing in him is finally quiet.",
+            ],
+            "collapse": [
+                "He stops mid-swing. The words of the oath — your words — reach him. "
+                "He lowers his sword. Then his knees. He does not rise.",
+                "The oath lands harder than any blow. He folds. Not defeated — finished.",
+            ],
+            "taunt": [
+                "He says nothing. His silence is its own answer.",
+                "He looks at you like he's already decided how this ends.",
+            ],
+            "passive": [
+                "He stands in your path. He does not advance.",
+                "He watches. He is not hunting. He is blocking.",
+            ],
         },
     },
 }

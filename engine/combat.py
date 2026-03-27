@@ -303,6 +303,31 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
                 "Your oath sounds different coming back from his mouth."
             )
 
+    elif special_id == "oath_memory":
+        # Direct strikes trigger counter (flagged for defensive turn)
+        combat_state["player_struck_this_turn"] = action_id in (
+            "strike", "doubt_surge"
+        )
+        if action_id == "invoke_oath":
+            # Faith ability causes hesitation — suppresses counter
+            combat_state["faith_hesitation"] = True
+            combat_state["player_struck_this_turn"] = False
+            e["resolve"] = max(0, e.get("resolve", 80) - 8)
+            # Understand resolution: at low HP, invoke_oath collapses him
+            hp_ratio = e["current_hp"] / e["hp"]
+            if hp_ratio < 0.30 and dealt_damage:
+                e["current_hp"] = 0
+                player.modify_stat("faith", 20)
+                player.modify_stat("doubt", -10)
+                log.append(
+                    random.choice(
+                        e["phrases"].get(
+                            "collapse",
+                            ["The oath reaches him. He does not rise."],
+                        )
+                    )
+                )
+
 
 # ── Enemy turn — routed by behavior ──────────────────────────
 
@@ -318,6 +343,26 @@ def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
                 )
             )
             return
+
+    if behavior == "defensive":
+        # Does not initiate — only counters direct strikes
+        # Counter is suppressed this turn if oath_memory triggered (faith hesitation)
+        if combat_state.pop("faith_hesitation", False):
+            line = random.choice(e["phrases"].get("faith_hesitation", []))
+            if line:
+                log.append(line)
+            player.modify_stat("resolve", -8)  # the knight loses resolve too
+            return
+        if not combat_state.get("player_struck_this_turn"):
+            # Holds position — no attack
+            log.append(
+                random.choice(e["phrases"].get("passive", ["He holds his ground."]))
+            )
+            return
+        # Counter on direct strike
+        log.append(random.choice(e["phrases"].get("counter", ["He answers."])))
+        _physical_turn(e, player, log, combat_state, enduring, acc_bonus=0.20)
+        return
 
     if behavior == "manipulative":
         # 60% psychological, 40% physical
