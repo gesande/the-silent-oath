@@ -419,4 +419,78 @@ ENEMIES = {
             ],
         },
     },
+
+    # ── Reliquary beast ───────────────────────────────────────
+    # Identity: a creature bound into a relic — not born, not living.
+    # Shaped by whatever the relic holds. Cannot be killed by ordinary violence.
+    # The relic is the anchor. The beast is the consequence.
+    "reliquary_beast": {
+        "name": "the Reliquary Beast",
+        "name_short": "the beast",
+        "identity": "bound into a relic — the relic is the anchor, the beast is the consequence",
+        # Stats (GDD: Body 5, Faith 0, Resolve 2 → engine values)
+        "threat": 5,
+        "hp": 180,
+        "damage": (18, 32),
+        "accuracy": 0.80,
+        "faith": 0,     # no faith — invoke_oath hits it at full, unresisted
+        "resolve": 20,  # low — once the relic breaks, it loses coherence fast
+        # Behavior: relentless, no hesitation, no pattern
+        "behavior": "aggressive",
+        # Special: relic_bound — immune to physical damage while relic is intact.
+        # Two valid paths: destroy the relic (costs Faith), or invoke_oath (bypasses immunity).
+        "special": {
+            "id": "relic_bound",
+            "label": "Relic-Bound",
+            "desc": (
+                "Physical attacks (strike, doubt_surge) deal 1 damage while the relic is intact. "
+                "invoke_oath bypasses immunity entirely (Faith 0 = no resistance). "
+                "destroy_relic action shatters the anchor: costs Faith -20, Doubt +10, "
+                "removes immunity for the rest of the fight."
+            ),
+        },
+        # Moral resolution — it is not a person
+        "resolution": {
+            "kill": True,
+            "free": False,
+            "understand": False,
+        },
+        "loot": [],
+        "on_death": {
+            "flag": "reliquary_beast_defeated",
+            "memory": ("reliquary_beast", "The Reliquary Beast"),
+        },
+        "phrases": {
+            "windup": [
+                "It moves without hesitation. There is nothing in it that hesitates.",
+                "It comes at you like something that has forgotten what stopping is.",
+                "The shape of it shifts as it advances. The relic at its chest pulses.",
+            ],
+            "hit": [
+                "The blow connects. There is no reaction. It continues.",
+                "It hits you the way stone hits stone.",
+                "The impact is enormous. It does not slow down.",
+            ],
+            "miss": [
+                "It overshoots. The motion carries it past you.",
+                "You move. Barely. It continues in the direction it was already going.",
+                "The blow misses. It does not seem to notice.",
+            ],
+            "immune": [
+                "Your strike passes through it. The relic holds the wound closed.",
+                "The blade connects — and the relic pulls the damage out of it.",
+                "It takes the blow without registering it. The relic at its chest glows faintly.",
+            ],
+            "relic_destroyed": (
+                "The relic cracks. Something inside the beast changes — "
+                "a coherence it had is gone. "
+                "It is still moving. It is less than it was."
+            ),
+            "death": [
+                "The beast collapses inward. Without the relic, there was nothing holding it.",
+                "It comes apart. Not violently — just stops. Piece by piece.",
+                "The shape of it dissolves. What was bound is no longer bound.",
+            ],
+        },
+    },
 }

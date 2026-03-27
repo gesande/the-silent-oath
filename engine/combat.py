@@ -67,6 +67,8 @@ def start_combat(
     e["effects"] = {}
     if e.get("phases"):
         e["current_phase"] = 1
+    if e.get("special", {}).get("id") == "relic_bound":
+        e["relic_intact"] = True
     return {
         "enemy": e,
         "log": [f"You face {e['name']}."],
@@ -104,6 +106,11 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
         and not combat_state.get("heretic_transformed")
     ):
         actions.append({"id": "listen", "label": "Listen — hear what they have to say"})
+    # Destroy relic — available while relic is intact
+    if e.get("relic_intact"):
+        actions.append(
+            {"id": "destroy_relic", "label": "Destroy the Relic — shatter what binds it"}
+        )
     if player.doubt >= 40:
         actions.append(
             {
@@ -167,7 +174,7 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
             if player.faith >= 70:
                 base = roll_range(20, 35)
             dmg = int(_player_damage(base, player, e) * faith_resist)
-            _hit_enemy(dmg, e, player, log)
+            _hit_enemy(dmg, e, player, log, bypass_relic=True)
             player.modify_stat("doubt", -3)
             log.append(_invoke_prose(dmg, player, e, faith_resist))
             dealt_damage = True
@@ -217,6 +224,12 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         combat_state["released"] = True
         release_line = random.choice(e["phrases"].get("release", ["You let them go."]))
         log.append(release_line)
+
+    elif action_id == "destroy_relic":
+        e["relic_intact"] = False
+        player.modify_stat("faith", -20)
+        player.modify_stat("doubt", 10)
+        log.append(e["phrases"].get("relic_destroyed", "The relic shatters."))
 
     elif action_id == "listen":
         # Understand resolution — ends combat peacefully; costs doubt, gains resolve
@@ -324,6 +337,18 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
             log.append(
                 "Arnaud mutters something — the same words, broken. "
                 "Your oath sounds different coming back from his mouth."
+            )
+
+    elif special_id == "relic_bound":
+        # Log immunity when physical attacks are used against intact relic
+        if e.get("relic_intact") and action_id in ("strike", "doubt_surge"):
+            log.append(
+                random.choice(
+                    e["phrases"].get(
+                        "immune",
+                        ["The blow connects. The relic holds the wound closed."],
+                    )
+                )
             )
 
     elif special_id == "doubt_watcher":
@@ -535,7 +560,9 @@ def _tick_effects(e, log):
             log.append("The bleeding slows.")
 
 
-def _hit_enemy(dmg, e, player=None, log=None):
+def _hit_enemy(dmg, e, player=None, log=None, bypass_relic=False):
+    if e.get("relic_intact") and not bypass_relic:
+        dmg = 1
     e["current_hp"] = max(0, e["current_hp"] - dmg)
     if player is not None and e["current_hp"] > 0:
         weapon = player.equipped.get("weapon", "unarmed")
