@@ -111,6 +111,15 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
         actions.append(
             {"id": "destroy_relic", "label": "Destroy the Relic — shatter what binds it"}
         )
+    # False saint bargain actions
+    if e.get("special", {}).get("id") == "false_sanctity":
+        actions.append(
+            {"id": "accept_bargain", "label": "Accept — take what it offers"}
+        )
+        if player.faith >= 60:
+            actions.append(
+                {"id": "expose_saint", "label": "Expose it — call out the false sanctity"}
+            )
     if player.doubt >= 40:
         actions.append(
             {
@@ -231,6 +240,35 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         player.modify_stat("doubt", 10)
         log.append(e["phrases"].get("relic_destroyed", "The relic shatters."))
 
+    elif action_id == "accept_bargain":
+        player.modify_stat("faith", 15)
+        player.modify_stat("doubt", 20)
+        player.heal(10)
+        bargains = combat_state.get("bargains_taken", 0) + 1
+        combat_state["bargains_taken"] = bargains
+        log.append(
+            random.choice(e["phrases"].get("bargain_accepted", ["You take it."]))
+        )
+        if bargains >= 3:
+            # False blessing — saint departs, player is marked
+            player.set_flag("false_blessed", True)
+            combat_state["false_blessed"] = True
+            combat_state["over"] = True
+            combat_state["won"] = True
+            log.append(e["phrases"].get("false_blessing", "It blesses you and departs."))
+            return combat_state
+
+    elif action_id == "expose_saint":
+        # Strip false faith — invoke_oath becomes fully effective afterward
+        e["faith"] = 0
+        dmg = roll_range(25, 40)
+        _hit_enemy(dmg, e, player, log, bypass_relic=False)
+        player.modify_stat("faith", -5)   # even true faith is shaken by this
+        player.modify_stat("doubt", 5)
+        log.append(
+            random.choice(e["phrases"].get("exposed", ["The false light flickers."]))
+        )
+
     elif action_id == "listen":
         # Understand resolution — ends combat peacefully; costs doubt, gains resolve
         e["current_hp"] = 0
@@ -339,6 +377,12 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
                 "Your oath sounds different coming back from his mouth."
             )
 
+    elif special_id == "false_sanctity":
+        # Striking what wears a saint's face costs faith
+        if action_id == "strike":
+            player.modify_stat("faith", -3)
+            log.append("Striking what wears a saint's face costs something.")
+
     elif special_id == "relic_bound":
         # Log immunity when physical attacks are used against intact relic
         if e.get("relic_intact") and action_id in ("strike", "doubt_surge"):
@@ -434,8 +478,9 @@ def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
         return
 
     if behavior == "manipulative":
-        # 60% psychological, 40% physical
-        if chance(0.60):
+        # Enemies with no damage capability are always psychological
+        no_damage = e.get("damage", (1, 1))[1] == 0
+        if no_damage or chance(0.60):
             _manipulative_turn(e, player, log)
             return
 

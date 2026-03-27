@@ -208,6 +208,9 @@ def combat_action():
         "won": combat.get("won", False),
         "fled": combat.get("fled", False),
         "died": combat.get("died", False),
+        "false_blessed": combat.get("false_blessed", False),
+        "listened": combat.get("listened", False),
+        "released": combat.get("released", False),
         "hud": _build_hud(state),
         "enemy_hp_ratio": (
             combat["enemy"]["current_hp"] / combat["enemy"]["hp"]

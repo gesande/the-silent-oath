@@ -493,4 +493,97 @@ ENEMIES = {
             ],
         },
     },
+
+    # ── False saint ───────────────────────────────────────────
+    # Identity: a "saint" who gives power — but the power is real
+    # and so is the cost. It does not lie about what it offers.
+    # It lies about what it is.
+    # You might not fight it at all. That is the point.
+    "false_saint": {
+        "name": "the False Saint",
+        "name_short": "the saint",
+        "identity": "offers real power at real cost — lies about what it is, not what it gives",
+        # Stats (GDD: Body 2, Faith 5, Resolve 3)
+        "threat": 3,
+        "hp": 60,
+        "damage": (0, 0),    # does not strike — corruption is its weapon
+        "accuracy": 0.0,
+        "faith": 90,         # enormous false faith — invoke_oath is heavily resisted
+        "resolve": 60,       # medium; breaks when exposed
+        # Behavior: manipulative — every turn it offers itself
+        "behavior": "manipulative",
+        # Special: false_sanctity
+        #   accept_bargain — faith +15, doubt +20, heal +10. Real power, real cost.
+        #   After 3 bargains: false_blessing — combat ends, player is marked.
+        #   expose_saint — requires player faith >= 60. Strips false faith, deals
+        #   spiritual damage. The right answer, but it costs something too.
+        #   Striking it costs faith -3 (attacking what wears a saint's face).
+        "special": {
+            "id": "false_sanctity",
+            "label": "False Sanctity",
+            "desc": (
+                "accept_bargain: faith +15, doubt +20, heal +10. "
+                "Three bargains triggers false_blessing (combat ends). "
+                "expose_saint (faith >= 60): strips enemy faith to 0, spiritual damage. "
+                "Striking it costs the player faith -3."
+            ),
+        },
+        # Moral resolution
+        "resolution": {
+            "kill": True,    # possible but spiritually costly
+            "free": False,
+            "understand": False,  # there is nothing there to understand
+            "expose": True,  # the right path — reveal what it is
+        },
+        "loot": [],
+        "on_death": {
+            "flag": "false_saint_defeated",
+            "memory": ("false_saint", "The False Saint"),
+        },
+        "phrases": {
+            "windup": [],    # never physically attacks
+            "hit": [],
+            "miss": [],
+            "death": [
+                "The light goes out of it. What is left is not a saint.",
+                "It collapses without ceremony. The holiness was the first thing to go.",
+                "What remains is small. It was always small.",
+            ],
+            "manipulate": [
+                "\"I can give you what you came here for,\" it says. "
+                "\"The power to protect the oath. Is that not what you want?\"",
+                "\"Your doubt is not weakness. Let me show you what it can become.\"",
+                "It holds out its hand. The light around it is warm.",
+                "\"You have already given so much. Let me give something back.\"",
+            ],
+            "bargain_offered": [
+                "\"Take it. The cost is real. So is the gift.\"",
+                "\"One more. You can stop whenever you choose.\"",
+                "The warmth of it is genuine. That is the worst part.",
+            ],
+            "bargain_accepted": [
+                "The power is real. It fills you. The doubt follows it in.",
+                "You take what it offers. You feel stronger. You feel less.",
+                "It gives. You receive. Something moves between you that you won't be able to name later.",
+            ],
+            "false_blessing": (
+                "It places both hands on your shoulders. "
+                "\"You are ready,\" it says. "
+                "\"Go. Do what must be done.\" "
+                "Then it is gone. "
+                "The power is still in you. "
+                "The doubt is too."
+            ),
+            "exposed": [
+                "The light flickers. Underneath it, something much smaller.",
+                "\"How—\" it begins. The word doesn't finish.",
+                "The sanctity was the only thing holding its shape. You've taken it.",
+            ],
+            "taunt": [
+                "\"You hesitate. That tells me everything I need to know about your faith.\"",
+                "\"The order is gone. What are you protecting it for?\"",
+                "\"I am not your enemy. Your doubt is your enemy. I am the cure.\"",
+            ],
+        },
+    },
 }
