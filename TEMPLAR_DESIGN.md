@@ -10,6 +10,23 @@ You play an aging Templar knight called back to the heart of the order's secret 
 
 The Templars are not protecting the world. They are keeping something terrible locked away.
 
+## Lore
+
+*He eivät löytäneet Jumalaa.*
+
+*He löysivät vastauksen.*
+
+*Ja vastaus ei ollut tarkoitettu ihmiselle.*
+
+*Siksi ovi suljettiin.*
+*Siksi vala annettiin.*
+
+*Ei suojelemaan maailmaa —*
+
+*vaan pitämään se tietämättömänä.*
+
+---
+
 ## The Secret
 
 > "Voima ei ole voima — se on totuus, jota ei voi kantaa."
