@@ -94,15 +94,17 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
     # ── Choir distortion: replace entire action list ───────────
     if special_id == "choir_distortion":
         actions = [
-            {"id": "confess",  "label": "Confess — speak a truth into the dark"},
-            {"id": "kneel",    "label": "Kneel — submit to the voices"},
-            {"id": "silence",  "label": "Silence — hold the oath against the noise"},
-            {"id": "open",     "label": "Open — let the voices through"},
+            {"id": "confess", "label": "Confess — speak a truth into the dark"},
+            {"id": "kneel", "label": "Kneel — submit to the voices"},
+            {"id": "silence", "label": "Silence — hold the oath against the noise"},
+            {"id": "open", "label": "Open — let the voices through"},
         ]
         if combat_state.get("confessions_made", 0) >= 4:
             actions.append(
-                {"id": "dissolve_choir",
-                 "label": "Name them — call each voice by its truth"}
+                {
+                    "id": "dissolve_choir",
+                    "label": "Name them — call each voice by its truth",
+                }
             )
         actions.append({"id": "flee", "label": "Seal it — leave before it seals you"})
         return actions
@@ -114,9 +116,7 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
         {"id": "invoke_oath", "label": "Invoke your Oath — call on your faith"},
     ]
     if e.get("shield") and not e.get("flanked"):
-        actions.append(
-            {"id": "flank", "label": "Flank — circle wide past the shield"}
-        )
+        actions.append({"id": "flank", "label": "Flank — circle wide past the shield"})
     # Listen — available before attacking a passive enemy who can be understood
     if (
         resolution.get("listen")
@@ -127,7 +127,10 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
     # Destroy relic — available while relic is intact
     if e.get("relic_intact"):
         actions.append(
-            {"id": "destroy_relic", "label": "Destroy the Relic — shatter what binds it"}
+            {
+                "id": "destroy_relic",
+                "label": "Destroy the Relic — shatter what binds it",
+            }
         )
     # False saint bargain actions
     if special_id == "false_sanctity":
@@ -136,7 +139,10 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
         )
         if player.faith >= 60:
             actions.append(
-                {"id": "expose_saint", "label": "Expose it — call out the false sanctity"}
+                {
+                    "id": "expose_saint",
+                    "label": "Expose it — call out the false sanctity",
+                }
             )
     if player.doubt >= 40:
         actions.append(
@@ -268,7 +274,9 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         player.modify_stat("resolve", -5)
         combat_state["confessions_made"] = combat_state.get("confessions_made", 0) + 1
         log.append(
-            random.choice(e["phrases"].get("confess_recoil", ["The truth pushes them back."]))
+            random.choice(
+                e["phrases"].get("confess_recoil", ["The truth pushes them back."])
+            )
         )
         dealt_damage = True
 
@@ -289,7 +297,9 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         player.modify_stat("doubt", -8)
         player.modify_stat("resolve", -5)
         log.append(
-            random.choice(e["phrases"].get("silence_lands", ["The held oath cuts through."]))
+            random.choice(
+                e["phrases"].get("silence_lands", ["The held oath cuts through."])
+            )
         )
         dealt_damage = True
 
@@ -330,7 +340,9 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
             combat_state["false_blessed"] = True
             combat_state["over"] = True
             combat_state["won"] = True
-            log.append(e["phrases"].get("false_blessing", "It blesses you and departs."))
+            log.append(
+                e["phrases"].get("false_blessing", "It blesses you and departs.")
+            )
             return combat_state
 
     elif action_id == "expose_saint":
@@ -338,7 +350,7 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
         e["faith"] = 0
         dmg = roll_range(25, 40)
         _hit_enemy(dmg, e, player, log, bypass_relic=False)
-        player.modify_stat("faith", -5)   # even true faith is shaken by this
+        player.modify_stat("faith", -5)  # even true faith is shaken by this
         player.modify_stat("doubt", 5)
         log.append(
             random.choice(e["phrases"].get("exposed", ["The false light flickers."]))
@@ -347,11 +359,13 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
     elif action_id == "listen":
         # Understand resolution — ends combat peacefully; costs doubt, gains resolve
         e["current_hp"] = 0
-        player.modify_stat("doubt", 15)   # what they say is unsettling
-        player.modify_stat("faith", -5)   # shaken
-        player.modify_stat("resolve", 10) # you chose understanding
+        player.modify_stat("doubt", 15)  # what they say is unsettling
+        player.modify_stat("faith", -5)  # shaken
+        player.modify_stat("resolve", 10)  # you chose understanding
         combat_state["listened"] = True
-        listen_line = random.choice(e["phrases"].get("listen", ["They speak. You listen."]))
+        listen_line = random.choice(
+            e["phrases"].get("listen", ["They speak. You listen."])
+        )
         log.append(listen_line)
         on_listen = e.get("on_listen", {})
         if "memory" in on_listen:
@@ -427,9 +441,7 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
         # Reads repeated actions — flags for accuracy penalty on enemy turn
         if combat_state["repeated_action"]:
             combat_state["guard_reads_pattern"] = True
-            log.append(
-                f"{e['name_short']} adjusts. He's seen that move already."
-            )
+            log.append(f"{e['name_short']} adjusts. He's seen that move already.")
         else:
             combat_state["guard_reads_pattern"] = False
 
@@ -438,9 +450,11 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
         if not dealt_damage:
             player.modify_stat("doubt", 4)
             log.append(
-                random.choice(e["phrases"].get("manipulate", [
-                    "He uses the pause. The doubt fills it."
-                ]))
+                random.choice(
+                    e["phrases"].get(
+                        "manipulate", ["He uses the pause. The doubt fills it."]
+                    )
+                )
             )
 
     elif special_id == "broken_mirror":
@@ -486,9 +500,7 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
 
     elif special_id == "oath_memory":
         # Direct strikes trigger counter (flagged for defensive turn)
-        combat_state["player_struck_this_turn"] = action_id in (
-            "strike", "doubt_surge"
-        )
+        combat_state["player_struck_this_turn"] = action_id in ("strike", "doubt_surge")
         if action_id == "invoke_oath":
             # Faith ability causes hesitation — suppresses counter
             combat_state["faith_hesitation"] = True
@@ -526,9 +538,7 @@ def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
             # doubt_watcher grows doubt even while standing still
             if e.get("special", {}).get("id") == "doubt_watcher":
                 player.modify_stat("doubt", 3)
-                log.append(
-                    random.choice(e["phrases"].get("watch", ["He watches."]))
-                )
+                log.append(random.choice(e["phrases"].get("watch", ["He watches."])))
             else:
                 log.append(
                     random.choice(
@@ -600,7 +610,9 @@ def _choir_turn(e, player, log, combat_state):
     if e["current_hp"] < e["hp"] * 0.40:
         log.append(
             random.choice(
-                e["phrases"].get("near_dissolution", ["The remaining voices are louder."])
+                e["phrases"].get(
+                    "near_dissolution", ["The remaining voices are louder."]
+                )
             )
         )
 

@@ -26,7 +26,7 @@ ENEMIES = {
         "hp": 80,
         "damage": (10, 18),
         "accuracy": 0.65,
-        "faith": 15,    # serves crown, not God — invoke_oath hits harder
+        "faith": 15,  # serves crown, not God — invoke_oath hits harder
         "resolve": 65,  # disciplined; hard to rattle
         # Behavior: presses forward, no hesitation, no mercy
         "behavior": "aggressive",
@@ -42,8 +42,8 @@ ENEMIES = {
         # Resolution
         "resolution": {
             "kill": True,
-            "free": True,      # disarm and release — he'll leave
-            "understand": True, # he's following orders; that's human
+            "free": True,  # disarm and release — he'll leave
+            "understand": True,  # he's following orders; that's human
         },
         "loot": [],
         "phrases": {
@@ -68,9 +68,9 @@ ENEMIES = {
                 "He stops moving. The silence after is loud.",
             ],
             "taunt": [
-                "\"Surrender and the Inquisition will hear your confession.\"",
-                "\"Your order is finished, Templar. This is mercy.\"",
-                "\"There are more of us outside.\"",
+                '"Surrender and the Inquisition will hear your confession."',
+                '"Your order is finished, Templar. This is mercy."',
+                '"There are more of us outside."',
             ],
             "release": [
                 "He holds your gaze for a moment. Then he turns and walks.",
@@ -78,7 +78,6 @@ ENEMIES = {
             ],
         },
     },
-
     # ── Inquisitor's agent ────────────────────────────────────
     # Identity: living doubt — weaponises uncertainty as effectively as steel.
     # He does not fight you. He interrogates you while you fight him.
@@ -92,7 +91,7 @@ ENEMIES = {
         "hp": 55,
         "damage": (6, 14),
         "accuracy": 0.55,
-        "faith": 70,    # genuinely believes — invoke_oath is weaker against him
+        "faith": 70,  # genuinely believes — invoke_oath is weaker against him
         "resolve": 30,  # not a fighter; breaks under real pressure
         # Behavior: exploits hesitation; psychological before physical
         "behavior": "manipulative",
@@ -109,8 +108,8 @@ ENEMIES = {
         # Resolution
         "resolution": {
             "kill": True,
-            "free": False,      # releasing him brings more
-            "understand": True, # the horror is he might be right about God
+            "free": False,  # releasing him brings more
+            "understand": True,  # the horror is he might be right about God
         },
         "loot": [],
         "phrases": {
@@ -135,20 +134,19 @@ ENEMIES = {
                 "He is quiet at last.",
             ],
             "taunt": [
-                "\"Did you know what the order guarded? Did they tell you?\"",
-                "\"Confession is not weakness. Silence is.\"",
+                '"Did you know what the order guarded? Did they tell you?"',
+                '"Confession is not weakness. Silence is."',
                 "\"Every brother we've questioned has said the same: they didn't know. "
-                "Are you different?\"",
+                'Are you different?"',
             ],
             "manipulate": [
-                "\"What do you protect? Do you even know anymore?\"",
-                "\"The order fell in a single night. What does that tell you about God's favour?\"",
-                "\"You hesitate. That is already an answer.\"",
+                '"What do you protect? Do you even know anymore?"',
+                '"The order fell in a single night. What does that tell you about God\'s favour?"',
+                '"You hesitate. That is already an answer."',
                 "He says nothing. Just watches. The silence is deliberate.",
             ],
         },
     },
-
     # ── Fallen brother ────────────────────────────────────────
     # Identity: the broken oath made flesh — what the player could become.
     # He broke under interrogation. Now he serves the crown.
@@ -162,7 +160,7 @@ ENEMIES = {
         "hp": 140,
         "damage": (12, 22),
         "accuracy": 0.70,
-        "faith": 35,    # broken but not gone; invoke_oath still costs something
+        "faith": 35,  # broken but not gone; invoke_oath still costs something
         "resolve": 80,  # endures despite everything
         # Behavior: reads the player; adapts; has nothing left to hold back
         "behavior": "testing",
@@ -181,8 +179,8 @@ ENEMIES = {
         # Resolution
         "resolution": {
             "kill": True,
-            "free": True,      # mercy; he accepts it, may even want it
-            "understand": True, # his story is the player's possible future
+            "free": True,  # mercy; he accepts it, may even want it
+            "understand": True,  # his story is the player's possible future
         },
         "loot": [("templar_sword", 1.0)],
         "on_death": {
@@ -207,7 +205,7 @@ ENEMIES = {
             ],
             "death": [
                 "Arnaud falls to one knee. Stays there. "
-                "\"I thought it would feel like something,\" he says. Then nothing.",
+                '"I thought it would feel like something," he says. Then nothing.',
                 "He goes down without a word. The sword drops from his hand. "
                 "It was a good sword. It deserved better.",
                 "He looks at you at the end with something like relief. "
@@ -219,26 +217,25 @@ ENEMIES = {
                 "\"I didn't think you'd—\" He stops. He goes.",
             ],
             "taunt": [
-                "\"They broke me in three days. How long do you think you'll last?\"",
-                "\"I said the words they wanted. Just words. "
-                "What did it cost? What did it change?\"",
-                "\"You still believe. I can see it. It must be very heavy.\"",
+                '"They broke me in three days. How long do you think you\'ll last?"',
+                '"I said the words they wanted. Just words. '
+                'What did it cost? What did it change?"',
+                '"You still believe. I can see it. It must be very heavy."',
             ],
             "testing": [
                 "He adjusts. He saw that coming.",
-                "\"Same move. You did that last time too.\"",
+                '"Same move. You did that last time too."',
             ],
             "phase2": (
                 "Arnaud stops. He looks at you — really looks. "
-                "\"You haven't run,\" he says. Then he comes at you harder."
+                '"You haven\'t run," he says. Then he comes at you harder.'
             ),
             "phase3": (
                 "He is bleeding badly now. It doesn't slow him. "
-                "\"Finish it,\" he says, between strikes. \"One of us should.\""
+                '"Finish it," he says, between strikes. "One of us should."'
             ),
         },
     },
-
     # ── Broken knight ─────────────────────────────────────────
     # Identity: a former Templar who broke his oath — not captured, not coerced.
     # He simply stopped believing. He did not leave. He stayed and became hollow.
@@ -252,7 +249,7 @@ ENEMIES = {
         "hp": 110,
         "damage": (14, 24),
         "accuracy": 0.75,
-        "faith": 8,     # almost none — invoke_oath hits hardest here
+        "faith": 8,  # almost none — invoke_oath hits hardest here
         "resolve": 80,  # endures; has nothing left to lose
         # Behavior: defensive — does not initiate; punishes direct strikes with counter
         "behavior": "defensive",
@@ -326,7 +323,6 @@ ENEMIES = {
             ],
         },
     },
-
     # ── Watching heretic ──────────────────────────────────────
     # Identity: a person who sees too much — not mad, not evil.
     # He has looked at the thing the Order guards and cannot un-see it.
@@ -339,7 +335,7 @@ ENEMIES = {
         # Stats (GDD: Body 1, Faith 2, Resolve 3 → engine values)
         "threat": 1,
         "hp": 40,
-        "damage": (0, 0),    # does not attack — initially
+        "damage": (0, 0),  # does not attack — initially
         "accuracy": 0.0,
         "faith": 20,
         "resolve": 60,
@@ -359,7 +355,7 @@ ENEMIES = {
         },
         # Moral resolution
         "resolution": {
-            "kill": True,    # you can, after the transformation
+            "kill": True,  # you can, after the transformation
             "free": False,
             "listen": True,  # the right answer — available before attacking
             "understand": True,
@@ -390,15 +386,15 @@ ENEMIES = {
                 "He watches you. He does not move.",
                 "His eyes hold something you don't have a word for.",
                 "He says nothing. The silence is not empty.",
-                "\"You already know,\" he says. \"You just haven't let yourself know it yet.\"",
+                '"You already know," he says. "You just haven\'t let yourself know it yet."',
             ],
             "listen": [
                 "He tells you what he saw beneath the commandery. "
                 "Not all of it — he doesn't have the words for all of it. "
                 "But enough. You understand why he couldn't stay quiet.",
-                "\"I was a brother once,\" he says. \"Before I looked. "
+                '"I was a brother once," he says. "Before I looked. '
                 "I thought knowing would make me stronger. "
-                "It made me — this.\" He gestures at himself. \"But I'd look again.\"",
+                'It made me — this." He gestures at himself. "But I\'d look again."',
             ],
             "transform": (
                 "Something happens to his face. The moment your blade touches him, "
@@ -414,12 +410,11 @@ ENEMIES = {
             ],
             "passive": [
                 "He watches. He does not move toward you.",
-                "\"I'm not what you think I am,\" he says quietly.",
+                '"I\'m not what you think I am," he says quietly.',
                 "He holds out his hands. No weapon.",
             ],
         },
     },
-
     # ── Reliquary beast ───────────────────────────────────────
     # Identity: a creature bound into a relic — not born, not living.
     # Shaped by whatever the relic holds. Cannot be killed by ordinary violence.
@@ -433,7 +428,7 @@ ENEMIES = {
         "hp": 180,
         "damage": (18, 32),
         "accuracy": 0.80,
-        "faith": 0,     # no faith — invoke_oath hits it at full, unresisted
+        "faith": 0,  # no faith — invoke_oath hits it at full, unresisted
         "resolve": 20,  # low — once the relic breaks, it loses coherence fast
         # Behavior: relentless, no hesitation, no pattern
         "behavior": "aggressive",
@@ -493,7 +488,6 @@ ENEMIES = {
             ],
         },
     },
-
     # ── False saint ───────────────────────────────────────────
     # Identity: a "saint" who gives power — but the power is real
     # and so is the cost. It does not lie about what it offers.
@@ -506,10 +500,10 @@ ENEMIES = {
         # Stats (GDD: Body 2, Faith 5, Resolve 3)
         "threat": 3,
         "hp": 60,
-        "damage": (0, 0),    # does not strike — corruption is its weapon
+        "damage": (0, 0),  # does not strike — corruption is its weapon
         "accuracy": 0.0,
-        "faith": 90,         # enormous false faith — invoke_oath is heavily resisted
-        "resolve": 60,       # medium; breaks when exposed
+        "faith": 90,  # enormous false faith — invoke_oath is heavily resisted
+        "resolve": 60,  # medium; breaks when exposed
         # Behavior: manipulative — every turn it offers itself
         "behavior": "manipulative",
         # Special: false_sanctity
@@ -530,7 +524,7 @@ ENEMIES = {
         },
         # Moral resolution
         "resolution": {
-            "kill": True,    # possible but spiritually costly
+            "kill": True,  # possible but spiritually costly
             "free": False,
             "understand": False,  # there is nothing there to understand
             "expose": True,  # the right path — reveal what it is
@@ -541,7 +535,7 @@ ENEMIES = {
             "memory": ("false_saint", "The False Saint"),
         },
         "phrases": {
-            "windup": [],    # never physically attacks
+            "windup": [],  # never physically attacks
             "hit": [],
             "miss": [],
             "death": [
@@ -550,15 +544,15 @@ ENEMIES = {
                 "What remains is small. It was always small.",
             ],
             "manipulate": [
-                "\"I can give you what you came here for,\" it says. "
-                "\"The power to protect the oath. Is that not what you want?\"",
-                "\"Your doubt is not weakness. Let me show you what it can become.\"",
+                '"I can give you what you came here for," it says. '
+                '"The power to protect the oath. Is that not what you want?"',
+                '"Your doubt is not weakness. Let me show you what it can become."',
                 "It holds out its hand. The light around it is warm.",
-                "\"You have already given so much. Let me give something back.\"",
+                '"You have already given so much. Let me give something back."',
             ],
             "bargain_offered": [
-                "\"Take it. The cost is real. So is the gift.\"",
-                "\"One more. You can stop whenever you choose.\"",
+                '"Take it. The cost is real. So is the gift."',
+                '"One more. You can stop whenever you choose."',
                 "The warmth of it is genuine. That is the worst part.",
             ],
             "bargain_accepted": [
@@ -568,25 +562,24 @@ ENEMIES = {
             ],
             "false_blessing": (
                 "It places both hands on your shoulders. "
-                "\"You are ready,\" it says. "
-                "\"Go. Do what must be done.\" "
+                '"You are ready," it says. '
+                '"Go. Do what must be done." '
                 "Then it is gone. "
                 "The power is still in you. "
                 "The doubt is too."
             ),
             "exposed": [
                 "The light flickers. Underneath it, something much smaller.",
-                "\"How—\" it begins. The word doesn't finish.",
+                '"How—" it begins. The word doesn\'t finish.',
                 "The sanctity was the only thing holding its shape. You've taken it.",
             ],
             "taunt": [
-                "\"You hesitate. That tells me everything I need to know about your faith.\"",
-                "\"The order is gone. What are you protecting it for?\"",
-                "\"I am not your enemy. Your doubt is your enemy. I am the cure.\"",
+                '"You hesitate. That tells me everything I need to know about your faith."',
+                '"The order is gone. What are you protecting it for?"',
+                '"I am not your enemy. Your doubt is your enemy. I am the cure."',
             ],
         },
     },
-
     # ── Hollow choir ──────────────────────────────────────────
     # Identity: voices in the dark — the Order's confessions, never spoken aloud.
     # They accumulated beneath the commandery. They have no body.
@@ -605,11 +598,11 @@ ENEMIES = {
         "name_short": "the Choir",
         "identity": "the Order's unspoken confessions — they accumulated until they could speak",
         # Stats (GDD: Body 0, Faith 4, Resolve 4)
-        "threat": 3,    # scales with player Doubt in practice
+        "threat": 3,  # scales with player Doubt in practice
         "hp": 100,
         "damage": (5, 12),  # base; +player.doubt // 8 per turn
         "accuracy": 0.75,
-        "faith": 80,    # collective faith — silence/confess bypass it
+        "faith": 80,  # collective faith — silence/confess bypass it
         "resolve": 80,
         # Behavior: entirely psychological — no physical form
         "behavior": "manipulative",
@@ -633,7 +626,7 @@ ENEMIES = {
         },
         # Moral resolution
         "resolution": {
-            "kill": False,    # voices cannot be killed
+            "kill": False,  # voices cannot be killed
             "free": False,
             "understand": True,  # dissolve them by naming what they are
         },
@@ -643,7 +636,7 @@ ENEMIES = {
             "memory": ("hollow_choir", "The Hollow Choir"),
         },
         "phrases": {
-            "windup": [],   # never physically attacks
+            "windup": [],  # never physically attacks
             "hit": [],
             "miss": [],
             "choir_attack": [
@@ -694,8 +687,8 @@ ENEMIES = {
             ],
             "taunt": [
                 "They do not taunt. They recite.",
-                "\"You knew,\" they say. All of them. At once.",
-                "\"Why didn't you speak?\" The question has no single voice.",
+                '"You knew," they say. All of them. At once.',
+                '"Why didn\'t you speak?" The question has no single voice.',
             ],
         },
     },

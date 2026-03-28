@@ -318,7 +318,9 @@ function renderScene(data) {
   proseEl.innerHTML = "";
   // Base delay: small pause then paragraphs stagger in one by one
   const BASE_DELAY = 0.8; // seconds before first paragraph
-  const paraCount = (data.paragraphs || []).filter((p) => p.type !== "memory").length;
+  const paraCount = (data.paragraphs || []).filter(
+    (p) => p.type !== "memory",
+  ).length;
   const PARA_GAP = paraCount > 10 ? 0.55 : 1.1; // tighter gap for long scenes
   let paraIdx = 0;
   const narrativePanel = $("narrative-panel");
@@ -334,7 +336,7 @@ function renderScene(data) {
     div.style.animationDelay = `${delay}s`;
     setTimeout(
       () => div.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-      delay * 1000 + 200
+      delay * 1000 + 200,
     );
     proseEl.appendChild(div);
     paraIdx++;
@@ -373,7 +375,7 @@ function renderChoices(choices, autoNext, hasNamePrompt, paraCount) {
     btn.textContent = "Continue";
     btn.style.animationDelay = `${afterProse}s`;
     btn.addEventListener("click", () =>
-      hasNamePrompt ? submitName() : advanceScene(autoNext)
+      hasNamePrompt ? submitName() : advanceScene(autoNext),
     );
     wrap.appendChild(btn);
     return;
@@ -505,12 +507,14 @@ function renderHUD(hud) {
   if (invEl) {
     invEl.innerHTML = "";
     const equippedSet = new Set(Object.values(hud.equipped || {}));
-    (hud.inventory || []).filter((item) => !equippedSet.has(item)).forEach((item) => {
-      const span = document.createElement("span");
-      span.className = "hud-item";
-      span.textContent = item;
-      invEl.appendChild(span);
-    });
+    (hud.inventory || [])
+      .filter((item) => !equippedSet.has(item))
+      .forEach((item) => {
+        const span = document.createElement("span");
+        span.className = "hud-item";
+        span.textContent = item;
+        invEl.appendChild(span);
+      });
   }
 }
 

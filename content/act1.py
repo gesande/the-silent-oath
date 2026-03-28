@@ -10,9 +10,7 @@ SCENE_INTRO = {
     "beats": [
         {
             "type": "prose",
-            "text": (
-                "Paris. October 1307."
-            ),
+            "text": ("Paris. October 1307."),
         },
         {
             "type": "prose",
@@ -104,7 +102,10 @@ SCENE_NAME_ENTRY = {
                 "there are chambers that do not appear on any record of the Order."
             ),
         },
-        {"type": "prose", "text": "They were not built by the brothers who serve above."},
+        {
+            "type": "prose",
+            "text": "They were not built by the brothers who serve above.",
+        },
         {"type": "prose", "text": "They were not meant to be found."},
         {
             "type": "prose",
@@ -168,8 +169,7 @@ SCENE_COMMANDERY_NIGHT = {
         {
             "type": "prose",
             "text": (
-                "Cold air fills your lungs as you draw breath. "
-                "It tastes of smoke."
+                "Cold air fills your lungs as you draw breath. " "It tastes of smoke."
             ),
         },
         {
@@ -230,7 +230,10 @@ SCENE_COMMANDERY_NIGHT = {
             "type": "prose",
             "text": "Your lantern flickers again.",
         },
-        {"type": "italic", "text": "And for a moment, you feel that something is looking back."},
+        {
+            "type": "italic",
+            "text": "And for a moment, you feel that something is looking back.",
+        },
         {"type": "italic", "text": "Not an enemy."},
         {"type": "italic", "text": "Not a person."},
         {"type": "italic", "text": "Something that knows your name."},
@@ -244,9 +247,7 @@ SCENE_COMMANDERY_NIGHT = {
         },
         {
             "type": "prose",
-            "text": (
-                "But now, in this silence, none of them feel whole."
-            ),
+            "text": ("But now, in this silence, none of them feel whole."),
         },
         {"type": "prose", "text": "The fire crackles."},
         {"type": "prose", "text": "Through the smoke, something else drifts."},

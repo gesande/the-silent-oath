@@ -17,19 +17,25 @@ class PlayerState:
 
     # ── Core stats (0–100) ────────────────────────────────────
     # These shape which choices appear and how prose reads.
-    body: int = 50      # physical strength/endurance; < 20 = broken
-    faith: int = 50     # belief; >= 70 = faithful; powers oath abilities
-    resolve: int = 50   # mental fortitude; < 20 = broken
-    doubt: int = 0      # grows during play; destabilises faith; >= 60 = doubting
+    body: int = 50  # physical strength/endurance; < 20 = broken
+    faith: int = 50  # belief; >= 70 = faithful; powers oath abilities
+    resolve: int = 50  # mental fortitude; < 20 = broken
+    doubt: int = 0  # grows during play; destabilises faith; >= 60 = doubting
 
     # ── Combat HP ─────────────────────────────────────────────
     health: int = 100
     max_health: int = 100
 
     # ── Inventory ─────────────────────────────────────────────
-    inventory: list = field(default_factory=lambda: ["templar_sword", "templar_shield", "lantern"])
+    inventory: list = field(
+        default_factory=lambda: ["templar_sword", "templar_shield", "lantern"]
+    )
     equipped: dict = field(
-        default_factory=lambda: {"weapon": "templar_sword", "shield": "", "off_hand": "lantern"}
+        default_factory=lambda: {
+            "weapon": "templar_sword",
+            "shield": "",
+            "off_hand": "lantern",
+        }
     )
 
     # ── Story flags ───────────────────────────────────────────

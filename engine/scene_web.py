@@ -42,7 +42,6 @@ def render_scene(scene_key: str, state: PlayerState) -> dict:
         "paragraphs": [],  # rendered narrative text blocks
         "memories": [],  # any memories recovered this scene
         "items": [],  # items gained
-
         "choices": [],
         "next": None,
         "combat": None,  # set if a combat beat triggers
@@ -189,7 +188,6 @@ def _process_beat(
         if first_visit:
             for stat, delta in beat.get("changes", {}).items():
                 state.modify_stat(stat, delta)
-
 
     elif kind == "flag":
         if first_visit:
