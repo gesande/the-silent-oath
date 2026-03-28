@@ -220,7 +220,7 @@ SCENE_COMMANDERY_NIGHT = {
     ],
     "choices": [
         {
-            "label": "Cross the bridge.",
+            "label": "Move forward into the ruins.",
             "next": "commandery_night",  # placeholder
         },
         {

@@ -24,7 +24,9 @@ EQUIPMENT = {
     "unarmed":       {"slot": "weapon", "tier": 0, "damage_bonus": 0},
     "dagger":        {"slot": "weapon", "tier": 1, "damage_bonus": 3},
     "templar_sword": {"slot": "weapon", "tier": 2, "damage_bonus": 8},
-    "kite_shield":   {"slot": "shield", "tier": 1, "defense": 8},
+    "greatsword":    {"slot": "weapon", "tier": 3, "damage_bonus": 14, "two_handed": True},
+    "kite_shield":      {"slot": "shield", "tier": 1, "defense": 8},
+    "templar_shield":   {"slot": "shield", "tier": 2, "defense": 12},
 }
 
 # ── HUD layout ────────────────────────────────────────────────

@@ -27,9 +27,9 @@ class PlayerState:
     max_health: int = 100
 
     # ── Inventory ─────────────────────────────────────────────
-    inventory: list = field(default_factory=list)
+    inventory: list = field(default_factory=lambda: ["templar_shield"])
     equipped: dict = field(
-        default_factory=lambda: {"weapon": "unarmed", "shield": ""}
+        default_factory=lambda: {"weapon": "greatsword", "shield": ""}
     )
 
     # ── Story flags ───────────────────────────────────────────
