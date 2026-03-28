@@ -1,12 +1,6 @@
-# Drop .ogg and .mp3 music files here.
-# See IMAGE_PROMPTS.md for the full list of expected filenames.
+# Drop .mp3 music files here.
 #
 # Required tracks:
-#   ambient_title.ogg       - title screen
-#   ambient_battlefield.ogg - battlefield / leif scenes
-#   ambient_forge.ogg       - longhouse / forge
-#   ambient_cairn.ogg       - bone cairn
-#   ambient_mound.ogg       - mound of oathbreakers
-#   ambient_void.ogg        - act break
-#   combat_draugar.ogg      - draugar combat
-#   combat_boss.ogg         - Gunnar boss fight
+#   title.mp3   - title screen + default fallback for unmapped scenes
+#
+# Add entries to SCENE_MUSIC in static/js/audio.js when new tracks are added.
