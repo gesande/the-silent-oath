@@ -47,7 +47,7 @@ F8xx ruff errors are real bugs and must be fixed. E4xx/E7xx are style only.
 
 **Game Config — `content/game_config.py`**
 - `STATS`: per-stat bounds (`min`/`max`/`default`) and derived thresholds (`threshold`)
-- `EQUIPMENT`: all equippable items with `slot`, `tier`, and slot-specific properties
+- `EQUIPMENT`: all equippable items with `slot`, `tier`, and slot-specific properties. Slots: `weapon` (`damage_bonus`, optional `two_handed`, `effect`), `shield` (`defense`), `off_hand` (`light: True` = grants visibility)
 - `HUD_STATS`: which stats appear in the HUD
 - `START_SCENE`: entry point scene key
 
@@ -77,7 +77,9 @@ F8xx ruff errors are real bugs and must be fixed. E4xx/E7xx are style only.
 - **Oath & Judgment**: Combat is physical + mental + spiritual simultaneously. TBD.
 - **Faith/Doubt tension**: Core stat interplay — doubt grows organically, affects faith-based abilities
 - **Memory Fragments**: Narrative collectibles visible in HUD
-- **Equipment slots**: `equipped` dict on PlayerState; `"weapon"` and `"shield"` slots
+- **Equipment slots**: `equipped` dict on PlayerState; three slots: `"weapon"`, `"shield"`, `"off_hand"` (held items — lantern, torch, relic)
+- **Starting equipment**: `templar_sword` (weapon), `lantern` (off_hand), `templar_shield` (inventory, unequipped — other hand is full)
+- **Inventory display**: Equipped items are filtered out of the bag list in the HUD; only unequipped carried items show there
 
 ## The Secret
 
@@ -128,4 +130,4 @@ SCENE_MY_SCENE = {
 - Images: `static/svg/<art_key>.png`
 - Music: add `"art_key": "track_name"` to `SCENE_MUSIC` in `static/js/audio.js`, place `track_name.mp3` in `static/audio/music/`
 - The `"art"` field in a scene drives both the image and the music track
-- Unmapped art keys fall back to `exploration.mp3`
+- Unmapped art keys fall back to `title.mp3`
