@@ -314,9 +314,8 @@ body {
 .hud-weapon {
   font-family: "Cinzel", serif;
   font-size: 10px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: rgba(138, 154, 168, 0.6);
-  text-transform: uppercase;
   margin-top: 4px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
 }
