@@ -378,6 +378,8 @@ function renderChoices(choices, autoNext, hasNamePrompt, paraCount, autoAdvance)
     btn.dataset.num = "·";
     btn.textContent = "Continue";
     btn.style.animationDelay = `${afterProse}s`;
+    btn.disabled = true;
+    setTimeout(() => { btn.disabled = false; }, afterProse * 1000);
     btn.addEventListener("click", () =>
       hasNamePrompt ? submitName() : advanceScene(autoNext),
     );
@@ -390,7 +392,10 @@ function renderChoices(choices, autoNext, hasNamePrompt, paraCount, autoAdvance)
     btn.className = "choice-btn";
     btn.dataset.num = i + 1;
     btn.textContent = choice.label;
-    btn.style.animationDelay = `${afterProse + i * CHOICE_GAP}s`;
+    const choiceDelay = afterProse + i * CHOICE_GAP;
+    btn.style.animationDelay = `${choiceDelay}s`;
+    btn.disabled = true;
+    setTimeout(() => { btn.disabled = false; }, choiceDelay * 1000);
     btn.addEventListener("mouseenter", () => SoundEngine.playSfx("choice"));
     btn.addEventListener("click", () => {
       SoundEngine.playSfx("confirm");
