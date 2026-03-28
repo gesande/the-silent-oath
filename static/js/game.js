@@ -25,7 +25,7 @@ let _paraIdx = 0;
 let _paraReady = false;
 let _paraOnDone = null;
 
-const PAGE_SIZE = 3; // paragraphs shown per page before advance prompt
+const PAGE_SIZE = 10; // paragraphs shown per page before advance prompt
 
 function _startParagraphs(paragraphs, onDone) {
   _paraQueue = (paragraphs || []).filter((p) => p.type !== "memory");
@@ -62,6 +62,8 @@ function _showPage() {
 
   setTimeout(() => {
     _paraReady = true;
+    const ind = $("para-advance");
+    if (ind) ind.remove();
     if (isLastPage) {
       setTimeout(() => _paraOnDone(), 300);
     } else {
