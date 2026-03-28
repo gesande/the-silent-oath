@@ -33,7 +33,6 @@ function _startParagraphs(paragraphs, onDone) {
   _paraReady = false;
   _paraOnDone = onDone;
   $("prose-body").innerHTML = "";
-  $("choices-wrap").innerHTML = "";
   if (_paraQueue.length === 0) { onDone(); return; }
   _showPage();
 }
