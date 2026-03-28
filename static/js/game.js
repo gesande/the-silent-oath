@@ -49,9 +49,8 @@ async function init() {
   // Check for existing save
   try {
     const data = await api("/api/status");
-    if (data.has_save) {
-      $("btn-load").style.display = "block";
-    }
+    // load button intentionally hidden — save/load not yet in use
+    void data.has_save;
   } catch (e) {}
 
   $("btn-new").addEventListener("click", () => {
