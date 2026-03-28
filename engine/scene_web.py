@@ -16,7 +16,7 @@
 from engine.state import PlayerState
 from engine.conditions import eval_condition
 from content.scenes import SCENES
-from content.game_config import HUD_STATS
+from content.game_config import EQUIPMENT, HUD_STATS
 
 
 def render_scene(scene_key: str, state: PlayerState) -> dict:
@@ -236,6 +236,11 @@ def _build_hud(state: PlayerState) -> dict:
         "memories": len(state.memories),
         "inventory": state.inventory,
         "equipped": state.equipped,
+        "equipped_names": {
+            slot: EQUIPMENT[key]["name"]
+            for slot, key in state.equipped.items()
+            if key and key in EQUIPMENT
+        },
         "is_dead": state.is_dead(),
         "is_doubting": state.is_doubting(),
     }

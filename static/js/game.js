@@ -500,14 +500,14 @@ function renderHUD(hud) {
   }
 
   // Equipped items
+  const names = hud.equipped_names || {};
   const weaponEl = $("hud-weapon");
   if (weaponEl) {
-    const w = hud.equipped?.weapon;
-    weaponEl.textContent = w && w !== "bare hands" ? w : "";
+    weaponEl.textContent = names.weapon || "";
   }
   const shieldEl = $("hud-shield");
   if (shieldEl) {
-    shieldEl.textContent = hud.equipped?.shield || "";
+    shieldEl.textContent = names.shield || "";
   }
 
   // Inventory
