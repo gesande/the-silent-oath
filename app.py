@@ -21,6 +21,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "the-silent-oath-dev-key")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # disable static file caching in dev
 
 # Always ensure saves dir exists regardless of how app is started
 os.makedirs(SAVES_DIR, exist_ok=True)

@@ -236,10 +236,9 @@ def _build_hud(state: PlayerState) -> dict:
         "memories": len(state.memories),
         "inventory": state.inventory,
         "equipped": state.equipped,
-        "equipped_names": {
-            slot: EQUIPMENT[key]["name"]
-            for slot, key in state.equipped.items()
-            if key and key in EQUIPMENT
+        "item_names": {
+            key: EQUIPMENT[key]["name"]
+            for key in EQUIPMENT
         },
         "is_dead": state.is_dead(),
         "is_doubting": state.is_doubting(),

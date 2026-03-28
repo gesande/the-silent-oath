@@ -499,30 +499,24 @@ function renderHUD(hud) {
     memEl.textContent = `${hud.memories} ${hud.memories === 1 ? "memory" : "memories"} recovered`;
   }
 
-  // Equipped items
-  const names = hud.equipped_names || {};
+  // Equipped items + inventory — all use item_names[key] for display
+  const inames = hud.item_names || {};
+  const eq = hud.equipped || {};
   const weaponEl = $("hud-weapon");
-  if (weaponEl) {
-    weaponEl.textContent = names.weapon || "";
-  }
+  if (weaponEl) weaponEl.textContent = inames[eq.weapon] || "";
   const shieldEl = $("hud-shield");
-  if (shieldEl) {
-    shieldEl.textContent = names.shield || "";
-  }
+  if (shieldEl) shieldEl.textContent = inames[eq.shield] || "";
 
-  // Inventory
   const invEl = $("hud-inventory");
   if (invEl) {
     invEl.innerHTML = "";
-    const equippedSet = new Set(Object.values(hud.equipped || {}));
-    (hud.inventory || [])
-      .filter((item) => !equippedSet.has(item))
-      .forEach((item) => {
-        const span = document.createElement("span");
-        span.className = "hud-item";
-        span.textContent = item;
-        invEl.appendChild(span);
-      });
+    const equippedKeys = new Set(Object.values(eq));
+    (hud.inventory || []).filter((key) => !equippedKeys.has(key)).forEach((key) => {
+      const span = document.createElement("span");
+      span.className = "hud-item";
+      span.textContent = inames[key] || key;
+      invEl.appendChild(span);
+    });
   }
 }
 
