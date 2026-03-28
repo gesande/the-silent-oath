@@ -49,21 +49,19 @@ function _showPage() {
     div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
     div.style.animationDelay = `${i * PARA_GAP}s`;
     proseEl.appendChild(div);
+    // Scroll to each paragraph as it animates in
+    setTimeout(
+      () => div.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+      i * PARA_GAP * 1000 + 200,
+    );
   });
 
   const lastDelay = (pageParas.length - 1) * PARA_GAP;
-  setTimeout(
-    () => proseEl.lastElementChild.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-    lastDelay * 1000 + 200,
-  );
-
   const pageEnd = _paraIdx + pageParas.length - 1;
   const isLastPage = pageEnd >= _paraQueue.length - 1;
 
   setTimeout(() => {
     _paraReady = true;
-    const ind = $("para-advance");
-    if (ind) ind.remove();
     if (isLastPage) {
       setTimeout(() => _paraOnDone(), 300);
     } else {
@@ -71,6 +69,10 @@ function _showPage() {
       ind.id = "para-advance";
       ind.className = "para-advance";
       proseEl.appendChild(ind);
+      setTimeout(
+        () => ind.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+        200,
+      );
     }
   }, (lastDelay + 1.15) * 1000);
 }
