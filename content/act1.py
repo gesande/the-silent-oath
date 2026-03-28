@@ -158,6 +158,79 @@ SCENE_NAME_ENTRY = {
             "store_as": "name",
         },
     ],
+    "next": "descent",
+}
+
+# ── Scene: The Descent ───────────────────────────────────────
+SCENE_DESCENT = {
+    "art": "commandery_night",
+    "header": {"title": "The Silent Oath", "subtitle": "Act I — The Vow"},
+    "beats": [
+        {
+            "type": "prose",
+            "text": "The commandery gates are open.",
+        },
+        {
+            "type": "italic",
+            "text": "That is the first thing that seems wrong.",
+        },
+        {
+            "type": "prose",
+            "text": (
+                "A brother you do not recognise meets you in the outer courtyard. "
+                "He does not give his name. He does not look at you long. "
+                "He says only: below. And he turns."
+            ),
+        },
+        {
+            "type": "prose",
+            "text": (
+                "You follow him through the chapel, past the prayer halls, "
+                "down a staircase that does not appear on any plan you have seen. "
+                "The torches burn lower here than they should. "
+                "The walls are older than the building above."
+            ),
+        },
+        {
+            "type": "italic",
+            "text": "The air is different. Not cold. Something else.",
+        },
+        {
+            "type": "prose",
+            "text": (
+                "At the base of the stairs, a passage opens into a chamber. "
+                "No torch burns here. "
+                "The only light comes from the door at the far end."
+            ),
+        },
+        {
+            "type": "italic",
+            "text": "It is open.",
+        },
+        {
+            "type": "prose",
+            "text": (
+                "Not forced. Not broken. "
+                "Opened from the other side."
+            ),
+        },
+        {
+            "type": "prose",
+            "text": "The brother who led you here has stopped walking.",
+        },
+        {
+            "type": "italic",
+            "text": "He will not say why.",
+        },
+        {
+            "type": "prose",
+            "text": "You take one step through the door.",
+        },
+        {
+            "type": "italic",
+            "text": "And then the light goes out.",
+        },
+    ],
     "next": "commandery_night",
 }
 
@@ -269,5 +342,6 @@ SCENE_COMMANDERY_NIGHT = {
 SCENES = {
     "intro": SCENE_INTRO,
     "name_entry": SCENE_NAME_ENTRY,
+    "descent": SCENE_DESCENT,
     "commandery_night": SCENE_COMMANDERY_NIGHT,
 }
