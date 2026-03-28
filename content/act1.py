@@ -194,13 +194,8 @@ SCENE_COMMANDERY_NIGHT = {
             "type": "prose",
             "text": "Two bodies burn before you.",
         },
-        {
-            "type": "italic",
-            "text": (
-                "They do not cry out. "
-                "They do not move."
-            ),
-        },
+        {"type": "italic", "text": "They do not cry out."},
+        {"type": "italic", "text": "They do not move."},
         {
             "type": "prose",
             "text": "Their armor bears the same mark as yours.",
@@ -235,14 +230,10 @@ SCENE_COMMANDERY_NIGHT = {
             "type": "prose",
             "text": "Your lantern flickers again.",
         },
-        {
-            "type": "italic",
-            "text": (
-                "And for a moment, you feel that something is looking back. "
-                "Not an enemy. Not a person. "
-                "Something that knows your name."
-            ),
-        },
+        {"type": "italic", "text": "And for a moment, you feel that something is looking back."},
+        {"type": "italic", "text": "Not an enemy."},
+        {"type": "italic", "text": "Not a person."},
+        {"type": "italic", "text": "Something that knows your name."},
         {
             "type": "prose",
             "text": "Your oath was clear.",
@@ -257,21 +248,10 @@ SCENE_COMMANDERY_NIGHT = {
                 "But now, in this silence, none of them feel whole."
             ),
         },
-        {
-            "type": "prose",
-            "text": (
-                "The fire crackles. "
-                "Through the smoke, something else drifts."
-            ),
-        },
-        {
-            "type": "prose",
-            "text": "You are not alone.",
-        },
-        {
-            "type": "italic",
-            "text": "You have not been for some time.",
-        },
+        {"type": "prose", "text": "The fire crackles."},
+        {"type": "prose", "text": "Through the smoke, something else drifts."},
+        {"type": "prose", "text": "You are not alone."},
+        {"type": "italic", "text": "You have not been for some time."},
     ],
     "choices": [
         {
