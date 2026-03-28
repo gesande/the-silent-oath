@@ -564,17 +564,18 @@ body {
 .para-advance {
   text-align: left;
   padding-left: 0.2rem;
-  color: var(--iron);
-  font-size: 1.4rem;
+  color: var(--sacred);
+  font-size: 1.1rem;
   line-height: 1;
-  animation: hintPulse 1.4s ease-in-out infinite;
+  animation: hintPulse 1.6s ease-in-out infinite;
   cursor: pointer;
   user-select: none;
+  margin-top: 0.8rem;
   margin-bottom: 0.5rem;
+  letter-spacing: 0.5em;
 }
 .para-advance::after {
-  content: "·  ·  ·";
-  letter-spacing: 0.3em;
+  content: "· · ·";
 }
 
 @keyframes slideIn {
