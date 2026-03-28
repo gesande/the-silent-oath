@@ -163,7 +163,7 @@ SCENE_NAME_ENTRY = {
 
 # ── Scene: The Descent ───────────────────────────────────────
 SCENE_DESCENT = {
-    "art": "commandery_night",
+    "art": "descent",
     "header": {"title": "The Silent Oath", "subtitle": "Act I — The Vow"},
     "beats": [
         {
