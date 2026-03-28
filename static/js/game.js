@@ -398,6 +398,11 @@ function renderScene(data) {
   $("name-input").value = "";
   $("name-input-wrap").classList.add("hidden");
 
+  // ── Choices — pre-render hidden to reserve space ─────────
+  if (!data.auto_advance && !data.name_prompt) {
+    renderChoices(data.choices || [], data.next, true);
+  }
+
   // ── Prose — paginated, one paragraph at a time ────────────
   _startParagraphs(data.paragraphs, () => {
     if (data.auto_advance && data.next) {
@@ -410,14 +415,20 @@ function renderScene(data) {
       setTimeout(() => $("name-input").focus(), 100);
       return;
     }
-    renderChoices(data.choices || [], data.next);
+    // Reveal pre-rendered choices
+    const wrap = $("choices-wrap");
+    wrap.style.visibility = "visible";
+    setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
   });
 }
 
-function renderChoices(choices, autoNext) {
+function renderChoices(choices, autoNext, hidden = false) {
   const wrap = $("choices-wrap");
   wrap.innerHTML = "";
-  setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+  wrap.style.visibility = hidden ? "hidden" : "visible";
+  if (!hidden) {
+    setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+  }
 
   if (autoNext && !choices.length) {
     const btn = document.createElement("button");
