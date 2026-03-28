@@ -19,6 +19,54 @@ let screens = {};
 let currentScene = null;
 let inCombat = false;
 
+// ── Paragraph pagination ───────────────────────────────────────
+let _paraQueue = [];
+let _paraIdx = 0;
+let _paraReady = false;
+let _paraOnDone = null;
+
+function _startParagraphs(paragraphs, onDone) {
+  _paraQueue = (paragraphs || []).filter((p) => p.type !== "memory");
+  _paraIdx = 0;
+  _paraReady = false;
+  _paraOnDone = onDone;
+  $("prose-body").innerHTML = "";
+  $("choices-wrap").innerHTML = "";
+  if (_paraQueue.length === 0) { onDone(); return; }
+  _showParagraph();
+}
+
+function _showParagraph() {
+  const p = _paraQueue[_paraIdx];
+  const div = document.createElement("div");
+  div.className = "prose-block" + (p.type === "italic" ? " italic" : "");
+  div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
+  $("prose-body").appendChild(div);
+  setTimeout(() => div.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+
+  const isLast = _paraIdx >= _paraQueue.length - 1;
+  setTimeout(() => {
+    _paraReady = true;
+    if (isLast) {
+      setTimeout(() => _paraOnDone(), 300);
+    } else {
+      const ind = document.createElement("div");
+      ind.id = "para-advance";
+      ind.className = "para-advance";
+      $("prose-body").appendChild(ind);
+    }
+  }, 1150);
+}
+
+function _advanceParagraph() {
+  if (!_paraReady || _paraIdx >= _paraQueue.length - 1) return;
+  _paraReady = false;
+  const ind = $("para-advance");
+  if (ind) ind.remove();
+  _paraIdx++;
+  _showParagraph();
+}
+
 // ── Central fetch helper — always sends session cookie ────────
 async function api(path, body = null) {
   const opts = {
@@ -75,6 +123,19 @@ async function init() {
   $("name-submit").addEventListener("click", submitName);
   $("name-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitName();
+  });
+
+  // Advance paragraph on click (narrative area) or Space / ArrowRight
+  $("narrative-panel").addEventListener("click", (e) => {
+    if (e.target.closest("button, input")) return;
+    _advanceParagraph();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space" || e.code === "ArrowRight") {
+      if (document.activeElement.tagName === "INPUT") return;
+      e.preventDefault();
+      _advanceParagraph();
+    }
   });
 
   // ── Audio controls ─────────────────────────────────────────
@@ -312,76 +373,36 @@ function renderScene(data) {
     memFlash.classList.add("hidden");
   }
 
-  // ── Prose body — staggered slide-in ──────────────────────
-  const proseEl = $("prose-body");
-  proseEl.innerHTML = "";
-  // Base delay: small pause then paragraphs stagger in one by one
-  const BASE_DELAY = 0.8; // seconds before first paragraph
-  const paraCount = (data.paragraphs || []).filter(
-    (p) => p.type !== "memory",
-  ).length;
-  const PARA_GAP = paraCount > 10 ? 0.55 : 1.1; // tighter gap for long scenes
-  let paraIdx = 0;
-  const narrativePanel = $("narrative-panel");
-  (data.paragraphs || []).forEach((p) => {
-    if (p.type === "memory") return;
-    const div = document.createElement("div");
-    let cls = "prose-block";
-    if (p.type === "italic") cls += " italic";
-    if (p.type === "memory") cls += " memory-block";
-    div.className = cls;
-    div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
-    const delay = BASE_DELAY + paraIdx * PARA_GAP;
-    div.style.animationDelay = `${delay}s`;
-    setTimeout(
-      () => div.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-      delay * 1000 + 200,
-    );
-    proseEl.appendChild(div);
-    paraIdx++;
-  });
-
-  // ── Name input ────────────────────────────────────────────
-  const nameWrap = $("name-input-wrap");
+  // ── Name input — reset ────────────────────────────────────
   $("name-input").value = "";
-  nameWrap.classList.add("hidden");
-  if (data.name_prompt && (data.choices || []).length === 0) {
-    const afterProse = (0.8 + (paraIdx || 0) * 1.1 + 0.3) * 1000;
-    setTimeout(() => {
+  $("name-input-wrap").classList.add("hidden");
+
+  // ── Prose — paginated, one paragraph at a time ────────────
+  _startParagraphs(data.paragraphs, () => {
+    if (data.auto_advance && data.next) {
+      advanceScene(data.next);
+      return;
+    }
+    if (data.name_prompt) {
+      const nameWrap = $("name-input-wrap");
       nameWrap.classList.remove("hidden");
       setTimeout(() => $("name-input").focus(), 100);
-    }, afterProse);
-  }
-
-  // ── Choices ───────────────────────────────────────────────
-  renderChoices(data.choices || [], data.next, data.name_prompt, paraIdx, data.auto_advance);
+      return;
+    }
+    renderChoices(data.choices || [], data.next);
+  });
 }
 
-function renderChoices(choices, autoNext, hasNamePrompt, paraCount, autoAdvance) {
+function renderChoices(choices, autoNext) {
   const wrap = $("choices-wrap");
   wrap.innerHTML = "";
 
-  // Choices appear after prose — delay based on how many paragraphs came before
-  const BASE_DELAY = 0.8;
-  const PARA_GAP = 1.1;
-  const CHOICE_GAP = 0.15;
-  const afterProse = BASE_DELAY + (paraCount || 0) * PARA_GAP + 0.5;
-
-  if (autoNext) {
-    if (autoAdvance) {
-      setTimeout(() => advanceScene(autoNext), afterProse * 1000);
-      return;
-    }
+  if (autoNext && !choices.length) {
     const btn = document.createElement("button");
     btn.className = "choice-btn";
     btn.dataset.num = "·";
     btn.textContent = "Continue";
-    btn.style.animationDelay = `${afterProse}s`;
-    btn.disabled = true;
-    setTimeout(() => { btn.disabled = false; }, afterProse * 1000);
-    btn.addEventListener("click", () =>
-      hasNamePrompt ? submitName() : advanceScene(autoNext),
-    );
+    btn.addEventListener("click", () => advanceScene(autoNext));
     wrap.appendChild(btn);
     return;
   }
@@ -391,10 +412,6 @@ function renderChoices(choices, autoNext, hasNamePrompt, paraCount, autoAdvance)
     btn.className = "choice-btn";
     btn.dataset.num = i + 1;
     btn.textContent = choice.label;
-    const choiceDelay = afterProse + i * CHOICE_GAP;
-    btn.style.animationDelay = `${choiceDelay}s`;
-    btn.disabled = true;
-    setTimeout(() => { btn.disabled = false; }, choiceDelay * 1000);
     btn.addEventListener("mouseenter", () => SoundEngine.playSfx("choice"));
     btn.addEventListener("click", () => {
       SoundEngine.playSfx("confirm");
