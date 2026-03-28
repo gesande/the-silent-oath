@@ -78,8 +78,9 @@ F8xx ruff errors are real bugs and must be fixed. E4xx/E7xx are style only.
 - **Faith/Doubt tension**: Core stat interplay — doubt grows organically, affects faith-based abilities
 - **Memory Fragments**: Narrative collectibles visible in HUD
 - **Equipment slots**: `equipped` dict on PlayerState; three slots: `"weapon"`, `"shield"`, `"off_hand"` (held items — lantern, torch, relic)
-- **Starting equipment**: `templar_sword` (weapon), `lantern` (off_hand), `templar_shield` (inventory, unequipped — other hand is full)
+- **Starting equipment**: `Templar Sword` (weapon), `Lantern` (off_hand), `Templar Shield` (inventory, unequipped — other hand is full)
 - **Inventory display**: Equipped items are filtered out of the bag list in the HUD; only unequipped carried items show there
+- **`auto_advance`**: Scene flag — if `True`, frontend advances to `next` automatically after prose completes (no button shown). Used for cinematic transitions like `descent`.
 
 ## The Secret
 

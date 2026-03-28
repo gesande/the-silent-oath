@@ -7,7 +7,7 @@ Historically charged — the year Philip IV of France moves against the Order.
 
 ## Hook
 
-You play an aging Templar knight called back to the heart of the order's secret guardianship.
+You play a Templar knight called back to the heart of the order's secret guardianship.
 The brotherhood is fracturing from within — some brothers want to use the power,
 some want to destroy it. You are caught in the middle.
 
@@ -426,7 +426,7 @@ Flask/Python backend + vanilla JS frontend. Stateless HTTP; player state in Flas
 
 ## Open Questions
 
-1. Where does Act I begin? (Commandery — established. What is the first combat encounter?)
+1. Act I opens at the commandery, night of the arrests (`commandery_night`). First combat encounter TBD.
 2. How does the Doubt threshold (≥ 60) mechanically affect scene content beyond combat?
 3. What triggers `false_blessed` consequences in scene content?
 4. Act III structure — how does the player reach the door?
