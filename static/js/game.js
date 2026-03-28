@@ -504,7 +504,8 @@ function renderHUD(hud) {
   const invEl = $("hud-inventory");
   if (invEl) {
     invEl.innerHTML = "";
-    (hud.inventory || []).forEach((item) => {
+    const equippedSet = new Set(Object.values(hud.equipped || {}));
+    (hud.inventory || []).filter((item) => !equippedSet.has(item)).forEach((item) => {
       const span = document.createElement("span");
       span.className = "hud-item";
       span.textContent = item;

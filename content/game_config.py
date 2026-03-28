@@ -27,6 +27,8 @@ EQUIPMENT = {
     "greatsword":    {"slot": "weapon", "tier": 3, "damage_bonus": 14, "two_handed": True},
     "kite_shield":      {"slot": "shield", "tier": 1, "defense": 8},
     "templar_shield":   {"slot": "shield", "tier": 2, "defense": 12},
+    # off_hand slot — held items (torch, lantern, relic); "light": True = grants visibility
+    "lantern":          {"slot": "off_hand", "tier": 1, "light": True},
 }
 
 # ── HUD layout ────────────────────────────────────────────────

@@ -29,7 +29,7 @@ class PlayerState:
     # ── Inventory ─────────────────────────────────────────────
     inventory: list = field(default_factory=lambda: ["templar_sword", "templar_shield", "lantern"])
     equipped: dict = field(
-        default_factory=lambda: {"weapon": "templar_sword", "shield": ""}
+        default_factory=lambda: {"weapon": "templar_sword", "shield": "", "off_hand": "lantern"}
     )
 
     # ── Story flags ───────────────────────────────────────────
