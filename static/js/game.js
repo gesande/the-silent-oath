@@ -505,6 +505,8 @@ $("hp-bar").style.width = hud.hp_ratio * 100 + "%";
   if (weaponEl) weaponEl.textContent = eq.weapon && eq.weapon !== "unarmed" ? eq.weapon : "";
   const shieldEl = $("hud-shield");
   if (shieldEl) shieldEl.textContent = eq.shield || "";
+  const offHandEl = $("hud-off-hand");
+  if (offHandEl) offHandEl.textContent = eq.off_hand || "";
 
   // Inventory — unequipped items only
   const invEl = $("hud-inventory");
