@@ -46,56 +46,111 @@ SCENE_INTRO = {
 SCENE_NAME_ENTRY = {
     "art": "title",
     "beats": [
-        {
-            "type": "prose",
-            "text": "Paris. October, 1307.",
-        },
+        {"type": "prose", "text": "Paris. October, 1307."},
         {
             "type": "prose",
             "text": (
                 "For years, King Philip IV has watched the Order in silence — "
-                "weighing its wealth, its influence, its independence. "
-                "Tonight, that silence breaks."
+                "measuring its wealth, its influence, its reach across kingdoms "
+                "that answer to no crown. "
+                "What cannot be owned, he has chosen to break."
             ),
         },
+        {"type": "prose", "text": "Tonight, that decision moves."},
         {
             "type": "prose",
             "text": (
-                "Sealed letters now rest in the hands of every royal sheriff in France. "
-                "Wax unbroken. Orders unseen. "
+                "Sealed letters rest in the hands of every royal sheriff in France. "
+                "Wax unbroken. Commands unseen. "
                 "They are not to be opened until dawn."
             ),
         },
-        {
-            "type": "prose",
-            "text": "By noon, the arrests will begin.",
-        },
-        {
-            "type": "prose",
-            "text": (
-                "Within the walls of the Temple in Paris, the night feels wrong."
-            ),
-        },
+        {"type": "prose", "text": "By noon, the arrests will begin."},
+        {"type": "prose", "text": "The Order does not yet fall."},
         {
             "type": "prose",
             "text": (
-                "The brothers speak in lowered voices, if they speak at all. "
-                "Servants move quickly, avoiding eye contact. "
-                "Even the horses in the lower stables are restless, "
-                "stamping against stone as if sensing a storm that has not yet arrived."
+                "Its banners still hang in chapels. "
+                "Its knights still keep their vigils. "
+                "Its coffers remain sealed, its rites unbroken."
             ),
         },
+        {"type": "prose", "text": "But something has shifted."},
         {
             "type": "italic",
             "text": (
-                "No alarm has been sounded. "
-                "No command to prepare, no call to arms."
+                "Not in the courts of kings, nor in the whispers of Rome — "
+                "but beneath stone, where no crown has ever held authority."
             ),
+        },
+        {"type": "prose", "text": "The Grand Master knows."},
+        {"type": "prose", "text": "He has known for three days."},
+        {
+            "type": "prose",
+            "text": (
+                "He has not fled. He has not called the banners. "
+                "He has not warned those who would run if given the chance."
+            ),
+        },
+        {"type": "prose", "text": "Instead, he has waited."},
+        {
+            "type": "italic",
+            "text": "And in that waiting, something older than fear has begun to stir.",
         },
         {
             "type": "prose",
-            "text": "Only waiting.",
+            "text": (
+                "Beneath the Paris commandery, far below the vaults and prayer halls, "
+                "there are chambers that do not appear on any record of the Order."
+            ),
         },
+        {"type": "prose", "text": "They were not built by the brothers who serve above."},
+        {"type": "prose", "text": "They were not meant to be found."},
+        {
+            "type": "prose",
+            "text": (
+                "For generations, they have remained sealed — "
+                "not by lock, but by oath."
+            ),
+        },
+        {"type": "prose", "text": "Three nights ago, something changed."},
+        {
+            "type": "italic",
+            "text": "No door was broken. No seal was lifted.",
+        },
+        {"type": "prose", "text": "And yet, the silence below was disturbed."},
+        {
+            "type": "prose",
+            "text": (
+                "The Grand Master summoned the inner circle. "
+                "No record was made of the gathering. "
+                "No servant was permitted near. "
+                "Those called did not speak of it afterward."
+            ),
+        },
+        {"type": "italic", "text": "Some did not emerge at all."},
+        {"type": "prose", "text": "Now, more are being called."},
+        {
+            "type": "italic",
+            "text": "Not the oldest. Not the highest.",
+        },
+        {
+            "type": "prose",
+            "text": "But those who have not yet chosen what they believe.",
+        },
+        {
+            "type": "prose",
+            "text": "By dawn, the King will move against the Order.",
+        },
+        {"type": "prose", "text": "By dusk, the Order may already be broken."},
+        {
+            "type": "prose",
+            "text": (
+                "But what waits below the commandery does not answer to kings. "
+                "It does not fear chains."
+            ),
+        },
+        {"type": "italic", "text": "And it has already begun to wake."},
         {
             "type": "input",
             "prompt": "What is your name, brother?",

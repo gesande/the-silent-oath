@@ -318,8 +318,10 @@ function renderScene(data) {
   proseEl.innerHTML = "";
   // Base delay: small pause then paragraphs stagger in one by one
   const BASE_DELAY = 0.8; // seconds before first paragraph
-  const PARA_GAP = 1.1; // seconds between paragraphs
+  const paraCount = (data.paragraphs || []).filter((p) => p.type !== "memory").length;
+  const PARA_GAP = paraCount > 10 ? 0.55 : 1.1; // tighter gap for long scenes
   let paraIdx = 0;
+  const narrativePanel = $("narrative-panel");
   (data.paragraphs || []).forEach((p) => {
     if (p.type === "memory") return;
     const div = document.createElement("div");
@@ -328,7 +330,12 @@ function renderScene(data) {
     if (p.type === "memory") cls += " memory-block";
     div.className = cls;
     div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
-    div.style.animationDelay = `${BASE_DELAY + paraIdx * PARA_GAP}s`;
+    const delay = BASE_DELAY + paraIdx * PARA_GAP;
+    div.style.animationDelay = `${delay}s`;
+    setTimeout(
+      () => div.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+      delay * 1000 + 200
+    );
     proseEl.appendChild(div);
     paraIdx++;
   });
