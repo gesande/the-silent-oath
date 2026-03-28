@@ -5,6 +5,7 @@
 # ============================================================
 import json
 import os
+import subprocess
 
 from flask import Flask, jsonify, render_template, request, session
 
@@ -61,9 +62,20 @@ def _save_combat(combat: dict | None):
 # ═══════════════════════════════════════════════════════════
 
 
+def _git_rev() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
+        ).decode().strip()
+    except Exception:
+        return "0"
+
+_STATIC_VER = _git_rev()
+
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", v=_STATIC_VER)
 
 
 # ── New game ──────────────────────────────────────────────────

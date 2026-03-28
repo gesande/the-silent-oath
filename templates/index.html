@@ -6,7 +6,7 @@
 <title>The Silent Oath</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/css/game.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}?v={{ v }}">
 <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 <body>
@@ -157,7 +157,7 @@
   </div>
 </div>
 
-<script src="/static/js/audio.js"></script>
-<script src="/static/js/game.js"></script>
+<script src="{{ url_for('static', filename='js/audio.js') }}?v={{ v }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}?v={{ v }}"></script>
 </body>
 </html>
