@@ -37,4 +37,4 @@ HUD_STATS = [
 ]
 
 # ── Starting scene ─────────────────────────────────────────────
-START_SCENE = "intro"
+START_SCENE = "name_entry"

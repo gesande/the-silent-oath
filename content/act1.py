@@ -48,14 +48,31 @@ SCENE_NAME_ENTRY = {
     "beats": [
         {
             "type": "prose",
+            "text": "Paris. October 1307.",
+        },
+        {
+            "type": "prose",
             "text": (
-                "You have kept your oath through fire and doubt. "
-                "Through campaigns that made no sense and silences that demanded everything."
+                "King Philip IV has been watching the Order for years. "
+                "Tonight, sealed letters are in the hands of every sheriff in France. "
+                "At dawn they will be opened. "
+                "By noon, the arrests will begin."
             ),
         },
         {
             "type": "prose",
-            "text": "Tonight you were called back to the heart of it.",
+            "text": (
+                "The Grand Master knows. He has known for three days. "
+                "He has not fled."
+            ),
+        },
+        {
+            "type": "italic",
+            "text": (
+                "Something beneath the commandery has been disturbed. "
+                "He summoned the inner circle. "
+                "You were called."
+            ),
         },
         {
             "type": "input",
