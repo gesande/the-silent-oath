@@ -25,6 +25,8 @@ let _paraIdx = 0;
 let _paraReady = false;
 let _paraOnDone = null;
 
+const PAGE_SIZE = 3; // paragraphs shown per page before advance prompt
+
 function _startParagraphs(paragraphs, onDone) {
   _paraQueue = (paragraphs || []).filter((p) => p.type !== "memory");
   _paraIdx = 0;
@@ -33,38 +35,53 @@ function _startParagraphs(paragraphs, onDone) {
   $("prose-body").innerHTML = "";
   $("choices-wrap").innerHTML = "";
   if (_paraQueue.length === 0) { onDone(); return; }
-  _showParagraph();
+  _showPage();
 }
 
-function _showParagraph() {
-  const p = _paraQueue[_paraIdx];
-  const div = document.createElement("div");
-  div.className = "prose-block" + (p.type === "italic" ? " italic" : "");
-  div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
-  $("prose-body").appendChild(div);
-  setTimeout(() => div.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+function _showPage() {
+  const proseEl = $("prose-body");
+  const pageParas = _paraQueue.slice(_paraIdx, _paraIdx + PAGE_SIZE);
+  const PARA_GAP = 0.55; // seconds between paragraphs on same page
 
-  const isLast = _paraIdx >= _paraQueue.length - 1;
+  pageParas.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "prose-block" + (p.type === "italic" ? " italic" : "");
+    div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
+    div.style.animationDelay = `${i * PARA_GAP}s`;
+    proseEl.appendChild(div);
+  });
+
+  const lastDelay = (pageParas.length - 1) * PARA_GAP;
+  setTimeout(
+    () => proseEl.lastElementChild.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+    lastDelay * 1000 + 200,
+  );
+
+  const pageEnd = _paraIdx + pageParas.length - 1;
+  const isLastPage = pageEnd >= _paraQueue.length - 1;
+
   setTimeout(() => {
     _paraReady = true;
-    if (isLast) {
+    if (isLastPage) {
       setTimeout(() => _paraOnDone(), 300);
     } else {
       const ind = document.createElement("div");
       ind.id = "para-advance";
       ind.className = "para-advance";
-      $("prose-body").appendChild(ind);
+      proseEl.appendChild(ind);
     }
-  }, 1150);
+  }, (lastDelay + 1.15) * 1000);
 }
 
 function _advanceParagraph() {
-  if (!_paraReady || _paraIdx >= _paraQueue.length - 1) return;
+  if (!_paraReady) return;
+  const pageEnd = _paraIdx + PAGE_SIZE - 1;
+  if (pageEnd >= _paraQueue.length - 1) return;
   _paraReady = false;
   const ind = $("para-advance");
   if (ind) ind.remove();
-  _paraIdx++;
-  _showParagraph();
+  _paraIdx += PAGE_SIZE;
+  _showPage();
 }
 
 // ── Central fetch helper — always sends session cookie ────────
