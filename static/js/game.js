@@ -481,7 +481,7 @@ async function submitName() {
 // ═══════════════════════════════════════════════════════════
 
 function renderHUD(hud) {
-  $("hp-bar").style.width = hud.hp_ratio * 100 + "%";
+$("hp-bar").style.width = hud.hp_ratio * 100 + "%";
   $("wrath-bar").style.width = (hud.faith || 0) + "%";
   $("doubt-bar").style.width = (hud.doubt || 0) + "%";
   $("hud-hp-desc").textContent = hud.hp_desc || "";
@@ -499,22 +499,22 @@ function renderHUD(hud) {
     memEl.textContent = `${hud.memories} ${hud.memories === 1 ? "memory" : "memories"} recovered`;
   }
 
-  // Equipped items + inventory — all use item_names[key] for display
-  const inames = hud.item_names || {};
+  // Equipped items
   const eq = hud.equipped || {};
   const weaponEl = $("hud-weapon");
-  if (weaponEl) weaponEl.textContent = inames[eq.weapon] || "";
+  if (weaponEl) weaponEl.textContent = eq.weapon && eq.weapon !== "unarmed" ? eq.weapon : "";
   const shieldEl = $("hud-shield");
-  if (shieldEl) shieldEl.textContent = inames[eq.shield] || "";
+  if (shieldEl) shieldEl.textContent = eq.shield || "";
 
+  // Inventory — unequipped items only
   const invEl = $("hud-inventory");
   if (invEl) {
     invEl.innerHTML = "";
-    const equippedKeys = new Set(Object.values(eq));
-    (hud.inventory || []).filter((key) => !equippedKeys.has(key)).forEach((key) => {
+    const equippedSet = new Set(Object.values(eq));
+    (hud.inventory || []).filter((item) => !equippedSet.has(item)).forEach((item) => {
       const span = document.createElement("span");
       span.className = "hud-item";
-      span.textContent = inames[key] || key;
+      span.textContent = item;
       invEl.appendChild(span);
     });
   }

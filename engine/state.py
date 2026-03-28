@@ -28,13 +28,13 @@ class PlayerState:
 
     # ── Inventory ─────────────────────────────────────────────
     inventory: list = field(
-        default_factory=lambda: ["templar_sword", "templar_shield", "lantern"]
+        default_factory=lambda: ["Templar Sword", "Templar Shield", "Lantern"]
     )
     equipped: dict = field(
         default_factory=lambda: {
-            "weapon": "templar_sword",
+            "weapon": "Templar Sword",
             "shield": "",
-            "off_hand": "lantern",
+            "off_hand": "Lantern",
         }
     )
 
