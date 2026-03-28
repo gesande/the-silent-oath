@@ -231,6 +231,7 @@ SCENE_DESCENT = {
             "text": "And then the light goes out.",
         },
     ],
+    "auto_advance": True,
     "next": "commandery_night",
 }
 

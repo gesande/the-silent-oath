@@ -355,10 +355,10 @@ function renderScene(data) {
   }
 
   // ── Choices ───────────────────────────────────────────────
-  renderChoices(data.choices || [], data.next, data.name_prompt, paraIdx);
+  renderChoices(data.choices || [], data.next, data.name_prompt, paraIdx, data.auto_advance);
 }
 
-function renderChoices(choices, autoNext, hasNamePrompt, paraCount) {
+function renderChoices(choices, autoNext, hasNamePrompt, paraCount, autoAdvance) {
   const wrap = $("choices-wrap");
   wrap.innerHTML = "";
 
@@ -369,6 +369,10 @@ function renderChoices(choices, autoNext, hasNamePrompt, paraCount) {
   const afterProse = BASE_DELAY + (paraCount || 0) * PARA_GAP + 0.5;
 
   if (autoNext) {
+    if (autoAdvance) {
+      setTimeout(() => advanceScene(autoNext), afterProse * 1000);
+      return;
+    }
     const btn = document.createElement("button");
     btn.className = "choice-btn";
     btn.dataset.num = "·";
