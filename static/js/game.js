@@ -4,7 +4,7 @@
 // ============================================================
 
 const ART_BASE = "/static/svg/";
-const ART_FALLBACK = "commandery";
+const ART_FALLBACK = "title";
 
 // Art key aliases — use a different image file but trigger different music
 const ART_ALIASES = {};

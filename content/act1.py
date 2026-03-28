@@ -85,7 +85,7 @@ SCENE_NAME_ENTRY = {
 
 # ── Scene: Commandery at night ────────────────────────────────
 SCENE_COMMANDERY_NIGHT = {
-    "art": "commandery",
+    "art": "commandery_night",
     "header": {"title": "The Silent Oath", "subtitle": "Act I — The Vow"},
     "beats": [
         {
