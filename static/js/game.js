@@ -33,7 +33,10 @@ function _startParagraphs(paragraphs, onDone) {
   _paraReady = false;
   _paraOnDone = onDone;
   $("prose-body").innerHTML = "";
-  if (_paraQueue.length === 0) { onDone(); return; }
+  if (_paraQueue.length === 0) {
+    onDone();
+    return;
+  }
   _showPage();
 }
 
@@ -59,21 +62,24 @@ function _showPage() {
   const pageEnd = _paraIdx + pageParas.length - 1;
   const isLastPage = pageEnd >= _paraQueue.length - 1;
 
-  setTimeout(() => {
-    _paraReady = true;
-    if (isLastPage) {
-      setTimeout(() => _paraOnDone(), 300);
-    } else {
-      const ind = document.createElement("div");
-      ind.id = "para-advance";
-      ind.className = "para-advance";
-      proseEl.appendChild(ind);
-      setTimeout(
-        () => ind.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-        200,
-      );
-    }
-  }, (lastDelay + 1.15) * 1000);
+  setTimeout(
+    () => {
+      _paraReady = true;
+      if (isLastPage) {
+        setTimeout(() => _paraOnDone(), 300);
+      } else {
+        const ind = document.createElement("div");
+        ind.id = "para-advance";
+        ind.className = "para-advance";
+        proseEl.appendChild(ind);
+        setTimeout(
+          () => ind.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          200,
+        );
+      }
+    },
+    (lastDelay + 1.15) * 1000,
+  );
 }
 
 function _advanceParagraph() {
@@ -417,7 +423,10 @@ function renderScene(data) {
     // Reveal pre-rendered choices
     const wrap = $("choices-wrap");
     wrap.style.visibility = "visible";
-    setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+    setTimeout(
+      () => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+      100,
+    );
   });
 }
 
@@ -426,7 +435,10 @@ function renderChoices(choices, autoNext, hidden = false) {
   wrap.innerHTML = "";
   wrap.style.visibility = hidden ? "hidden" : "visible";
   if (!hidden) {
-    setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+    setTimeout(
+      () => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+      100,
+    );
   }
 
   if (autoNext && !choices.length) {
@@ -530,7 +542,7 @@ async function submitName() {
 // ═══════════════════════════════════════════════════════════
 
 function renderHUD(hud) {
-$("hp-bar").style.width = hud.hp_ratio * 100 + "%";
+  $("hp-bar").style.width = hud.hp_ratio * 100 + "%";
   $("wrath-bar").style.width = (hud.faith || 0) + "%";
   $("doubt-bar").style.width = (hud.doubt || 0) + "%";
   $("hud-hp-desc").textContent = hud.hp_desc || "";
@@ -551,7 +563,9 @@ $("hp-bar").style.width = hud.hp_ratio * 100 + "%";
   // Equipped items
   const eq = hud.equipped || {};
   const weaponEl = $("hud-weapon");
-  if (weaponEl) weaponEl.textContent = eq.weapon && eq.weapon !== "unarmed" ? eq.weapon : "";
+  if (weaponEl)
+    weaponEl.textContent =
+      eq.weapon && eq.weapon !== "unarmed" ? eq.weapon : "";
   const shieldEl = $("hud-shield");
   if (shieldEl) shieldEl.textContent = eq.shield || "";
   const offHandEl = $("hud-off-hand");
@@ -562,12 +576,14 @@ $("hp-bar").style.width = hud.hp_ratio * 100 + "%";
   if (invEl) {
     invEl.innerHTML = "";
     const equippedSet = new Set(Object.values(eq));
-    (hud.inventory || []).filter((item) => !equippedSet.has(item)).forEach((item) => {
-      const span = document.createElement("span");
-      span.className = "hud-item";
-      span.textContent = item;
-      invEl.appendChild(span);
-    });
+    (hud.inventory || [])
+      .filter((item) => !equippedSet.has(item))
+      .forEach((item) => {
+        const span = document.createElement("span");
+        span.className = "hud-item";
+        span.textContent = item;
+        invEl.appendChild(span);
+      });
   }
 }
 

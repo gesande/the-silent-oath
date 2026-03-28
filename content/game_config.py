@@ -21,13 +21,13 @@ STATS = {
 #            "effect":       on-hit effect ("bleeding")
 #   shield → "defense":      flat damage absorbed per incoming hit
 EQUIPMENT = {
-    "unarmed":        {"slot": "weapon",   "tier": 0, "damage_bonus": 0},
-    "dagger":         {"slot": "weapon",   "tier": 1, "damage_bonus": 3},
-    "Templar Sword":  {"slot": "weapon",   "tier": 2, "damage_bonus": 8},
-    "Greatsword":     {"slot": "weapon",   "tier": 3, "damage_bonus": 14, "two_handed": True},
-    "Kite Shield":    {"slot": "shield",   "tier": 1, "defense": 8},
-    "Templar Shield": {"slot": "shield",   "tier": 2, "defense": 12},
-    "Lantern":        {"slot": "off_hand", "tier": 1, "light": True},
+    "unarmed": {"slot": "weapon", "tier": 0, "damage_bonus": 0},
+    "dagger": {"slot": "weapon", "tier": 1, "damage_bonus": 3},
+    "Templar Sword": {"slot": "weapon", "tier": 2, "damage_bonus": 8},
+    "Greatsword": {"slot": "weapon", "tier": 3, "damage_bonus": 14, "two_handed": True},
+    "Kite Shield": {"slot": "shield", "tier": 1, "defense": 8},
+    "Templar Shield": {"slot": "shield", "tier": 2, "defense": 12},
+    "Lantern": {"slot": "off_hand", "tier": 1, "light": True},
 }
 
 # ── HUD layout ────────────────────────────────────────────────

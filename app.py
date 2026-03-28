@@ -64,11 +64,16 @@ def _save_combat(combat: dict | None):
 
 def _git_rev() -> str:
     try:
-        return subprocess.check_output(
-            ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
-        ).decode().strip()
+        return (
+            subprocess.check_output(
+                ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
+            )
+            .decode()
+            .strip()
+        )
     except Exception:
         return "0"
+
 
 _STATIC_VER = _git_rev()
 

@@ -209,10 +209,7 @@ SCENE_DESCENT = {
         },
         {
             "type": "prose",
-            "text": (
-                "Not forced. Not broken. "
-                "Opened from the other side."
-            ),
+            "text": ("Not forced. Not broken. " "Opened from the other side."),
         },
         {
             "type": "prose",
