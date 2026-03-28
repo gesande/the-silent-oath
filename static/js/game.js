@@ -338,8 +338,11 @@ function renderScene(data) {
   $("name-input").value = "";
   nameWrap.classList.add("hidden");
   if (data.name_prompt && (data.choices || []).length === 0) {
-    nameWrap.classList.remove("hidden");
-    setTimeout(() => $("name-input").focus(), 200);
+    const afterProse = (0.8 + (paraIdx || 0) * 1.1 + 0.3) * 1000;
+    setTimeout(() => {
+      nameWrap.classList.remove("hidden");
+      setTimeout(() => $("name-input").focus(), 100);
+    }, afterProse);
   }
 
   // ── Choices ───────────────────────────────────────────────
