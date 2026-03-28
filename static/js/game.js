@@ -417,6 +417,7 @@ function renderScene(data) {
 function renderChoices(choices, autoNext) {
   const wrap = $("choices-wrap");
   wrap.innerHTML = "";
+  setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
 
   if (autoNext && !choices.length) {
     const btn = document.createElement("button");

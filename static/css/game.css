@@ -613,7 +613,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: auto;
+  margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 0.5px solid var(--iron);
 }
