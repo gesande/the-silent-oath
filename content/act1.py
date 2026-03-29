@@ -1,7 +1,7 @@
 # ============================================================
 #  content/act1.py
 #  Act I — The Vow
-#  Pure data. No logic. The engine in scene_web.py runs these.
+#  Pure data. No logic. The engine in scene.py runs these.
 # ============================================================
 
 # ── Scene: Intro ──────────────────────────────────────────────

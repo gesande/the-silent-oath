@@ -10,21 +10,9 @@
 # ============================================================
 import random
 from engine.state import PlayerState
+from engine.dice import roll, roll_range, chance
 from content.game_config import EQUIPMENT
 from content.enemies import ENEMIES
-
-
-# ── Dice ──────────────────────────────────────────────────────
-def roll(sides):
-    return random.randint(1, sides)
-
-
-def roll_range(lo, hi):
-    return random.randint(lo, hi)
-
-
-def chance(p):
-    return random.random() < p
 
 
 def damage_word(dmg):

@@ -1,5 +1,5 @@
 # ============================================================
-#  engine/scene_web.py
+#  engine/scene.py
 #  Scene runner for the web version.
 #  Instead of printing, returns a SceneOutput dict:
 #  {

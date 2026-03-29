@@ -12,7 +12,7 @@ from flask import Flask, jsonify, render_template, request, session
 from content.game_config import START_SCENE
 from content.scenes import SCENES
 from engine.combat import ENEMIES, get_player_actions, resolve_action, start_combat
-from engine.scene_web import render_scene, apply_choice, _build_hud
+from engine.scene import render_scene, apply_choice, _build_hud
 from engine.state import PlayerState
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
