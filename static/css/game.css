@@ -985,3 +985,40 @@ body {
     height: 65%;
   }
 }
+
+@keyframes save-flash {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.9; }
+  25%  { opacity: 0.1; }
+  40%  { opacity: 0.8; }
+  55%  { opacity: 0.1; }
+  70%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+#save-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#save-indicator img {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+#save-indicator span {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(196, 149, 42, 0.9);
+}
+
+#save-indicator.visible {
+  animation: save-flash 1s ease-out forwards;
+}
