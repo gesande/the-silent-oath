@@ -33,5 +33,5 @@
 ## Polish
 
 - [ ] **HUD** — Body/Faith/Resolve/Doubt -statit; layout tarkistamatta
-- [ ] **Save/load UI** — save-indikaattori puuttuu (forgotten-among-the-fallenissa on)
+- [x] **Save/load UI** — favicon + "saved" välähdys lisätty
 - [ ] **Mobiili** — testaamatta
