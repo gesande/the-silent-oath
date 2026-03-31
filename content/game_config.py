@@ -39,5 +39,16 @@ HUD_STATS = [
     {"key": "resolve", "stat": "resolve"},
 ]
 
+# ── Combat config ─────────────────────────────────────────────
+COMBAT_CONFIG = {
+    # HP description thresholds — checked high-to-low, last entry is fallback
+    "hp_desc": [
+        (0.75, "Unbroken"),
+        (0.50, "Wounded"),
+        (0.25, "Bleeding"),
+        (0.00, "Near Death"),
+    ],
+}
+
 # ── Starting scene ─────────────────────────────────────────────
 START_SCENE = "name_entry"
