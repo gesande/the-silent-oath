@@ -11,7 +11,7 @@
 import random
 from engine.state import PlayerState
 from engine.dice import roll, roll_range, chance
-from content.game_config import EQUIPMENT
+from content.game_config import EQUIPMENT, CONSUMABLES
 from content.enemies import ENEMIES
 
 
@@ -145,6 +145,11 @@ def get_player_actions(combat_state: dict, player: PlayerState) -> list:
             actions.append({"id": "mercy", "label": "Show Mercy — lower your weapon"})
         if resolution.get("free"):
             actions.append({"id": "release", "label": "Release — let them go"})
+
+    # Consumable items
+    for item, cfg in CONSUMABLES.items():
+        if player.has_item(item):
+            actions.append({"id": f"use_{item}", "label": cfg["label"]})
 
     actions.append({"id": "flee", "label": "Retreat — fall back while you still can"})
     return actions
@@ -361,6 +366,29 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
             player.add_memory(key, label)
         if "flag" in on_listen:
             player.set_flag(on_listen["flag"], True)
+
+    elif action_id.startswith("use_"):
+        item = action_id[4:]  # strip "use_"
+        cfg = CONSUMABLES.get(item)
+        if cfg and player.has_item(item):
+            player.remove_item(item)
+            if cfg.get("trap"):
+                player.modify_stat("doubt", cfg.get("doubt", 0))
+                player.modify_stat("faith", cfg.get("faith", 0))
+                log.append(
+                    "The warmth of it is wrong — too immediate, too easy. "
+                    "You feel it move through you and take something as it goes."
+                )
+                log.append("The relic was false. The doubt it left is not.")
+            else:
+                healed = player.heal(cfg.get("heal", 0))
+                player.modify_stat("faith", cfg.get("faith", 0))
+                log.append(
+                    "You uncork the vial. The water is cold and clear. "
+                    "Whatever it passed through to get here, it carried something through."
+                )
+                if healed > 0:
+                    log.append(f"You recover {healed} health.")
 
     elif action_id == "flee":
         dmg = roll_range(10, 20)

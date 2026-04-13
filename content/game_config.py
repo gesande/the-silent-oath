@@ -50,5 +50,22 @@ COMBAT_CONFIG = {
     ],
 }
 
+# ── Consumable items ──────────────────────────────────────────
+# Items in player inventory that can be used during combat.
+# "trap": True — item appears to offer help but delivers the opposite.
+CONSUMABLES = {
+    "holy water": {
+        "label": "Use Holy Water — drink deep",
+        "heal": 30,
+        "faith": 5,
+    },
+    "false relic": {
+        "label": "Invoke the Relic — call on its blessing",
+        "trap": True,
+        "doubt": 15,
+        "faith": -5,
+    },
+}
+
 # ── Starting scene ─────────────────────────────────────────────
 START_SCENE = "name_entry"

@@ -111,7 +111,7 @@ ENEMIES = {
             "free": False,  # releasing him brings more
             "understand": True,  # the horror is he might be right about God
         },
-        "loot": [],
+        "loot": [("spoiled holy water", 0.9)],
         "phrases": {
             "windup": [
                 "He speaks as he moves — questions dressed as accusations.",
@@ -529,7 +529,7 @@ ENEMIES = {
             "understand": False,  # there is nothing there to understand
             "expose": True,  # the right path — reveal what it is
         },
-        "loot": [],
+        "loot": [("false relic", 0.8)],
         "on_death": {
             "flag": "false_saint_defeated",
             "memory": ("false_saint", "The False Saint"),
