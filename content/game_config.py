@@ -85,7 +85,29 @@ CONSUMABLES = {
         "doubt": 15,
         "faith": -5,
     },
+    "spoiled holy water": {
+        "label": "Drink the Water — it might still help",
+        "trap": True,
+        "doubt": 8,
+        "faith": -3,
+    },
+}
+
+# ── Status effects ────────────────────────────────────────────
+# Applied via _apply_effect() in engine/combat.py.
+# "dmg": (lo, hi) — rolled each tick.
+# "duration": int or (lo, hi) — turns the effect lasts.
+# Add matching string keys to content/combat_prose.py:
+#   {effect}_open_player, {effect}_open_enemy
+#   {effect}_player_tick, {effect}_enemy_tick
+#   {effect}_slow
+EFFECTS = {
+    "bleeding": {"dmg": (4, 8), "duration": 3},
 }
 
 # ── Starting scene ─────────────────────────────────────────────
 START_SCENE = "name_entry"
+
+# ── Fallback scene ─────────────────────────────────────────────
+# Used when a scene has no explicit "next" and in pre-combat returns.
+FALLBACK_SCENE = "commandery_night"

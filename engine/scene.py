@@ -119,7 +119,7 @@ def apply_choice(scene_key: str, choice_id: str, state: PlayerState) -> str:
 
     idx = int(choice_id)
     if idx >= len(available):
-        return scene_key  # safety fallback
+        return scene_key, None  # safety fallback
 
     choice = available[idx]
 

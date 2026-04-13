@@ -182,7 +182,7 @@ ENEMIES = {
             "free": True,  # mercy; he accepts it, may even want it
             "understand": True,  # his story is the player's possible future
         },
-        "loot": [("templar_sword", 1.0)],
+        "loot": [("Templar Sword", 1.0)],
         "on_death": {
             "flag": "arnaud_defeated",
             "memory": ("arnaud", "Brother Arnaud"),
@@ -272,7 +272,7 @@ ENEMIES = {
             # if hp < 30% and player uses invoke_oath → oath_memory collapses him (hp → 0,
             # faith +20, no kill flag set — counts as understanding, not victory)
         },
-        "loot": [("kite_shield", 0.8)],
+        "loot": [("Kite Shield", 0.8)],
         "on_death": {
             "flag": "broken_knight_defeated",
             "memory": ("broken_knight", "The Broken Knight"),

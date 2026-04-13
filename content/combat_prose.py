@@ -51,7 +51,7 @@ STRINGS = {
     "player_death_2": ("Darkness. Then cold stone. You are not finished — not yet."),
     # ── Bleeding ──────────────────────────────────────────────
     "bleeding_player_tick": "Your wound bleeds — {dmg} damage.",
-    "bleeding_slows": "The bleeding slows.",
+    "bleeding_slow": "The bleeding slows.",
     "bleeding_enemy_tick": "The wound bleeds. {name} loses {dmg}.",
     "bleeding_open_enemy": "The wound opens. Dark blood begins to run.",
     "bleeding_open_player": "The wound opens. You are bleeding.",

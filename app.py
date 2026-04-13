@@ -9,7 +9,7 @@ import subprocess
 
 from flask import Flask, jsonify, render_template, request, session
 
-from content.game_config import START_SCENE
+from content.game_config import FALLBACK_SCENE, START_SCENE
 from content.scenes import SCENES
 from engine.combat import ENEMIES, get_player_actions, resolve_action, start_combat
 from engine.scene import render_scene, apply_choice, _build_hud
@@ -159,6 +159,8 @@ def get_scene():
         combat_state["victory_flag"] = _cb_beat.get("flag", f"defeated_{enemy_key}")
         _save_combat(combat_state)
         _save_state(state)
+        if enemy_key not in ENEMIES:
+            return jsonify({"error": f"Unknown enemy: {enemy_key}"}), 400
         output["combat"]["actions"] = get_player_actions(combat_state, state)
         output["combat"]["enemy_name"] = ENEMIES[enemy_key]["name"]
         output["combat"]["enemy_hp_ratio"] = (
@@ -187,7 +189,7 @@ def choose():
         if choices:
             next_key, _ = apply_choice(scene_key, pending_id, state)
         else:
-            next_key = scene.get("next", "commandery_night")
+            next_key = scene.get("next", FALLBACK_SCENE)
         state.current_scene = next_key
         _save_state(state)
         return jsonify({"next_scene": next_key, "ok": True})
@@ -280,7 +282,7 @@ def advance():
     # __scene_next__ means: look up the current scene's next key
     if next_key == "__scene_next__":
         scene_key = data.get("scene_key") or state.current_scene
-        next_key = SCENES.get(scene_key, {}).get("next", "commandery_night")
+        next_key = SCENES.get(scene_key, {}).get("next", FALLBACK_SCENE)
 
     if next_key in ("__save_quit__", "end", "__end__"):
         state.save(0)
@@ -318,7 +320,7 @@ def _advance_after_combat(scene_key: str, combat: dict) -> str:
     # Key: combat scene key → scene to return to on death/flee.
     pre_combat: dict[str, str] = {}
     if combat.get("died") or combat.get("fled"):
-        return pre_combat.get(scene_key, "commandery_night")
+        return pre_combat.get(scene_key, FALLBACK_SCENE)
     # Victory: advance to scene defined in scene data
     return SCENES[scene_key].get("next", scene_key)
 

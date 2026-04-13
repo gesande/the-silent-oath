@@ -11,7 +11,7 @@
 import random
 from engine.state import PlayerState
 from engine.dice import roll, roll_range, chance
-from content.game_config import COMBAT_MODS, CONSUMABLES, EQUIPMENT
+from content.game_config import COMBAT_MODS, CONSUMABLES, EFFECTS, EQUIPMENT
 from content.enemies import ENEMIES
 from content.combat_prose import STRINGS, damage_word, strike_prose
 
@@ -638,9 +638,7 @@ def _physical_turn(e, player, log, combat_state, enduring, acc_bonus):
         effect = e.get("weapon", {}).get("effect")
         if effect == "bleeding" and combat_state is not None:
             peff = combat_state.setdefault("player_effects", {})
-            if not peff.get("bleeding"):
-                peff["bleeding"] = 3
-                log.append(S["bleeding_open_player"])
+            _apply_effect("bleeding", peff, log, target="player")
         if effect == "fear":
             player.modify_stat("resolve", -8)
             log.append(S["effect_fear"])
@@ -652,6 +650,45 @@ def _physical_turn(e, player, log, combat_state, enduring, acc_bonus):
 
 
 # ── Shared helpers ────────────────────────────────────────────
+
+
+def _apply_effect(effect_name, effects_dict, log=None, target="enemy"):
+    """Apply a status effect from the EFFECTS registry. Does not stack."""
+    cfg = EFFECTS.get(effect_name)
+    if not cfg or effects_dict.get(effect_name):
+        return
+    duration = cfg["duration"]
+    if isinstance(duration, tuple):
+        duration = roll_range(*duration)
+    effects_dict[effect_name] = duration
+    if log is not None:
+        open_key = f"{effect_name}_open_{target}"
+        if open_key in S:
+            log.append(S[open_key])
+
+
+def _tick_effect(effect_name, effects_dict, hp_target, log, name_short=None):
+    """Tick one effect entry. hp_target is a mutable dict with 'current_hp' key,
+    or None (for player, where damage is applied externally)."""
+    if effect_name not in effects_dict:
+        return 0
+    cfg = EFFECTS.get(effect_name, {})
+    lo, hi = cfg.get("dmg", (4, 8))
+    dmg = roll_range(lo, hi)
+    if hp_target is not None:
+        hp_target["current_hp"] = max(0, hp_target["current_hp"] - dmg)
+        tick_key = f"{effect_name}_enemy_tick"
+        log.append(S[tick_key].format(name=name_short, dmg=dmg))
+    else:
+        tick_key = f"{effect_name}_player_tick"
+        log.append(S[tick_key].format(dmg=dmg))
+    effects_dict[effect_name] -= 1
+    if effects_dict[effect_name] <= 0:
+        del effects_dict[effect_name]
+        slow_key = f"{effect_name}_slow"
+        if slow_key in S:
+            log.append(S[slow_key])
+    return dmg
 
 
 def _handle_player_death(player, combat_state, log):
@@ -667,14 +704,10 @@ def _handle_player_death(player, combat_state, log):
 
 def _tick_player_effects(combat_state, player, log):
     effects = combat_state.get("player_effects", {})
-    if "bleeding" in effects:
-        dmg = roll_range(4, 8)
-        player.take_damage(dmg)
-        log.append(S["bleeding_player_tick"].format(dmg=dmg))
-        effects["bleeding"] -= 1
-        if effects["bleeding"] <= 0:
-            del effects["bleeding"]
-            log.append(S["bleeding_slows"])
+    for effect_name in list(effects.keys()):
+        dmg = _tick_effect(effect_name, effects, None, log)
+        if dmg:
+            player.take_damage(dmg)
 
 
 def _resolve_enemy_death(e, player, combat_state, log):
@@ -700,14 +733,8 @@ def _resolve_enemy_death(e, player, combat_state, log):
 
 def _tick_effects(e, log):
     effects = e.get("effects", {})
-    if "bleeding" in effects:
-        dmg = roll_range(4, 8)
-        e["current_hp"] = max(0, e["current_hp"] - dmg)
-        log.append(S["bleeding_enemy_tick"].format(name=e["name_short"], dmg=dmg))
-        effects["bleeding"] -= 1
-        if effects["bleeding"] <= 0:
-            del effects["bleeding"]
-            log.append(S["bleeding_slows"])
+    for effect_name in list(effects.keys()):
+        _tick_effect(effect_name, effects, e, log, name_short=e["name_short"])
 
 
 def _hit_enemy(dmg, e, player=None, log=None, bypass_relic=False):
@@ -717,10 +744,8 @@ def _hit_enemy(dmg, e, player=None, log=None, bypass_relic=False):
     if player is not None and e["current_hp"] > 0:
         weapon = player.equipped.get("weapon", "unarmed")
         effect = EQUIPMENT.get(weapon, {}).get("effect")
-        if effect == "bleeding" and not e.get("effects", {}).get("bleeding"):
-            e.setdefault("effects", {})["bleeding"] = 3
-            if log is not None:
-                log.append(S["bleeding_open_enemy"])
+        if effect == "bleeding":
+            _apply_effect("bleeding", e.setdefault("effects", {}), log, target="enemy")
 
 
 def _player_damage(base, player, action="strike"):

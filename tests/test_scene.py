@@ -424,9 +424,9 @@ def test_apply_choice_respects_condition_filtering(player):
 
 
 def test_apply_choice_out_of_bounds_returns_scene_key(player):
-    # Out-of-bounds returns just the scene_key string (no narration tuple)
+    # Out-of-bounds returns (scene_key, None) — consistent with normal return type
     result = apply_choice("simple", "99", player)
-    assert result == "simple"
+    assert result == ("simple", None)
 
 
 # ── _build_hud: hp_desc thresholds ───────────────────────────
