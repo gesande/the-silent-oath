@@ -5,7 +5,6 @@ from unittest.mock import patch
 from engine.state import PlayerState
 from engine.scene import render_scene, apply_choice
 
-
 # ── Minimal test scenes injected via patch ────────────────────
 
 SIMPLE_SCENE = {

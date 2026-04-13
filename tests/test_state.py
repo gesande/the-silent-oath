@@ -1,7 +1,6 @@
 """Tests for engine/state.py — PlayerState methods."""
 
 import pytest
-import json
 import os
 import tempfile
 from unittest.mock import patch
@@ -259,12 +258,14 @@ def test_save_load_roundtrip(player):
     player.add_item("holy water")
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        saves_path = os.path.join(tmpdir, "saves")
-        with patch("engine.state.os.path.join", side_effect=lambda *a: os.path.join(*a)), \
-             patch("engine.state.os.makedirs"), \
-             patch("builtins.open", side_effect=lambda p, m="r", **kw: open(
-                 os.path.join(tmpdir, os.path.basename(p)), m, **kw
-             )):
+        with patch(
+            "engine.state.os.path.join", side_effect=lambda *a: os.path.join(*a)
+        ), patch("engine.state.os.makedirs"), patch(
+            "builtins.open",
+            side_effect=lambda p, m="r", **kw: open(
+                os.path.join(tmpdir, os.path.basename(p)), m, **kw
+            ),
+        ):
             pass  # skip patching approach — use direct to_dict/from_dict
 
     restored = PlayerState.from_dict(player.to_dict())

@@ -176,7 +176,9 @@ def _process_beat(
             vcond = variant.get("condition")
             if vcond is None or eval_condition(vcond, state):
                 para_type = variant.get("type", "prose")
-                output["paragraphs"].append({"type": para_type, "text": variant["text"]})
+                output["paragraphs"].append(
+                    {"type": para_type, "text": variant["text"]}
+                )
                 break
 
     elif kind == "combat":
