@@ -314,13 +314,14 @@ def load_game():
 
 def _advance_after_combat(scene_key: str, combat: dict) -> str:
     """After combat ends, move to the right next scene."""
-    # On death: go to the scene BEFORE the combat so player
-    # sees the approach again rather than re-entering combat immediately
-    # Populate these as combat scenes are added to the acts.
-    # Key: combat scene key → scene to return to on death/flee.
-    pre_combat: dict[str, str] = {}
     if combat.get("died") or combat.get("fled"):
-        return pre_combat.get(scene_key, FALLBACK_SCENE)
+        # On death/flee, scenes can declare a "death_return" key in the combat beat.
+        # Otherwise the player returns to the start of the same combat scene.
+        scene = SCENES.get(scene_key, {})
+        combat_beat = next(
+            (b for b in scene.get("beats", []) if b.get("type") == "combat"), {}
+        )
+        return combat_beat.get("death_return", scene_key) or FALLBACK_SCENE
     # Victory: advance to scene defined in scene data
     return SCENES[scene_key].get("next", scene_key)
 

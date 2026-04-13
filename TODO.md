@@ -41,9 +41,9 @@
 
 ### MEDIUM — toiminnallisuus rikki tai puuttuu
 
-- [ ] **broken_knight collapse-polku ilman on_death** — invoke_oath matalalla HP:lla triggeröi erityisen lopun, mutta ei aseta flagia/muistia; ei rekisteröidy pelitilaan
-- [ ] **Enemy phrases ilman fallbackia** — `e["phrases"]["windup"]` / `"hit"` / `"miss"]` kaataa jos avain puuttuu; pitäisi käyttää `.get()` + tyhjä lista
-- [ ] **`_advance_after_combat` pre_combat aina `{}`** — `combat.py`: pre_combat-dict rakennetaan muttei täytetä koskaan; scene-konteksti häviää taistelun jälkeen
+- [x] **broken_knight collapse-polku ilman on_death** — `collapsed` flag lisätty; `_resolve_enemy_death` ohittaa väkivaltapalkinnot ja death-fraasit; flag/memory/loot silti triggeröityvät
+- [x] **Enemy phrases ilman fallbackia** — `_physical_turn` käyttää `.get()` + tyhjä lista windup/hit/miss; `_resolve_enemy_death` sama death-fraaseille
+- [x] **`_advance_after_combat` pre_combat aina `{}`** — luetaan `death_return` combat-beatista; fallback = nykyinen kohtaus (pelaaja palaa taistelun alkuun)
 
 ### LOW — epäselvyys tai puuttuva logiikka
 

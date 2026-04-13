@@ -500,6 +500,7 @@ def _apply_special(action_id, dealt_damage, e, player, combat_state, log):
                 e["current_hp"] = 0
                 player.modify_stat("faith", 20)
                 player.modify_stat("doubt", -10)
+                combat_state["collapsed"] = True
                 log.append(
                     random.choice(
                         e["phrases"].get(
@@ -615,8 +616,9 @@ def _manipulative_turn(e, player, log):
 
 
 def _physical_turn(e, player, log, combat_state, enduring, acc_bonus):
-    windup = random.choice(e["phrases"]["windup"])
-    log.append(windup)
+    windup_opts = e.get("phrases", {}).get("windup", [])
+    if windup_opts:
+        log.append(random.choice(windup_opts))
 
     dmg_range = e["damage"]
     if e.get("shield") and not e.get("flanked"):
@@ -631,7 +633,9 @@ def _physical_turn(e, player, log, combat_state, enduring, acc_bonus):
         if enduring:
             dmg = dmg // 2
         actual = player.take_damage(dmg)
-        log.append(random.choice(e["phrases"]["hit"]))
+        hit_opts = e.get("phrases", {}).get("hit", [])
+        if hit_opts:
+            log.append(random.choice(hit_opts))
         log.append(S["damage_taken"].format(damage=damage_word(actual)))
 
         # Weapon effects on hit
@@ -646,7 +650,9 @@ def _physical_turn(e, player, log, combat_state, enduring, acc_bonus):
             player.modify_stat("doubt", 6)
             log.append(S["effect_corruption"])
     else:
-        log.append(random.choice(e["phrases"]["miss"]))
+        miss_opts = e.get("phrases", {}).get("miss", [])
+        if miss_opts:
+            log.append(random.choice(miss_opts))
 
 
 # ── Shared helpers ────────────────────────────────────────────
@@ -711,9 +717,14 @@ def _tick_player_effects(combat_state, player, log):
 
 
 def _resolve_enemy_death(e, player, combat_state, log):
-    # Listen and release endings skip the death log
-    if not combat_state.get("listened") and not combat_state.get("released"):
-        log.append(random.choice(e["phrases"]["death"]))
+    # Non-violent endings (listen, release, collapse) skip death prose and violence rewards
+    violent_end = not any(
+        combat_state.get(k) for k in ("listened", "released", "collapsed")
+    )
+    if violent_end:
+        death_phrases = e.get("phrases", {}).get("death", [])
+        if death_phrases:
+            log.append(random.choice(death_phrases))
         # Winning through violence: faith up slightly, doubt up slightly
         player.modify_stat("faith", 3)
         player.modify_stat("doubt", 2)

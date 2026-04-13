@@ -509,9 +509,23 @@ def test_oath_memory_collapse_raises_faith(player):
         "engine.combat.chance", return_value=False
     ):
         resolve_action("invoke_oath", cs, player)
-    # collapse: +20 faith; invoke_oath: -3 doubt; _resolve_enemy_death: +3 faith, +2 doubt
-    assert player.faith == 73
-    assert player.doubt == 9
+    # collapse: +20 faith, -10 doubt; invoke_oath: -3 doubt
+    # _resolve_enemy_death skips violence rewards (collapsed=True)
+    assert player.faith == 70
+    assert player.doubt == 7
+
+
+def test_oath_memory_collapse_sets_on_death_flag(player):
+    cs = start_combat("broken_knight", player)
+    cs["enemy"]["current_hp"] = 30
+    player.faith = 50
+    with patch("engine.combat.roll_range", return_value=20), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("invoke_oath", cs, player)
+    # on_death flag and memory must fire even on non-violent collapse ending
+    assert player.flags.get("broken_knight_defeated") is True
+    assert "broken_knight" in player.memories
 
 
 # ── resolve_action: doubt_watcher ────────────────────────────
