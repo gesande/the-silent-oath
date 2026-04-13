@@ -395,3 +395,318 @@ def test_kneel_costs_resolve_and_raises_doubt(player, choir_combat):
         resolve_action("kneel", choir_combat, player)
     assert player.resolve == 42
     assert player.doubt == 20
+
+
+# ── resolve_action: interrogator ──────────────────────────────
+
+
+def test_interrogator_no_damage_raises_doubt(player, agent_combat):
+    # endure deals no damage → interrogator special adds Doubt +4
+    player.doubt = 0
+    agent_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("endure", agent_combat, player)
+    assert player.doubt == 4
+
+
+def test_interrogator_damage_no_doubt_penalty(player, agent_combat):
+    # strike deals damage → interrogator special does not fire
+    player.doubt = 0
+    agent_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("strike", agent_combat, player)
+    assert player.doubt == 0
+
+
+# ── resolve_action: broken_mirror ────────────────────────────
+
+
+def test_broken_mirror_invoke_oath_raises_doubt(player):
+    cs = start_combat("fallen_brother", player)
+    cs["enemy"]["current_hp"] = 9999
+    player.faith = 50  # ensures invoke_oath always deals damage
+    player.doubt = 0
+    with patch("engine.combat.roll_range", return_value=20), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("invoke_oath", cs, player)
+    # broken_mirror adds Doubt +5 on successful invoke_oath
+    assert player.doubt >= 5
+
+
+def test_broken_mirror_only_on_hit(player):
+    # With faith=0 and chance=True, invoke_oath fails (dealt_damage=False).
+    # broken_mirror should not add its +5 Doubt penalty.
+    # Enemy hits with corruption (+6 Doubt) — so doubt without broken_mirror = 6.
+    cs = start_combat("fallen_brother", player)
+    cs["enemy"]["current_hp"] = 9999
+    player.faith = 0
+    player.doubt = 0
+    with patch("engine.combat.roll_range", return_value=20), patch(
+        "engine.combat.chance", return_value=True
+    ):
+        resolve_action("invoke_oath", cs, player)
+    # broken_mirror did not fire: doubt is from enemy hit only, not +5 extra
+    assert player.doubt == 6
+
+
+# ── resolve_action: oath_memory ───────────────────────────────
+
+
+def test_oath_memory_strike_triggers_counter(player):
+    cs = start_combat("broken_knight", player)
+    cs["enemy"]["current_hp"] = 9999
+    player.health = 100
+    # chance=True: counter hits player
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=True
+    ):
+        resolve_action("strike", cs, player)
+    assert player.health < 100
+
+
+def test_oath_memory_invoke_oath_suppresses_counter(player):
+    cs = start_combat("broken_knight", player)
+    cs["enemy"]["current_hp"] = 9999
+    player.health = 100
+    player.faith = 50  # ensures oath fires
+    # chance=True but faith_hesitation suppresses counter
+    with patch("engine.combat.roll_range", return_value=20), patch(
+        "engine.combat.chance", return_value=True
+    ):
+        resolve_action("invoke_oath", cs, player)
+    # Knight hesitates — no counter, health unchanged from enemy
+    assert player.health == 100
+
+
+def test_oath_memory_collapse_at_low_hp(player):
+    cs = start_combat("broken_knight", player)
+    cs["enemy"]["current_hp"] = 30  # < 30% of 110
+    player.faith = 50  # ensures oath always deals damage
+    with patch("engine.combat.roll_range", return_value=20), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        result = resolve_action("invoke_oath", cs, player)
+    assert result["won"] is True
+    assert result["enemy"]["current_hp"] == 0
+
+
+def test_oath_memory_collapse_raises_faith(player):
+    cs = start_combat("broken_knight", player)
+    cs["enemy"]["current_hp"] = 30
+    player.faith = 50
+    player.doubt = 20
+    with patch("engine.combat.roll_range", return_value=20), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("invoke_oath", cs, player)
+    # collapse: +20 faith; invoke_oath: -3 doubt; _resolve_enemy_death: +3 faith, +2 doubt
+    assert player.faith == 73
+    assert player.doubt == 9
+
+
+# ── resolve_action: doubt_watcher ────────────────────────────
+
+
+def test_doubt_watcher_strike_transforms(player):
+    cs = start_combat("watching_heretic", player)
+    hp_before = cs["enemy"]["current_hp"]
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("strike", cs, player)
+    assert cs.get("heretic_transformed") is True
+    assert cs["enemy"]["behavior"] == "aggressive"
+    assert cs["enemy"]["current_hp"] > hp_before  # HP surged on transform
+
+
+def test_doubt_watcher_passive_raises_doubt(player):
+    cs = start_combat("watching_heretic", player)
+    player.doubt = 0
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("endure", cs, player)
+    assert player.doubt == 3
+
+
+def test_doubt_watcher_listen_available_before_transform(player):
+    cs = start_combat("watching_heretic", player)
+    ids = [a["id"] for a in get_player_actions(cs, player)]
+    assert "listen" in ids
+
+
+def test_doubt_watcher_listen_unavailable_after_transform(player):
+    cs = start_combat("watching_heretic", player)
+    cs["heretic_transformed"] = True
+    cs["player_has_struck"] = True
+    ids = [a["id"] for a in get_player_actions(cs, player)]
+    assert "listen" not in ids
+
+
+# ── resolve_action: resolution paths ─────────────────────────
+
+
+def test_mercy_ends_combat(player, sergeant_combat):
+    sergeant_combat["enemy"]["current_hp"] = 20
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        cs = resolve_action("mercy", sergeant_combat, player)
+    assert cs["over"] is True
+    assert cs["won"] is True
+
+
+def test_mercy_raises_faith_lowers_doubt(player, sergeant_combat):
+    player.faith = 50
+    player.doubt = 20
+    sergeant_combat["enemy"]["current_hp"] = 20
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("mercy", sergeant_combat, player)
+    # mercy: +10 faith, -5 doubt; _resolve_enemy_death: +3 faith, +2 doubt
+    assert player.faith == 63
+    assert player.doubt == 17
+
+
+def test_release_ends_combat_with_flag(player, sergeant_combat):
+    sergeant_combat["enemy"]["current_hp"] = 20
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        cs = resolve_action("release", sergeant_combat, player)
+    assert cs["over"] is True
+    assert cs["won"] is True
+    assert cs["released"] is True
+
+
+def test_listen_ends_combat_peacefully(player):
+    cs = start_combat("watching_heretic", player)
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        result = resolve_action("listen", cs, player)
+    assert result["over"] is True
+    assert result["won"] is True
+    assert result.get("listened") is True
+
+
+# ── resolve_action: flee ──────────────────────────────────────
+
+
+def test_flee_ends_combat(player, sergeant_combat):
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        cs = resolve_action("flee", sergeant_combat, player)
+    assert cs["fled"] is True
+    assert cs["over"] is True
+    assert cs["won"] is False
+
+
+def test_flee_costs_health_faith_resolve(player, sergeant_combat):
+    player.faith = 50
+    player.resolve = 50
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("flee", sergeant_combat, player)
+    assert player.health < 100
+    assert player.faith == 45
+    assert player.resolve == 45
+
+
+# ── player death ──────────────────────────────────────────────
+
+
+def test_player_death_ends_combat(player, sergeant_combat):
+    player.health = 1
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    # chance=True → enemy hits; roll_range for dmg returns 15
+    with patch("engine.combat.roll_range", return_value=15), patch(
+        "engine.combat.chance", return_value=True
+    ):
+        cs = resolve_action("endure", sergeant_combat, player)
+    assert cs["over"] is True
+    assert cs.get("died") is True
+
+
+def test_player_death_increments_deaths(player, sergeant_combat):
+    player.health = 1
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=15), patch(
+        "engine.combat.chance", return_value=True
+    ):
+        resolve_action("endure", sergeant_combat, player)
+    assert player.deaths == 1
+
+
+def test_player_death_restores_health(player, sergeant_combat):
+    player.health = 1
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=15), patch(
+        "engine.combat.chance", return_value=True
+    ):
+        resolve_action("endure", sergeant_combat, player)
+    assert player.health == player.max_health
+
+
+# ── bleeding tick ─────────────────────────────────────────────
+
+
+def test_bleeding_damages_player_each_turn(player, sergeant_combat):
+    sergeant_combat["player_effects"]["bleeding"] = 2
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("endure", sergeant_combat, player)
+    assert player.health < 100
+
+
+def test_bleeding_decrements_counter(player, sergeant_combat):
+    sergeant_combat["player_effects"]["bleeding"] = 2
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("endure", sergeant_combat, player)
+    assert sergeant_combat["player_effects"]["bleeding"] == 1
+
+
+def test_bleeding_removed_when_expired(player, sergeant_combat):
+    sergeant_combat["player_effects"]["bleeding"] = 1
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=5), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("endure", sergeant_combat, player)
+    assert "bleeding" not in sergeant_combat["player_effects"]
+
+
+# ── trained_guard ─────────────────────────────────────────────
+
+
+def test_trained_guard_same_action_reads_pattern(player, sergeant_combat):
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("strike", sergeant_combat, player)
+        resolve_action("strike", sergeant_combat, player)
+    assert sergeant_combat.get("guard_reads_pattern") is True
+
+
+def test_trained_guard_different_action_clears_pattern(player, sergeant_combat):
+    sergeant_combat["enemy"]["current_hp"] = 9999
+    with patch("engine.combat.roll_range", return_value=10), patch(
+        "engine.combat.chance", return_value=False
+    ):
+        resolve_action("strike", sergeant_combat, player)
+        resolve_action("endure", sergeant_combat, player)
+    assert sergeant_combat.get("guard_reads_pattern") is False
