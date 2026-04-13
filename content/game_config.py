@@ -39,6 +39,26 @@ HUD_STATS = [
     {"key": "resolve", "stat": "resolve"},
 ]
 
+# ── Combat damage modifiers ───────────────────────────────────
+# Applied in _player_damage() after equipment bonus.
+# Each entry is checked every strike; "action" limits to one action type.
+#
+#   stat / gt   → applies when getattr(player, stat) > gt
+#   fn          → applies when getattr(player, fn)() is True
+#   action      → limit modifier to one action id (omit = all actions)
+#   bonus_die   → roll(N) added to damage when applies
+#   penalty_die → roll(N) subtracted from damage when applies
+COMBAT_MODS = [
+    # Physical strength — high body adds force to every strike
+    {"stat": "body", "gt": 60, "bonus_die": 4},
+    # Broken condition — body or resolve < 20; every action suffers
+    {"fn": "is_broken", "penalty_die": 4},
+    # Faithful invocation — faith >= 70 empowers the oath
+    {"fn": "is_faithful", "action": "invoke_oath", "bonus_die": 6},
+    # Doubt surge — doubt >= 60 feeds the darkness
+    {"fn": "is_doubting", "action": "doubt_surge", "bonus_die": 6},
+]
+
 # ── Combat config ─────────────────────────────────────────────
 COMBAT_CONFIG = {
     # HP description thresholds — checked high-to-low, last entry is fallback

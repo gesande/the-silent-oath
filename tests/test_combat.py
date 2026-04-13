@@ -3,7 +3,12 @@
 import pytest
 from unittest.mock import patch
 from engine.state import PlayerState
-from engine.combat import start_combat, get_player_actions, resolve_action
+from engine.combat import (
+    _player_damage,
+    start_combat,
+    get_player_actions,
+    resolve_action,
+)
 
 
 @pytest.fixture
@@ -710,3 +715,77 @@ def test_trained_guard_different_action_clears_pattern(player, sergeant_combat):
         resolve_action("strike", sergeant_combat, player)
         resolve_action("endure", sergeant_combat, player)
     assert sergeant_combat.get("guard_reads_pattern") is False
+
+
+# ── COMBAT_MODS ───────────────────────────────────────────────
+
+
+def test_high_body_adds_bonus(player):
+    player.body = 70  # > 60 threshold
+    with patch("engine.combat.roll", return_value=3):
+        dmg = _player_damage(10, player, "strike")
+    # base 10 + roll(4)=3 bonus
+    assert dmg == 13
+
+
+def test_normal_body_no_bonus(player):
+    player.body = 50  # not > 60, not < 20
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=3):
+        dmg = _player_damage(10, player, "strike")
+    assert dmg == 10
+
+
+def test_is_broken_adds_penalty(player):
+    player.body = 15  # < 20 → is_broken
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=3):
+        dmg = _player_damage(10, player, "strike")
+    # base 10 - roll(4)=3 penalty
+    assert dmg == 7
+
+
+def test_is_faithful_bonus_on_invoke_oath(player):
+    player.faith = 70  # is_faithful
+    player.body = 50
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=4):
+        dmg = _player_damage(20, player, "invoke_oath")
+    # base 20 + roll(6)=4
+    assert dmg == 24
+
+
+def test_is_faithful_bonus_not_on_strike(player):
+    player.faith = 70  # is_faithful — but action is strike, not invoke_oath
+    player.body = 50
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=4):
+        dmg = _player_damage(20, player, "strike")
+    assert dmg == 20
+
+
+def test_is_doubting_bonus_on_doubt_surge(player):
+    player.doubt = 60  # is_doubting
+    player.body = 50
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=5):
+        dmg = _player_damage(15, player, "doubt_surge")
+    # base 15 + roll(6)=5
+    assert dmg == 20
+
+
+def test_is_doubting_bonus_not_on_strike(player):
+    player.doubt = 60  # is_doubting — but action is strike
+    player.body = 50
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=5):
+        dmg = _player_damage(15, player, "strike")
+    assert dmg == 15
+
+
+def test_damage_never_below_one(player):
+    player.body = 15  # is_broken → penalty
+    player.resolve = 50
+    with patch("engine.combat.roll", return_value=6):
+        dmg = _player_damage(1, player, "strike")
+    assert dmg >= 1

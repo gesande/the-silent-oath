@@ -11,7 +11,7 @@
 import random
 from engine.state import PlayerState
 from engine.dice import roll, roll_range, chance
-from content.game_config import EQUIPMENT, CONSUMABLES
+from content.game_config import COMBAT_MODS, CONSUMABLES, EQUIPMENT
 from content.enemies import ENEMIES
 
 
@@ -178,7 +178,7 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
 
     if action_id == "strike":
         base = roll_range(8, 18)
-        dmg = _player_damage(base, player, e)
+        dmg = _player_damage(base, player, "strike")
         _hit_enemy(dmg, e, player, log)
         log.append(_strike_prose(dmg, e))
         dealt_damage = True
@@ -199,7 +199,7 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
             base = roll_range(15, 30)
             if player.faith >= 70:
                 base = roll_range(20, 35)
-            dmg = int(_player_damage(base, player, e) * faith_resist)
+            dmg = int(_player_damage(base, player, "invoke_oath") * faith_resist)
             _hit_enemy(dmg, e, player, log, bypass_relic=True)
             player.modify_stat("doubt", -3)
             log.append(_invoke_prose(dmg, player, e, faith_resist))
@@ -285,7 +285,7 @@ def resolve_action(action_id: str, combat_state: dict, player: PlayerState) -> d
     elif action_id == "silence":
         # Hold the oath — faith attack, bypasses choir's faith resistance
         base = roll_range(15, 25)
-        dmg = _player_damage(base, player, e)
+        dmg = _player_damage(base, player, "silence")
         _hit_enemy(dmg, e, player, log, bypass_relic=True)
         player.modify_stat("doubt", -8)
         player.modify_stat("resolve", -5)
@@ -751,15 +751,23 @@ def _hit_enemy(dmg, e, player=None, log=None, bypass_relic=False):
                 log.append("The wound opens. Dark blood begins to run.")
 
 
-def _player_damage(base, player, e=None):
+def _player_damage(base, player, action="strike"):
     mod = base
     mod += EQUIPMENT.get(player.equipped.get("weapon", "unarmed"), {}).get(
         "damage_bonus", 0
     )
-    if player.body > 60:
-        mod += roll(4)
-    if player.body < 20:
-        mod -= roll(4)
+    for m in COMBAT_MODS:
+        if "fn" in m:
+            applies = getattr(player, m["fn"])()
+        else:
+            applies = getattr(player, m["stat"], 0) > m["gt"]
+        if "action" in m and m["action"] != action:
+            applies = False
+        if applies:
+            if "bonus_die" in m:
+                mod += roll(m["bonus_die"])
+            if "penalty_die" in m:
+                mod -= roll(m["penalty_die"])
     return max(1, mod)
 
 
