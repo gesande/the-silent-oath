@@ -540,10 +540,10 @@ def _resolve_enemy_turn(e, player, log, combat_state, enduring=False):
         # Does not initiate — only counters direct strikes
         # Counter is suppressed this turn if oath_memory triggered (faith hesitation)
         if combat_state.pop("faith_hesitation", False):
+            # Knight's resolve already drained in _apply_special; just show phrase
             line = random.choice(e["phrases"].get("faith_hesitation", []))
             if line:
                 log.append(line)
-            player.modify_stat("resolve", -8)  # the knight loses resolve too
             return
         if not combat_state.get("player_struck_this_turn"):
             # Holds position — no attack

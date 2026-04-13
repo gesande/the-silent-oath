@@ -47,7 +47,7 @@
 
 ### LOW — epäselvyys tai puuttuva logiikka
 
-- [ ] **faith_hesitation-logiikka epäselvä** — `_resolve_enemy_turn()`: faith_hesitation-ehto lasketaan mutta ei käytetä systemaattisesti kaikkialla; kannattaa tarkistaa tarkoitus
+- [x] **faith_hesitation-logiikka epäselvä** — bugi löydetty: `player.resolve -= 8` `_resolve_enemy_turn`:ssa oli väärin kohdistettu (piti olla ritarin, ei pelaajan); rivi poistettu, ritari menettää resolvea jo `_apply_special`:ssa
 - [ ] **commandery_night dead end** — molemmat valinnat silmukoivat takaisin itseensä; ei etene mihinkään (placeholder, mutta dokumentoimatta)
 
 ## Polish
