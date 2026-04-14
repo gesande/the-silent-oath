@@ -1025,3 +1025,109 @@ body {
 #save-indicator.visible {
   animation: save-flash 1s ease-out forwards;
 }
+
+/* ═══ CINEMATIC MODE ════════════════════════════════════════ */
+/*
+ * Art takes full screen; narrative overlays at the bottom.
+ * Used for act-transition scenes (cinematic: true in scene data).
+ */
+body.cinematic #hud {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+body.cinematic #art-panel {
+  width: 100%;
+  min-width: 100%;
+  transition: width 0.8s ease;
+}
+
+body.cinematic #art-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0%,
+    transparent 35%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+body.cinematic #narrative-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  pointer-events: none;
+  gap: 0;
+}
+
+body.cinematic #scene-header {
+  max-width: 660px;
+  width: 90vw;
+  text-align: center;
+  background: rgba(10, 9, 8, 0.82);
+  padding: 2rem 3rem 0.5rem;
+  margin: 0;
+  pointer-events: auto;
+}
+
+body.cinematic #notification {
+  max-width: 660px;
+  width: 90vw;
+  text-align: center;
+  background: rgba(10, 9, 8, 0.82);
+  margin: 0;
+  pointer-events: auto;
+}
+
+body.cinematic #memory-flash {
+  max-width: 660px;
+  width: 90vw;
+  text-align: center;
+  background: rgba(10, 9, 8, 0.82);
+  margin: 0;
+  pointer-events: auto;
+}
+
+body.cinematic #prose-body {
+  max-width: 660px;
+  width: 90vw;
+  max-height: 55vh;
+  text-align: center;
+  background: rgba(10, 9, 8, 0.82);
+  padding: 1.5rem 3rem 1rem;
+  margin: 0;
+  overflow-y: auto;
+  flex: unset;
+  pointer-events: auto;
+}
+
+body.cinematic .prose-block {
+  font-size: clamp(18px, 1.9vw, 22px);
+  line-height: 2;
+}
+
+body.cinematic #choices-wrap {
+  max-width: 660px;
+  width: 90vw;
+  background: rgba(10, 9, 8, 0.82);
+  padding: 0.5rem 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  margin-bottom: 5vh;
+}
+
+body.cinematic #name-input-wrap {
+  pointer-events: auto;
+}

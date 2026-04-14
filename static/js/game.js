@@ -357,6 +357,9 @@ function renderScene(data) {
   }
   tryLoad(["png", "jpg", "svg"], 0);
 
+  // ── Cinematic mode ────────────────────────────────────────
+  document.body.classList.toggle("cinematic", !!data.cinematic);
+
   // ── Scene music ───────────────────────────────────────────
   SoundEngine.playScene(artKey);
 

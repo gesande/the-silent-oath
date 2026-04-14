@@ -48,6 +48,7 @@ def render_scene(scene_key: str, state: PlayerState) -> dict:
         "hud": _build_hud(state),
         "name_prompt": False,  # set True if scene wants player name
         "auto_advance": scene.get("auto_advance", False),
+        "cinematic": scene.get("cinematic", False),
     }
 
     # ── Process beats ─────────────────────────────────────────
