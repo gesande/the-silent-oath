@@ -472,3 +472,16 @@ def test_hud_reflects_stat_changes_after_beat(player):
     player.faith = 50
     out = render_scene("stat_flag", player)
     assert out["hud"]["faith"] == 60
+
+
+def test_cinematic_flag_propagates(player):
+    cinematic_scene = {**SIMPLE_SCENE, "cinematic": True}
+    with patch("engine.scene.SCENES", {"s": cinematic_scene}):
+        out = render_scene("s", player)
+    assert out["cinematic"] is True
+
+
+def test_cinematic_defaults_to_false(player):
+    with patch("engine.scene.SCENES", {"s": SIMPLE_SCENE}):
+        out = render_scene("s", player)
+    assert out["cinematic"] is False
