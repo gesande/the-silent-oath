@@ -20,66 +20,28 @@ let currentScene = null;
 let inCombat = false;
 
 // ── Paragraph pagination ───────────────────────────────────────
-let _paraQueue = [];
-let _paraIdx = 0;
-let _paraReady = false;
-let _paraOnDone = null;
-
-const PAGE_SIZE = 999; // all paragraphs shown at once; scroll handles overflow
-
 function _startParagraphs(paragraphs, onDone) {
-  _paraQueue = (paragraphs || []).filter((p) => p.type !== "memory");
-  _paraIdx = 0;
-  _paraReady = false;
-  _paraOnDone = onDone;
-  $("prose-body").innerHTML = "";
-  if (_paraQueue.length === 0) {
+  const paras = (paragraphs || []).filter((p) => p.type !== "memory");
+  const proseEl = $("prose-body");
+  proseEl.innerHTML = "";
+  if (paras.length === 0) {
     onDone();
     return;
   }
-  _showPage();
-}
-
-function _showPage() {
-  const proseEl = $("prose-body");
-  const pageParas = _paraQueue.slice(_paraIdx, _paraIdx + PAGE_SIZE);
-  const PARA_GAP = 0.55; // seconds between paragraphs on same page
-
-  pageParas.forEach((p, i) => {
+  const PARA_GAP = 0.55;
+  paras.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "prose-block" + (p.type === "italic" ? " italic" : "");
     div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
     div.style.animationDelay = `${i * PARA_GAP}s`;
     proseEl.appendChild(div);
-    // Scroll to each paragraph as it animates in
     setTimeout(
       () => div.scrollIntoView({ behavior: "smooth", block: "nearest" }),
       i * PARA_GAP * 1000 + 200,
     );
   });
-
-  const lastDelay = (pageParas.length - 1) * PARA_GAP;
-  const pageEnd = _paraIdx + pageParas.length - 1;
-  const isLastPage = pageEnd >= _paraQueue.length - 1;
-
-  setTimeout(
-    () => {
-      _paraReady = true;
-      if (isLastPage) {
-        setTimeout(() => _paraOnDone(), 300);
-      }
-    },
-    (lastDelay + 1.15) * 1000,
-  );
-}
-
-function _advanceParagraph() {
-  if (!_paraReady) return;
-  const pageEnd = _paraIdx + PAGE_SIZE - 1;
-  if (pageEnd >= _paraQueue.length - 1) return;
-  _paraReady = false;
-  _paraIdx += PAGE_SIZE;
-  _showPage();
+  const totalDelay = (paras.length - 1) * PARA_GAP + 1.15;
+  setTimeout(onDone, totalDelay * 1000);
 }
 
 // ── Central fetch helper — always sends session cookie ────────
@@ -138,19 +100,6 @@ async function init() {
   $("name-submit").addEventListener("click", submitName);
   $("name-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitName();
-  });
-
-  // Advance paragraph on click (narrative area) or Space / ArrowRight
-  $("narrative-panel").addEventListener("click", (e) => {
-    if (e.target.closest("button, input")) return;
-    _advanceParagraph();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.code === "Space" || e.code === "ArrowRight") {
-      if (document.activeElement.tagName === "INPUT") return;
-      e.preventDefault();
-      _advanceParagraph();
-    }
   });
 
   // ── Audio controls ─────────────────────────────────────────
