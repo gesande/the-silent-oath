@@ -43,6 +43,7 @@ SCENE_INTRO = {
 # ── Scene: Name entry ─────────────────────────────────────────
 SCENE_NAME_ENTRY = {
     "art": "title",
+    "cinematic": True,
     "beats": [
         {"type": "prose", "text": "Paris. October, 1307."},
         {

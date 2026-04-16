@@ -67,15 +67,6 @@ function _showPage() {
       _paraReady = true;
       if (isLastPage) {
         setTimeout(() => _paraOnDone(), 300);
-      } else {
-        const ind = document.createElement("div");
-        ind.id = "para-advance";
-        ind.className = "para-advance";
-        proseEl.appendChild(ind);
-        setTimeout(
-          () => ind.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-          200,
-        );
       }
     },
     (lastDelay + 1.15) * 1000,
@@ -87,8 +78,6 @@ function _advanceParagraph() {
   const pageEnd = _paraIdx + PAGE_SIZE - 1;
   if (pageEnd >= _paraQueue.length - 1) return;
   _paraReady = false;
-  const ind = $("para-advance");
-  if (ind) ind.remove();
   _paraIdx += PAGE_SIZE;
   _showPage();
 }
