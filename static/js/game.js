@@ -25,7 +25,7 @@ let _paraIdx = 0;
 let _paraReady = false;
 let _paraOnDone = null;
 
-const PAGE_SIZE = 8; // paragraphs shown per page before advance prompt
+const PAGE_SIZE = 999; // all paragraphs shown at once; scroll handles overflow
 
 function _startParagraphs(paragraphs, onDone) {
   _paraQueue = (paragraphs || []).filter((p) => p.type !== "memory");
