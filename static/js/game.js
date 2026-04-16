@@ -6,9 +6,6 @@
 const ART_BASE = "/static/svg/";
 const ART_FALLBACK = "title";
 
-// ── Prose timing ──────────────────────────────────────────────
-const PARA_GAP_S = 0.65; // seconds between paragraph animations
-
 // Art key aliases — use a different image file but trigger different music
 const ART_ALIASES = {};
 
@@ -32,6 +29,8 @@ function _startParagraphs(paragraphs, onDone) {
     onDone();
     return;
   }
+  const BASE_DELAY = 0.8; // seconds before first paragraph
+  const PARA_GAP = 1.1; // seconds between paragraphs
   paras.forEach((p, i) => {
     setTimeout(
       () => {
@@ -41,10 +40,10 @@ function _startParagraphs(paragraphs, onDone) {
         proseEl.appendChild(div);
         proseEl.scrollTop = proseEl.scrollHeight;
       },
-      i * PARA_GAP_S * 1000,
+      (BASE_DELAY + i * PARA_GAP) * 1000,
     );
   });
-  const totalDelay = (paras.length - 1) * PARA_GAP_S + 1.15;
+  const totalDelay = BASE_DELAY + (paras.length - 1) * PARA_GAP + 0.5;
   setTimeout(onDone, totalDelay * 1000);
 }
 
