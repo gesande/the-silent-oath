@@ -6,6 +6,10 @@
 const ART_BASE = "/static/svg/";
 const ART_FALLBACK = "title";
 
+// ── Prose timing ──────────────────────────────────────────────
+const PARA_GAP_S = 0.55; // seconds between paragraph animations
+const PARA_SCROLL_MS = 1400; // scroll duration per paragraph (ms)
+
 // Art key aliases — use a different image file but trigger different music
 const ART_ALIASES = {};
 
@@ -44,19 +48,18 @@ function _startParagraphs(paragraphs, onDone) {
     onDone();
     return;
   }
-  const PARA_GAP = 0.55;
   paras.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "prose-block" + (p.type === "italic" ? " italic" : "");
     div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
-    div.style.animationDelay = `${i * PARA_GAP}s`;
+    div.style.animationDelay = `${i * PARA_GAP_S}s`;
     proseEl.appendChild(div);
     setTimeout(
-      () => _smoothScroll(proseEl, div, 1400),
-      i * PARA_GAP * 1000 + 200,
+      () => _smoothScroll(proseEl, div, PARA_SCROLL_MS),
+      i * PARA_GAP_S * 1000 + 200,
     );
   });
-  const totalDelay = (paras.length - 1) * PARA_GAP + 1.15;
+  const totalDelay = (paras.length - 1) * PARA_GAP_S + 1.15;
   setTimeout(onDone, totalDelay * 1000);
 }
 
