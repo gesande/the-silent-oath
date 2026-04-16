@@ -7,7 +7,7 @@ const ART_BASE = "/static/svg/";
 const ART_FALLBACK = "title";
 
 // ── Prose timing ──────────────────────────────────────────────
-const PARA_GAP_S = 0.55; // seconds between paragraph animations
+const PARA_GAP_S = 0.65; // seconds between paragraph animations
 const PARA_SCROLL_MS = 1400; // scroll duration per paragraph (ms)
 
 // Art key aliases — use a different image file but trigger different music
