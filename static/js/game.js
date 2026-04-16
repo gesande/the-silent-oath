@@ -348,12 +348,10 @@ function renderScene(data) {
   $("name-input").value = "";
   $("name-input-wrap").classList.add("hidden");
 
-  // ── Choices — pre-render hidden to reserve space ─────────
-  if (!data.auto_advance && !data.name_prompt) {
-    renderChoices(data.choices || [], data.next, true);
-  }
-
-  // ── Prose — paginated, one paragraph at a time ────────────
+  // ── Prose — one paragraph at a time, choices appear after ───
+  const paraCount = (data.paragraphs || []).filter(
+    (p) => p.type !== "memory",
+  ).length;
   _startParagraphs(data.paragraphs, () => {
     if (data.auto_advance && data.next) {
       advanceScene(data.next);
@@ -365,32 +363,25 @@ function renderScene(data) {
       setTimeout(() => $("name-input").focus(), 100);
       return;
     }
-    // Reveal pre-rendered choices
-    const wrap = $("choices-wrap");
-    wrap.style.visibility = "visible";
-    setTimeout(
-      () => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-      100,
-    );
+    renderChoices(data.choices || [], data.next, paraCount);
   });
 }
 
-function renderChoices(choices, autoNext, hidden = false) {
+function renderChoices(choices, autoNext, paraCount = 0) {
   const wrap = $("choices-wrap");
   wrap.innerHTML = "";
-  wrap.style.visibility = hidden ? "hidden" : "visible";
-  if (!hidden) {
-    setTimeout(
-      () => wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-      100,
-    );
-  }
+
+  const CHOICE_GAP = 0.15;
+  const afterProse = (BASE_DELAY_MS + paraCount * PARA_GAP_MS + 500) / 1000;
 
   if (autoNext && !choices.length) {
     const btn = document.createElement("button");
     btn.className = "choice-btn";
     btn.dataset.num = "·";
     btn.textContent = "Continue";
+    btn.style.animationDelay = `${afterProse}s`;
+    btn.style.pointerEvents = "none";
+    btn.addEventListener("animationend", () => (btn.style.pointerEvents = ""));
     btn.addEventListener("click", () => advanceScene(autoNext));
     wrap.appendChild(btn);
     return;
@@ -401,6 +392,9 @@ function renderChoices(choices, autoNext, hidden = false) {
     btn.className = "choice-btn";
     btn.dataset.num = i + 1;
     btn.textContent = choice.label;
+    btn.style.animationDelay = `${afterProse + i * CHOICE_GAP}s`;
+    btn.style.pointerEvents = "none";
+    btn.addEventListener("animationend", () => (btn.style.pointerEvents = ""));
     btn.addEventListener("mouseenter", () => SoundEngine.playSfx("choice"));
     btn.addEventListener("click", () => {
       SoundEngine.playSfx("confirm");
