@@ -6,6 +6,10 @@
 const ART_BASE = "/static/svg/";
 const ART_FALLBACK = "title";
 
+// ── Prose timing ──────────────────────────────────────────────
+const BASE_DELAY_MS = 800; // delay before first paragraph
+const PARA_GAP_MS = 1100; // delay between paragraphs
+
 // Art key aliases — use a different image file but trigger different music
 const ART_ALIASES = {};
 
@@ -29,8 +33,6 @@ function _startParagraphs(paragraphs, onDone) {
     onDone();
     return;
   }
-  const BASE_DELAY = 0.8; // seconds before first paragraph
-  const PARA_GAP = 1.1; // seconds between paragraphs
   paras.forEach((p, i) => {
     setTimeout(
       () => {
@@ -40,11 +42,10 @@ function _startParagraphs(paragraphs, onDone) {
         proseEl.appendChild(div);
         proseEl.scrollTop = proseEl.scrollHeight;
       },
-      (BASE_DELAY + i * PARA_GAP) * 1000,
+      BASE_DELAY_MS + i * PARA_GAP_MS,
     );
   });
-  const totalDelay = BASE_DELAY + (paras.length - 1) * PARA_GAP + 0.5;
-  setTimeout(onDone, totalDelay * 1000);
+  setTimeout(onDone, BASE_DELAY_MS + (paras.length - 1) * PARA_GAP_MS + 500);
 }
 
 // ── Central fetch helper — always sends session cookie ────────
