@@ -8,7 +8,6 @@ const ART_FALLBACK = "title";
 
 // ── Prose timing ──────────────────────────────────────────────
 const PARA_GAP_S = 0.65; // seconds between paragraph animations
-const PARA_SCROLL_MS = 3000; // scroll duration per paragraph (ms)
 
 // Art key aliases — use a different image file but trigger different music
 const ART_ALIASES = {};
@@ -25,21 +24,6 @@ let inCombat = false;
 
 // ── Paragraph rendering ────────────────────────────────────────
 
-function _smoothScroll(container, target, duration) {
-  const start = container.scrollTop;
-  const end = target.offsetTop - container.offsetTop;
-  const change = end - start;
-  if (Math.abs(change) < 2) return;
-  const startTime = performance.now();
-  function step(now) {
-    const t = Math.min((now - startTime) / duration, 1);
-    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-    container.scrollTop = start + change * ease;
-    if (t < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
 function _startParagraphs(paragraphs, onDone) {
   const paras = (paragraphs || []).filter((p) => p.type !== "memory");
   const proseEl = $("prose-body");
@@ -55,7 +39,7 @@ function _startParagraphs(paragraphs, onDone) {
         div.className = "prose-block" + (p.type === "italic" ? " italic" : "");
         div.textContent = p.type === "italic" ? `"${p.text}"` : p.text;
         proseEl.appendChild(div);
-        _smoothScroll(proseEl, div, PARA_SCROLL_MS);
+        proseEl.scrollTop = proseEl.scrollHeight;
       },
       i * PARA_GAP_S * 1000,
     );
